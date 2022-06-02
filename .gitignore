@@ -1,0 +1,17 @@
+### IntelliJ IDEA ###
+.idea/
+*.iws
+*.iml
+*.ipr
+*/.idea/*.*
+
+### Eclipse ###
+.eclipse
+
+### General ###
+target/
+*.class
+*.jar
+*.war
+*.ear
+*.logs
