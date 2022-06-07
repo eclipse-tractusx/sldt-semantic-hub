@@ -19,7 +19,7 @@
 -->
 
 # Semantic Hub
-The Semantic Hub is a logical and architectural component of Catena-X.
+The Semantic Hub is a logical and architectural component of Tractus-X.
 The source code under this folder contains reference implementations of the SLDT Semantic Hub
 
 ## Build Packages
