@@ -32,7 +32,6 @@ jobs: gitleaks:
 
           - name: Upload SARIF report
             if: always()
-            # if: steps.gitleaks.outputs.exitcode == 1
             uses: github/codeql-action/upload-sarif@v1
             with:
               sarif_file: ${{ steps.gitleaks.outputs.report }}
