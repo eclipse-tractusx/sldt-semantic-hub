@@ -6,6 +6,7 @@ jobs: gitleaks:
           - name: Checkout uses: actions/checkout@v2
             with:
               fetch-depth: '0'
+              
           - name: Run Gitleaks
             id: gitleaks
             uses: DariuszPorowski/github-action-gitleaks@v2
@@ -13,7 +14,7 @@ jobs: gitleaks:
               report_format: "sarif"
               fail: true
               # config: "/.gitleaks/GitleaksUdmCombo.toml"
-
+              
           - name: Get the output from the gitleaks step
             run: |
               echo "exitcode: ${{ steps.gitleaks.outputs.exitcode }}"
