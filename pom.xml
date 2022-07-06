@@ -101,8 +101,7 @@
 		<oltu-version>1.0.2</oltu-version>
 
 		<!-- semantics -->
-		<bamm.version>2.0.0-M2</bamm.version>
-		<bamm.sdk.version>1.1.0-M4</bamm.sdk.version>
+		<bamm.sdk.version>1.1.0-M5</bamm.sdk.version>
 		<jena.version>4.2.0</jena.version>
 		<shacl.version>1.3.1</shacl.version>
 
@@ -348,14 +347,14 @@
 			<!-- Semantics Libraries -->
 			<dependency>
 				<groupId>io.openmanufacturing</groupId>
-				<artifactId>sds-aspect-meta-model</artifactId>
-				<version>${bamm.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>io.openmanufacturing</groupId>
 				<artifactId>sds-aspect-model-starter</artifactId>
 				<version>${bamm.sdk.version}</version>
-			</dependency>			
+			</dependency>	
+			<dependency>
+				<groupId>io.openmanufacturing</groupId>
+				<artifactId>sds-aspect-model-aas-generator</artifactId>
+				<version>${bamm.sdk.version}</version>
+			</dependency>		
 			<dependency>
 				<groupId>org.apache.jena</groupId>
 				<artifactId>jena-core</artifactId>
