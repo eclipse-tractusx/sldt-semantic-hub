@@ -24,7 +24,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.util.HashMap;
+import java.io.FileOutputStream;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
@@ -35,6 +37,7 @@ import com.google.common.io.CharStreams;
 import org.apache.jena.rdf.model.Model;
 import org.springframework.stereotype.Component;
 
+import io.openmanufacturing.sds.aspectmodel.aas.AspectModelAASGenerator;
 import io.openmanufacturing.sds.aspectmodel.generator.diagram.AspectModelDiagramGenerator;
 import io.openmanufacturing.sds.aspectmodel.generator.diagram.AspectModelDiagramGenerator.Format;
 import io.openmanufacturing.sds.aspectmodel.generator.docu.AspectModelDocumentationGenerator;
@@ -153,5 +156,32 @@ public class BammHelper {
         AspectModelJsonPayloadGenerator payloadGenerator = new AspectModelJsonPayloadGenerator(aspect);
 
         return Try.of(payloadGenerator::generateJson);
+    }
+
+    public Try getAasSubmodelTemplate(Aspect aspect, String aasFormat) {
+        AspectModelAASGenerator aasGenerator = new AspectModelAASGenerator();
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        
+        try {
+            switch(aasFormat) {
+                case "file":
+                    aasGenerator.generateAASXFile(aspect, (String s) -> {
+                        return stream;
+                    });
+                    stream.close();
+                    return Try.of(stream::toByteArray);
+                case "xml":
+                    aasGenerator.generateAasXmlFile(aspect, (String s) -> {
+                        return stream;
+                    });
+                    stream.close();
+                    return Try.of(stream::toString);
+                default:
+                    return Try.failure(new Exception("Wrong AAS output format."));
+                        
+            }
+        } catch (IOException e) {
+            return Try.failure(e);
+        }
     }
 }

@@ -308,6 +308,37 @@ paths:
           $ref: '#/components/responses/NotFound'
         '500':
           $ref: '#/components/responses/InternalServerError'
+  '/models/{urn}/aas':
+    get:
+      tags:
+        - SemanticHub
+      operationId: getAasSubmodelTemplate
+      parameters:
+        - in: path
+          name: urn
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: aasFormat
+          schema:
+            type: string
+            enum:
+              - file
+              - xml
+            default: xml
+          required: false
+      responses:
+        '200':
+          $ref: '#/components/responses/AasxSubmodelTemplate'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 components:
   schemas:
     ErrorResponse:
@@ -435,6 +466,18 @@ components:
           schema:
             type: string
             format: binary
+    AasxSubmodelTemplate:
+      description: OK
+      content:
+        application/xml:
+          schema:
+            type: string
+        application/octet-stream:
+          schema:
+            type: string
+            format: binary
+
+
     SemanticModelDocumentation:
       description: OK
       content:

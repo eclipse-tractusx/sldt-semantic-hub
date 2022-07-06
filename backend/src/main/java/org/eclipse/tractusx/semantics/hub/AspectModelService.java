@@ -140,6 +140,34 @@ public class AspectModelService implements ModelsApiDelegate {
       return new ResponseEntity( openApiJson, HttpStatus.OK );
    }
 
+   @Override
+   public ResponseEntity<Void> getModelExamplePayloadJson( final String modelId ) {
+      final Aspect bammAspect = getBamAspect( modelId );
+      final Try<String> result = bammHelper.getExamplePayloadJson( bammAspect );
+      if ( result.isFailure() ) {
+         throw new RuntimeException( String.format( "Failed to generate example payload for urn %s", modelId ) );
+      }
+      return new ResponseEntity( result.get(), HttpStatus.OK );
+   }
+
+   @Override
+   public ResponseEntity getAasSubmodelTemplate(String urn, String aasFormat) {
+      final Aspect bammAspect = getBamAspect( urn );
+      final Try result = bammHelper.getAasSubmodelTemplate(bammAspect, aasFormat);
+      if ( result.isFailure() ) {
+         throw new RuntimeException( String.format( "Failed to generate AASX submodel template for model with urn %s", urn ) );
+      }
+      HttpHeaders responseHeaders = new HttpHeaders();
+
+      if(aasFormat.equals("file")) {
+         responseHeaders.set("Content-Type", "application/octet-stream");
+      } else {
+         responseHeaders.set("Content-Type", "application/xml");
+      }
+
+      return new ResponseEntity( result.get(), responseHeaders, HttpStatus.OK );
+   }
+
    private Aspect getBamAspect( String urn ) {
       final Try<Aspect> aspect = bammHelper.getAspectFromVersionedModel( getVersionedModel( urn ) );
       if ( aspect.isFailure() ) {
@@ -157,15 +185,5 @@ public class AspectModelService implements ModelsApiDelegate {
          throw new RuntimeException( "Failed to load versioned model", versionedModel.getCause() );
       }
       return versionedModel.get();
-   }
-
-   @Override
-   public ResponseEntity<Void> getModelExamplePayloadJson( final String modelId ) {
-      final Aspect bammAspect = getBamAspect( modelId );
-      final Try<String> result = bammHelper.getExamplePayloadJson( bammAspect );
-      if ( result.isFailure() ) {
-         throw new RuntimeException( String.format( "Failed to generate example payload for urn %s", modelId ) );
-      }
-      return new ResponseEntity( result.get(), HttpStatus.OK );
    }
 }
