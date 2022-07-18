@@ -35,6 +35,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.io.CharStreams;
 
 import org.apache.jena.rdf.model.Model;
+import org.eclipse.tractusx.semantics.hub.model.AasFormat;
 import org.springframework.stereotype.Component;
 
 import io.openmanufacturing.sds.aspectmodel.aas.AspectModelAASGenerator;
@@ -158,24 +159,24 @@ public class BammHelper {
         return Try.of(payloadGenerator::generateJson);
     }
 
-    public Try getAasSubmodelTemplate(Aspect aspect, String aasFormat) {
+    public Try getAasSubmodelTemplate(Aspect aspect, AasFormat aasFormat) {
         AspectModelAASGenerator aasGenerator = new AspectModelAASGenerator();
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         
         try {
             switch(aasFormat) {
-                case "file":
+                case FILE:
                     aasGenerator.generateAASXFile(aspect, (String s) -> {
                         return stream;
                     });
                     return Try.of(stream::toByteArray);
-                case "xml":
+                case XML:
                     aasGenerator.generateAasXmlFile(aspect, (String s) -> {
                         return stream;
                     });
                     return Try.of(stream::toString);
                 default:
-                    return Try.failure(new Exception(String.format("Wrong AAS output format %s", aasFormat)));
+                    return Try.failure(new Exception(String.format("Wrong AAS output format %s", aasFormat.toString())));
                         
             }
         } catch (IOException e) {

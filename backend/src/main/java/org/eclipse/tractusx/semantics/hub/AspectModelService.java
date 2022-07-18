@@ -9,6 +9,7 @@ import java.nio.charset.StandardCharsets;
 
 import org.eclipse.tractusx.semantics.hub.domain.ModelPackageStatus;
 import org.eclipse.tractusx.semantics.hub.domain.ModelPackageUrn;
+import org.eclipse.tractusx.semantics.hub.model.AasFormat;
 import org.eclipse.tractusx.semantics.hub.model.SemanticModel;
 import org.eclipse.tractusx.semantics.hub.model.SemanticModelList;
 import org.eclipse.tractusx.semantics.hub.model.SemanticModelStatus;
@@ -151,7 +152,7 @@ public class AspectModelService implements ModelsApiDelegate {
    }
 
    @Override
-   public ResponseEntity getAasSubmodelTemplate(String urn, String aasFormat) {
+   public ResponseEntity getAasSubmodelTemplate(String urn, AasFormat aasFormat) {
       final Aspect bammAspect = getBamAspect( urn );
       final Try result = bammHelper.getAasSubmodelTemplate(bammAspect, aasFormat);
       if ( result.isFailure() ) {
@@ -159,7 +160,7 @@ public class AspectModelService implements ModelsApiDelegate {
       }
       HttpHeaders responseHeaders = new HttpHeaders();
 
-      if(aasFormat.equals("file")) {
+      if(aasFormat.equals(AasFormat.FILE)) {
          responseHeaders.set("Content-Type", "application/octet-stream");
       } else {
          responseHeaders.set("Content-Type", "application/xml");

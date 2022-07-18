@@ -322,11 +322,8 @@ paths:
         - in: query
           name: aasFormat
           schema:
-            type: string
-            enum:
-              - file
-              - xml
-            default: xml
+            $ref: '#/components/schemas/AasFormat'
+            default: XML
           required: false
       responses:
         '200':
@@ -434,6 +431,11 @@ components:
             The actual model definition in the format defined by the type
             property.
           type: string
+    AasFormat:
+      type: string
+      enum:
+        - FILE
+        - XML
   responses:
     SemanticModelJsonSchema:
       description: OK
