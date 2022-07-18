@@ -168,16 +168,14 @@ public class BammHelper {
                     aasGenerator.generateAASXFile(aspect, (String s) -> {
                         return stream;
                     });
-                    stream.close();
                     return Try.of(stream::toByteArray);
                 case "xml":
                     aasGenerator.generateAasXmlFile(aspect, (String s) -> {
                         return stream;
                     });
-                    stream.close();
                     return Try.of(stream::toString);
                 default:
-                    return Try.failure(new Exception("Wrong AAS output format."));
+                    return Try.failure(new Exception(String.format("Wrong AAS output format %s", aasFormat)));
                         
             }
         } catch (IOException e) {
