@@ -323,7 +323,6 @@ paths:
           name: aasFormat
           schema:
             $ref: '#/components/schemas/AasFormat'
-            default: XML
           required: false
       responses:
         '200':
@@ -433,6 +432,7 @@ components:
           type: string
     AasFormat:
       type: string
+      default: XML
       enum:
         - FILE
         - XML
