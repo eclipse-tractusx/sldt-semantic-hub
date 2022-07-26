@@ -24,7 +24,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.util.HashMap;
+import java.io.FileOutputStream;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
@@ -33,8 +35,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.io.CharStreams;
 
 import org.apache.jena.rdf.model.Model;
+import org.eclipse.tractusx.semantics.hub.model.AasFormat;
 import org.springframework.stereotype.Component;
 
+import io.openmanufacturing.sds.aspectmodel.aas.AspectModelAASGenerator;
 import io.openmanufacturing.sds.aspectmodel.generator.diagram.AspectModelDiagramGenerator;
 import io.openmanufacturing.sds.aspectmodel.generator.diagram.AspectModelDiagramGenerator.Format;
 import io.openmanufacturing.sds.aspectmodel.generator.docu.AspectModelDocumentationGenerator;
@@ -153,5 +157,30 @@ public class BammHelper {
         AspectModelJsonPayloadGenerator payloadGenerator = new AspectModelJsonPayloadGenerator(aspect);
 
         return Try.of(payloadGenerator::generateJson);
+    }
+
+    public Try getAasSubmodelTemplate(Aspect aspect, AasFormat aasFormat) {
+        AspectModelAASGenerator aasGenerator = new AspectModelAASGenerator();
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        
+        try {
+            switch(aasFormat) {
+                case FILE:
+                    aasGenerator.generateAASXFile(aspect, (String s) -> {
+                        return stream;
+                    });
+                    return Try.of(stream::toByteArray);
+                case XML:
+                    aasGenerator.generateAasXmlFile(aspect, (String s) -> {
+                        return stream;
+                    });
+                    return Try.of(stream::toString);
+                default:
+                    return Try.failure(new Exception(String.format("Wrong AAS output format %s", aasFormat.toString())));
+                        
+            }
+        } catch (IOException e) {
+            return Try.failure(e);
+        }
     }
 }
