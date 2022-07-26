@@ -41,8 +41,8 @@ public class SparqlQueries {
    public static final String BAMM_ASPECT_URN_REGEX = "urn:bamm:io.openmanufacturing:meta-model:\\d\\.\\d\\.\\d#Aspect";
    public static final String ALL_BAMM_ASPECT_URN_PREFIX = "urn:bamm:io.openmanufacturing:([a-z]|-)+:\\d\\.\\d\\.\\d#";
    public static final String BAMM_ASPECT_URN_PREFIX = "urn:bamm:io.openmanufacturing:meta-model:\\d\\.\\d\\.\\d#";
-   public static final String BAMM_PREFERRED_NAME = "urn:bamm:io.openmanufacturing:meta-model:2.0.0#preferredName";
-   public static final String BAMM_DESCRIPTION = "urn:bamm:io.openmanufacturing:meta-model:2.0.0#description";
+   public static final String BAMM_PREFERRED_NAME = "urn:bamm:io.openmanufacturing:meta-model:1.0.0#preferredName";
+   public static final String BAMM_DESCRIPTION = "urn:bamm:io.openmanufacturing:meta-model:1.0.0#description";
    public static final Property STATUS_PROPERTY = ResourceFactory.createProperty( AUXILIARY_NAMESPACE, "status" );
 
    private static final String DELETE_BY_URN_QUERY =
