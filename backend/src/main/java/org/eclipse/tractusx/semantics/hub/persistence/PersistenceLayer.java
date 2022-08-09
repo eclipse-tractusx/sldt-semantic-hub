@@ -20,6 +20,8 @@
 
 package org.eclipse.tractusx.semantics.hub.persistence;
 
+import java.util.List;
+
 import javax.annotation.Nullable;
 
 import org.eclipse.tractusx.semantics.hub.domain.ModelPackageStatus;
@@ -59,4 +61,6 @@ public interface PersistenceLayer {
    void deleteModelsPackage( ModelPackageUrn urn );
 
    boolean echo();
+
+   public SemanticModelList findModelListByUrns(List<AspectModelUrn> urns, int page, int pageSize);
 }

@@ -128,6 +128,49 @@ paths:
           $ref: '#/components/responses/NotFound'
         '500':
           $ref: '#/components/responses/InternalServerError'
+  /models/bulk:
+    post:
+      tags:
+        - SemanticHub
+      operationId: getModelListByUrns
+      parameters:
+        - in: query
+          name: pageSize
+          required: true
+          schema:
+            default: 10
+            type: integer
+            enum:
+              - 10
+              - 50
+              - 100
+            description: Size of the pages that the results should be partitioned in
+        - in: query
+          name: page
+          required: true
+          schema:
+            default: 0
+            type: integer
+            description: The page to return
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/SemanticModelList'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
   '/models/{urn}':
     get:
       tags:
