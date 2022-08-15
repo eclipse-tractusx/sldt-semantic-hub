@@ -21,6 +21,7 @@ package org.eclipse.tractusx.semantics.hub;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -36,7 +37,12 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.apache.jena.atlas.json.JSON;
+import org.apache.poi.hpsf.Array;
+import org.json.JSONArray;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -46,7 +52,10 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
+import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.internal.function.text.Length;
+
+import jakarta.json.JsonArray;
 
 @DirtiesContext( classMode = DirtiesContext.ClassMode.AFTER_CLASS )
 public class ModelsApiTest extends AbstractModelsApiTest{
@@ -399,6 +408,69 @@ public class ModelsApiTest extends AbstractModelsApiTest{
                 "It is not allowed to release an aspect that has dependencies in DRAFT state." ) ) );
       }
    }
+
+    @Test
+    public void testGetModelListByMultipleUrns() throws Exception {
+        String urnPrefixPattern = "urn:bamm:org.eclipse.tractusx.test_model_list_by_urns_%s:1.0.0#";
+
+        List<String> urnSearchArrayEvenNumbers = new ArrayList<String>();
+        List<String> urnSearchArrayOddNumbers = new ArrayList<String>();
+        List<String> urnSearchArrayNonExistingEntry = new ArrayList<String>();
+
+        for(int i = 1; i <= 11; i++) {
+            String urnPrefix = String.format(urnPrefixPattern, i);
+            mvc.perform(post( TestUtils.createValidModelRequest(urnPrefix),"DRAFT") )
+            .andDo( MockMvcResultHandlers.print() )
+            .andExpect( status().isOk() );
+
+            if((i % 2) == 0) {
+                urnSearchArrayEvenNumbers.add(toMovementUrn(urnPrefix));
+            } else {
+                urnSearchArrayOddNumbers.add(toMovementUrn(urnPrefix));
+            }
+        }
+
+        urnSearchArrayNonExistingEntry.add("urn:bamm:org.eclipse.tractusx.test_model_list_by_urns_50:1.0.0#Movement");
+
+        mvc.perform(MockMvcRequestBuilders.post("/api/v1/models/bulk" )
+        .param("pageSize", "2")
+        .param("page", "0")
+        .content(new JSONArray(urnSearchArrayEvenNumbers).toString())
+        .contentType(MediaType.APPLICATION_JSON)
+        .with(jwtTokenFactory.allRoles()))
+        .andDo( MockMvcResultHandlers.print() )
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.currentPage", equalTo(0)))
+        .andExpect(jsonPath("$.totalItems", equalTo(5)))
+        .andExpect(jsonPath("$.totalPages", equalTo(3)))
+        .andExpect(jsonPath("$.items[0].urn", equalTo("urn:bamm:org.eclipse.tractusx.test_model_list_by_urns_10:1.0.0#Movement")))
+        .andExpect(jsonPath("$.items[1].urn", equalTo("urn:bamm:org.eclipse.tractusx.test_model_list_by_urns_2:1.0.0#Movement")))
+        .andExpect(jsonPath("$.items.length()", equalTo(2)));
+
+        mvc.perform(MockMvcRequestBuilders.post("/api/v1/models/bulk")
+        .param("pageSize", "2")
+        .param("page", "1")
+        .content(new JSONArray(urnSearchArrayOddNumbers).toString())
+        .contentType(MediaType.APPLICATION_JSON)
+        .with(jwtTokenFactory.allRoles()))
+        .andDo( MockMvcResultHandlers.print() )
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.currentPage", equalTo(1)))
+        .andExpect(jsonPath("$.totalItems", equalTo(6)))
+        .andExpect(jsonPath("$.totalPages", equalTo(3)))
+        .andExpect(jsonPath("$.items[0].urn", equalTo("urn:bamm:org.eclipse.tractusx.test_model_list_by_urns_3:1.0.0#Movement")))
+        .andExpect(jsonPath("$.items[1].urn", equalTo("urn:bamm:org.eclipse.tractusx.test_model_list_by_urns_5:1.0.0#Movement")))
+        .andExpect(jsonPath("$.items.length()", equalTo(2)));
+
+        mvc.perform(MockMvcRequestBuilders.post("/api/v1/models/bulk")
+        .content(new JSONArray(urnSearchArrayNonExistingEntry).toString())
+        .contentType(MediaType.APPLICATION_JSON)
+        .with(jwtTokenFactory.allRoles()))
+        .andDo( MockMvcResultHandlers.print() )
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.items.length()", equalTo(0)));
+
+    }
 
    private static String toMovementUrn(String urn){
       return urn + "Movement";
