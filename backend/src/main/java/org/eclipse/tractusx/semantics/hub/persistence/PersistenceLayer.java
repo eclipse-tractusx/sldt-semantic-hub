@@ -47,8 +47,7 @@ public interface PersistenceLayer {
     * @param pageSize size of the pages to batch the results in
     * @return a list of models belonging to the searched page
     */
-   SemanticModelList getModels(String namespaceFilter, String nameFilter,
-                               @Nullable String nameType, @Nullable ModelPackageStatus status, Integer page, Integer pageSize );
+   SemanticModelList getModels(String namespaceFilter, @Nullable ModelPackageStatus status, Integer page, Integer pageSize );
 
    SemanticModel getModel(AspectModelUrn urn );
 

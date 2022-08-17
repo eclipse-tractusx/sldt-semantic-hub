@@ -21,18 +21,6 @@ paths:
             type: string
             description: substring to search in the model`s namespace
         - in: query
-          name: nameFilter
-          schema:
-            default: ""
-            type: string
-            description: substring to search in the name of a model's definitions (see nameType)
-        - in: query
-          name: nameType
-          schema:
-            default: "_NAME_"
-            type: string
-            description: RDF object whose name is searched (_NAME_ means bamm-c:Aspect or owl:Schema, _DESCRIPTION_ means search inside bamm:Description, otherwise the short-qualified name of the object)
-        - in: query
           name: status
           schema:
             $ref: '#/components/schemas/SemanticModelStatus'

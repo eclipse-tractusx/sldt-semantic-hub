@@ -176,12 +176,8 @@ public class SparqlQueries {
       return pss.asQuery();
    }
 
-   public static Query buildCountAspectModelsQuery( String namespaceFilter, String nameFilter, String nameType,
+   public static Query buildCountAspectModelsQuery( String namespaceFilter,
          ModelPackageStatus status ) {
-      if(StringUtils.isNotBlank(nameType) && StringUtils.isNotBlank(nameFilter)){
-         return buildExtendedSearchQuery( COUNT_ASPECT_MODELS_EXTENDED_QUERY, namespaceFilter,
-                 nameFilter, nameType, status ).asQuery();
-      }
       return buildMinimalQuery(COUNT_ASPECT_MODELS_MINIMAL_QUERY, namespaceFilter, status).asQuery();
    }
 
@@ -226,16 +222,9 @@ public class SparqlQueries {
     * @param pageSize the page size
     * @return a Sparql query with the provided search filters
     */
-   public static Query buildFindAllQuery( String namespaceFilter, String nameFilter, String nameType, ModelPackageStatus status,
+   public static Query buildFindAllQuery( String namespaceFilter, ModelPackageStatus status,
          int page, int pageSize ) {
 
-      if(StringUtils.isNotBlank(nameType) && StringUtils.isNotBlank(nameFilter)){
-         final ParameterizedSparqlString pss = buildExtendedSearchQuery( FIND_ALL_EXTENDED_QUERY, namespaceFilter,
-                 nameFilter, nameType, status );
-         pss.setLiteral( "$limitParam", pageSize );
-         pss.setLiteral( "$offsetParam", getOffset( page, pageSize ) );
-         return pss.asQuery();
-      }
       final ParameterizedSparqlString pss = buildMinimalQuery(FIND_ALL_MINIMAL_QUERY, namespaceFilter, status);
       pss.setLiteral( "$limitParam", pageSize );
       pss.setLiteral( "$offsetParam", getOffset( page, pageSize ) );
