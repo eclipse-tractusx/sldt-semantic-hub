@@ -93,20 +93,7 @@ public class ModelsApiFilterTest extends AbstractModelsApiTest{
    }
 
    @Test
-   public void testGetByCombinedFilters() throws Exception {
-      mvc.perform(
-               MockMvcRequestBuilders.get(
-                                           "/api/v1/models?namespaceFilter=urn:bamm:org.eclipse.tractusx.traceability" )
-                                     .accept( MediaType.APPLICATION_JSON )
-                                     .with(jwtTokenFactory.allRoles())
-         )
-         .andDo( MockMvcResultHandlers.print() )
-         .andExpect( jsonPath( "$.items" ).isArray() )
-         .andExpect( jsonPath( "$.items.length()" ).value( 1 ) )
-         .andExpect( jsonPath( "$.totalItems", equalTo( 1 ) ) )
-         .andExpect( jsonPath( "$.itemCount", equalTo( 1 ) ) )
-         .andExpect( MockMvcResultMatchers.status().isOk() );
-
+   public void testGetByNamespaceExpectEmptyResultList() throws Exception {
       mvc.perform(
                MockMvcRequestBuilders.get(
                                            "/api/v1/models?namespaceFilter=urn:bamm:org.eclipse.tractusx.modelwithreferencetotraceabilitynonexisting" )
