@@ -133,6 +133,7 @@ paths:
       tags:
         - SemanticHub
       operationId: getModelListByUrns
+      description: This endpoint allows to filter for a specific set of URNs. The endpoint returns the metadata, such as the model status. For URNs that are not in the database there is no entry in the result set. Therefore, a search array with 10 URNs can result in a response containing 9 or less result entries.
       parameters:
         - in: query
           name: pageSize
