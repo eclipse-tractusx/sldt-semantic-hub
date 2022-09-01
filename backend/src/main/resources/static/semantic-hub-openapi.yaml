@@ -116,6 +116,50 @@ paths:
           $ref: '#/components/responses/NotFound'
         '500':
           $ref: '#/components/responses/InternalServerError'
+  /models/lookup:
+    post:
+      tags:
+        - SemanticHub
+      operationId: getModelListByUrns
+      description: This endpoint allows to filter for a specific set of URNs. The endpoint returns the metadata, such as the model status. For URNs that are not in the database there is no entry in the result set. Therefore, a search array with 10 URNs can result in a response containing 9 or less result entries.
+      parameters:
+        - in: query
+          name: pageSize
+          required: true
+          schema:
+            default: 10
+            type: integer
+            enum:
+              - 10
+              - 50
+              - 100
+            description: Size of the pages that the results should be partitioned in
+        - in: query
+          name: page
+          required: true
+          schema:
+            default: 0
+            type: integer
+            description: The page to return
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/SemanticModelList'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
   '/models/{urn}':
     get:
       tags:

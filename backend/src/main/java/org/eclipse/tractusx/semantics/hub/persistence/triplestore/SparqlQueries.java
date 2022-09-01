@@ -21,11 +21,31 @@ package org.eclipse.tractusx.semantics.hub.persistence.triplestore;
 
 import org.eclipse.tractusx.semantics.hub.domain.ModelPackageStatus;
 import org.eclipse.tractusx.semantics.hub.domain.ModelPackageUrn;
+
+import com.google.common.collect.Lists;
+
+import ch.qos.logback.core.pattern.LiteralConverter;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.apache.commons.lang3.StringUtils;
+import org.apache.jena.datatypes.BaseDatatype;
+import org.apache.jena.datatypes.RDFDatatype;
+import org.apache.jena.datatypes.xsd.impl.XSDPlainType;
+import org.apache.jena.graph.impl.AdhocDatatype;
 import org.apache.jena.query.ParameterizedSparqlString;
 import org.apache.jena.query.Query;
+import org.apache.jena.query.QuerySolutionMap;
+import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.RDFList;
+import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.ResourceFactory;
+import org.apache.jena.rdf.model.impl.RDFListImpl;
+import org.apache.jena.reasoner.rulesys.FunctorDatatype;
 import org.apache.jena.update.UpdateRequest;
 
 import io.openmanufacturing.sds.aspectmodel.urn.AspectModelUrn;
@@ -90,6 +110,23 @@ public class SparqlQueries {
                + "            && (str(?s) = ?packageUrn) )\n"
                + "  }";
 
+   private static final String FIND_BY_MULTIPLE_URNS_QUERY =
+         "SELECT DISTINCT ?aspect (?status as ?statusResult)\n"
+               + "WHERE\n"
+               + "  {\n"
+               + "      VALUES (?urns) { ?urnParamList } \n"
+               + "      VALUES (?packageUrns) { ?packageUrnParamList } \n"
+               + "      bind( $bammAspectUrnParam as ?bammAspectUrn )\n"
+               + "      ?aspect a ?bammAspect .\n"
+               + "      ?s aux:status ?status .\n"
+               + "      FILTER ( regex(str(?bammAspect), ?bammAspectUrn, \"\") \n"
+               + "      && ( str(?aspect) IN (?urns) )  \n"
+               + "      && ( str(?s) IN (?packageUrns)) ) \n"
+               + "  }"
+               + "ORDER BY lcase(str(?aspect))\n"
+               + "OFFSET  $offsetParam\n"
+               + "LIMIT   $limitParam";
+
    private static final String FIND_BY_PACKAGE_URN_QUERY =
          "SELECT (?status as ?statusResult)\n"
                + "WHERE\n"
@@ -114,6 +151,22 @@ public class SparqlQueries {
            + "FILTER ( !bound(?namespaceFilter) || contains(str(?aspect), ?namespaceFilter ) )\n"
            + "}\n";
 
+   private static final String FILTER_QUERY_MINIMAL_WHERE_CLAUSE_SELECTIVE = "WHERE {\n"
+           + "BIND($bammAspectUrnRegexParam AS ?bammAspectUrnRegex)\n"
+           + "BIND(iri($bammFieldToSearchInParam) AS ?bammFieldToSearchIn)\n"
+           + "BIND($bammFieldSearchValueParam AS ?bammFieldSearchValue)\n"
+           + "BIND($statusFilterParam AS ?statusFilter)\n"
+           + "BIND($namespaceFilterParam AS ?namespaceFilter)\n"
+           + "VALUES (?urns) { ?urnParamList } \n"
+           + "?aspect  a ?bammAspect .\n"
+           + "FILTER regex(str(?bammAspect), ?bammAspectUrnRegex, \"\")\n"
+           + "BIND(iri(concat(strbefore(str(?aspect ), \"#\"), \"#\")) AS ?package)\n"
+           + "?package  aux:status  ?status\n"
+           + "FILTER ( !bound(?statusFilter) || contains(str(?status), ?statusFilter) )\n"
+           + "FILTER ( !bound(?namespaceFilter) || contains(str(?aspect), ?namespaceFilter ) )\n"
+           + "FILTER ( str(?aspect) IN (?urns) ) "
+           + "}\n";
+
    private static final String FIND_ALL_MINIMAL_QUERY =
            "SELECT DISTINCT ?aspect (?status as ?statusResult)\n"
                    + FILTER_QUERY_MINIMAL_WHERE_CLAUSE
@@ -125,6 +178,10 @@ public class SparqlQueries {
            "SELECT (count(DISTINCT ?aspect) as ?aspectModelCount)\n"
                    + FILTER_QUERY_MINIMAL_WHERE_CLAUSE;
 
+   private static final String COUNT_ASPECT_MODELS_MINIMAL_QUERY_SELECTIVE =
+            "SELECT (count(DISTINCT ?aspect) as ?aspectModelCount)\n"
+                  + FILTER_QUERY_MINIMAL_WHERE_CLAUSE_SELECTIVE;
+
    private SparqlQueries() {
    }
 
@@ -135,10 +192,48 @@ public class SparqlQueries {
       pss.setLiteral( "$packageUrnParam", ModelPackageUrn.fromUrn( urn ).getUrn() );
       return pss.asQuery();
    }
+   
+   public static Query buildFindListByUrns( final List<AspectModelUrn> urns, int page, int pageSize ) {
+      final ParameterizedSparqlString pss = create( FIND_BY_MULTIPLE_URNS_QUERY );
+
+      List<RDFNode> urnList = new ArrayList<>();
+      List<RDFNode> modelPackageUrnList = new ArrayList<>();
+
+      urns.forEach((AspectModelUrn urn) -> {
+         urnList.add(ResourceFactory.createStringLiteral(urn.toString()));
+         modelPackageUrnList.add(ResourceFactory.createStringLiteral(ModelPackageUrn.fromUrn(urn).getUrn()));
+      });
+
+      pss.setValues("urnParamList", urnList);
+      pss.setLiteral( "$bammAspectUrnParam", BAMM_ASPECT_URN_REGEX );
+      pss.setValues( "packageUrnParamList", modelPackageUrnList );
+      pss.setLiteral("offsetParam", getOffset(page, pageSize));
+      pss.setLiteral("limitParam", pageSize);
+      
+      return pss.asQuery();
+   }
 
    public static Query buildCountAspectModelsQuery( String namespaceFilter,
          ModelPackageStatus status ) {
       return buildMinimalQuery(COUNT_ASPECT_MODELS_MINIMAL_QUERY, namespaceFilter, status).asQuery();
+   }
+
+   public static Query buildCountSelectiveAspectModelsQuery( String namespaceFilter, String nameFilter, String nameType,
+         ModelPackageStatus status, List<AspectModelUrn> urns ) {
+      ParameterizedSparqlString pss = buildMinimalQuery(COUNT_ASPECT_MODELS_MINIMAL_QUERY_SELECTIVE, namespaceFilter, status);
+      
+      List<RDFNode> urnList = new ArrayList<>();
+      List<RDFNode> modelPackageUrnList = new ArrayList<>();
+
+      urns.forEach((AspectModelUrn urn) -> {
+         urnList.add(ResourceFactory.createStringLiteral(urn.toString()));
+         modelPackageUrnList.add(ResourceFactory.createStringLiteral(ModelPackageUrn.fromUrn(urn).getUrn()));
+      });
+
+      pss.setValues("urnParamList", urnList);
+      pss.setValues( "packageUrnParamList", modelPackageUrnList );
+
+      return pss.asQuery();
    }
 
    public static Query buildFindByPackageQuery( final ModelPackageUrn modelsPackage ) {
