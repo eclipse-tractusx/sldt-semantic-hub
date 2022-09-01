@@ -137,46 +137,6 @@ public class SparqlQueries {
                + "      ?s aux:status ?status .\n"
                + "  }";
 
-   /**
-    * To ensures accurate page information results,
-    * the where clause have to be used for the find all query and the count query.
-    */
-   private static final String FILTER_QUERY_EXTENDED_WHERE_CLAUSE = "WHERE\n"
-         + "{ \n"
-         + "  \n"
-         + "     BIND($bammAspectUrnRegexParam AS ?bammAspectUrnRegex)\n"
-         + "     BIND($bammTypeUrnRegexParam AS ?bammTypeUrnRegex)\n"
-         + "     BIND(iri($bammFieldToSearchInParam) AS ?bammFieldToSearchIn)\n"
-         + "     BIND($bammFieldSearchValueParam AS ?bammFieldSearchValue)\n"
-         + "     BIND($statusFilterParam AS ?statusFilter)\n"
-         + "     BIND($namespaceFilterParam AS ?namespaceFilter)\n"
-         + "     ?s  a  ?bammType\n"
-         + "     FILTER ( !bound(?bammTypeUrnRegex) || regex(str(?bammType), ?bammTypeUrnRegex, \"\") )\n"
-         + "     ?s  ?bammFieldToSearchIn  ?bammFieldContent\n"
-         + "     FILTER ( !bound(?bammFieldSearchValue) || contains(str(?bammFieldContent), ?bammFieldSearchValue) )\n"
-         + "     ?aspect  a ?bammAspect .  \n"
-         //      selects nodes having a reference to ?s
-         + "     ?aspect (<>|!<>)* ?s . \n"
-         //      filters the result to match only bamm aspects
-         + "     FILTER regex(str(?bammAspect), ?bammAspectUrnRegex, \"\")\n"
-         + "     BIND(iri(concat(strbefore(str(?aspect ), \"#\"), \"#\")) AS ?package)\n"
-         + "     ?package  aux:status  ?status\n"
-         + "     FILTER (  !bound(?statusFilter) || contains(str(?status), ?statusFilter) )\n"
-         + "     FILTER (  !bound(?namespaceFilter) || contains(str(?aspect), ?namespaceFilter ) )\n"
-         + "  }\n";
-
-   private static final String FIND_ALL_EXTENDED_QUERY =
-         "SELECT DISTINCT ?aspect (?status as ?statusResult)\n"
-               + FILTER_QUERY_EXTENDED_WHERE_CLAUSE
-               + "ORDER BY lcase(str(?aspect))\n"
-               + "OFFSET  $offsetParam\n"
-               + "LIMIT   $limitParam";
-
-
-   private static final String COUNT_ASPECT_MODELS_EXTENDED_QUERY =
-           "SELECT (count(DISTINCT ?aspect) as ?aspectModelCount)\n"
-                   + FILTER_QUERY_EXTENDED_WHERE_CLAUSE;
-
    private static final String FILTER_QUERY_MINIMAL_WHERE_CLAUSE = "WHERE {\n"
            + "BIND($bammAspectUrnRegexParam AS ?bammAspectUrnRegex)\n"
            + "BIND(iri($bammFieldToSearchInParam) AS ?bammFieldToSearchIn)\n"
@@ -232,7 +192,7 @@ public class SparqlQueries {
       pss.setLiteral( "$packageUrnParam", ModelPackageUrn.fromUrn( urn ).getUrn() );
       return pss.asQuery();
    }
-
+   
    public static Query buildFindListByUrns( final List<AspectModelUrn> urns, int page, int pageSize ) {
       final ParameterizedSparqlString pss = create( FIND_BY_MULTIPLE_URNS_QUERY );
 
@@ -253,12 +213,8 @@ public class SparqlQueries {
       return pss.asQuery();
    }
 
-   public static Query buildCountAspectModelsQuery( String namespaceFilter, String nameFilter, String nameType,
+   public static Query buildCountAspectModelsQuery( String namespaceFilter,
          ModelPackageStatus status ) {
-      if(StringUtils.isNotBlank(nameType) && StringUtils.isNotBlank(nameFilter)){
-         return buildExtendedSearchQuery( COUNT_ASPECT_MODELS_EXTENDED_QUERY, namespaceFilter,
-                 nameFilter, nameType, status ).asQuery();
-      }
       return buildMinimalQuery(COUNT_ASPECT_MODELS_MINIMAL_QUERY, namespaceFilter, status).asQuery();
    }
 
@@ -321,16 +277,9 @@ public class SparqlQueries {
     * @param pageSize the page size
     * @return a Sparql query with the provided search filters
     */
-   public static Query buildFindAllQuery( String namespaceFilter, String nameFilter, String nameType, ModelPackageStatus status,
+   public static Query buildFindAllQuery( String namespaceFilter, ModelPackageStatus status,
          int page, int pageSize ) {
 
-      if(StringUtils.isNotBlank(nameType) && StringUtils.isNotBlank(nameFilter)){
-         final ParameterizedSparqlString pss = buildExtendedSearchQuery( FIND_ALL_EXTENDED_QUERY, namespaceFilter,
-                 nameFilter, nameType, status );
-         pss.setLiteral( "$limitParam", pageSize );
-         pss.setLiteral( "$offsetParam", getOffset( page, pageSize ) );
-         return pss.asQuery();
-      }
       final ParameterizedSparqlString pss = buildMinimalQuery(FIND_ALL_MINIMAL_QUERY, namespaceFilter, status);
       pss.setLiteral( "$limitParam", pageSize );
       pss.setLiteral( "$offsetParam", getOffset( page, pageSize ) );

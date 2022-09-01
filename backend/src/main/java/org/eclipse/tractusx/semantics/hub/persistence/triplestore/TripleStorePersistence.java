@@ -67,9 +67,9 @@ public class TripleStorePersistence implements PersistenceLayer {
    }
 
    @Override
-   public SemanticModelList getModels(String namespaceFilter, String nameFilter, @Nullable String nameType,
+   public SemanticModelList getModels(String namespaceFilter,
                                       @Nullable ModelPackageStatus status, Integer page, Integer pageSize ) {
-      final Query query = SparqlQueries.buildFindAllQuery( namespaceFilter, nameFilter, nameType, status, page,
+      final Query query = SparqlQueries.buildFindAllQuery( namespaceFilter, status, page,
             pageSize );
       final AtomicReference<List<SemanticModel>> aspectModels = new AtomicReference<>();
       try ( final RDFConnection rdfConnection = rdfConnectionRemoteBuilder.build() ) {
@@ -78,7 +78,7 @@ public class TripleStorePersistence implements PersistenceLayer {
             aspectModels.set( TripleStorePersistence.aspectModelFrom( querySolutions ) );
          } );
       }
-      int totalSemanticModelCount = getTotalItemsCount( namespaceFilter, nameFilter, nameType, status );
+      int totalSemanticModelCount = getTotalItemsCount( namespaceFilter, status );
       int totalPages =  getTotalPages(totalSemanticModelCount, pageSize );
       SemanticModelList modelList = new SemanticModelList();
       List<SemanticModel> semanticModels = aspectModels.get();
@@ -221,13 +221,12 @@ public class TripleStorePersistence implements PersistenceLayer {
       return true;
    }
 
-   private Integer getTotalItemsCount( @Nullable String namespaceFilter, @Nullable String nameFilter,
-         @Nullable String nameType,
+   private Integer getTotalItemsCount( @Nullable String namespaceFilter,
          @Nullable ModelPackageStatus status ) {
       try ( final RDFConnection rdfConnection = rdfConnectionRemoteBuilder.build() ) {
          AtomicReference<Integer> count = new AtomicReference<>();
          rdfConnection.querySelect(
-               SparqlQueries.buildCountAspectModelsQuery( namespaceFilter, nameFilter, nameType, status ),
+               SparqlQueries.buildCountAspectModelsQuery( namespaceFilter, status ),
                querySolution -> {
                   int countResult = querySolution.getLiteral( "aspectModelCount" ).getInt();
                   count.set( countResult );

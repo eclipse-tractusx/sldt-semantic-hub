@@ -45,25 +45,17 @@ public class AspectModelService implements ModelsApiDelegate {
    public ResponseEntity<SemanticModelList> getModelList(Integer pageSize,
                                                          Integer page,
                                                          String namespaceFilter,
-                                                         String nameFilter,
-                                                         String nameType,
                                                          SemanticModelStatus status ) {
 
       try {
-         String decodedType = null;
-         if ( nameType != null ) {
-            decodedType = URLDecoder.decode( nameType, StandardCharsets.UTF_8.name() );
-         }
          final String decodedNamespace = URLDecoder.decode( namespaceFilter,
-               StandardCharsets.UTF_8.name() );
-         final String decodedName = java.net.URLDecoder.decode( nameFilter,
                StandardCharsets.UTF_8.name() );
 
          ModelPackageStatus modelPackageStatus = null;
          if ( status != null ) {
             modelPackageStatus = ModelPackageStatus.valueOf( status.name() );
          }
-         final SemanticModelList list = persistenceLayer.getModels( decodedNamespace, decodedName, decodedType,
+         final SemanticModelList list = persistenceLayer.getModels( decodedNamespace,
                modelPackageStatus, page,
                pageSize );
 
