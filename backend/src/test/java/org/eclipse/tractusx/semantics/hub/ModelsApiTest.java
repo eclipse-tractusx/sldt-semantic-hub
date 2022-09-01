@@ -432,7 +432,7 @@ public class ModelsApiTest extends AbstractModelsApiTest{
 
         urnSearchArrayNonExistingEntry.add("urn:bamm:org.eclipse.tractusx.test_model_list_by_urns_50:1.0.0#Movement");
 
-        mvc.perform(MockMvcRequestBuilders.post("/api/v1/models/bulk" )
+        mvc.perform(MockMvcRequestBuilders.post("/api/v1/models/lookup" )
         .param("pageSize", "2")
         .param("page", "0")
         .content(new JSONArray(urnSearchArrayEvenNumbers).toString())
@@ -447,7 +447,7 @@ public class ModelsApiTest extends AbstractModelsApiTest{
         .andExpect(jsonPath("$.items[1].urn", equalTo("urn:bamm:org.eclipse.tractusx.test_model_list_by_urns_2:1.0.0#Movement")))
         .andExpect(jsonPath("$.items.length()", equalTo(2)));
 
-        mvc.perform(MockMvcRequestBuilders.post("/api/v1/models/bulk")
+        mvc.perform(MockMvcRequestBuilders.post("/api/v1/models/lookup")
         .param("pageSize", "2")
         .param("page", "1")
         .content(new JSONArray(urnSearchArrayOddNumbers).toString())
@@ -462,7 +462,7 @@ public class ModelsApiTest extends AbstractModelsApiTest{
         .andExpect(jsonPath("$.items[1].urn", equalTo("urn:bamm:org.eclipse.tractusx.test_model_list_by_urns_5:1.0.0#Movement")))
         .andExpect(jsonPath("$.items.length()", equalTo(2)));
 
-        mvc.perform(MockMvcRequestBuilders.post("/api/v1/models/bulk")
+        mvc.perform(MockMvcRequestBuilders.post("/api/v1/models/lookup")
         .content(new JSONArray(urnSearchArrayNonExistingEntry).toString())
         .contentType(MediaType.APPLICATION_JSON)
         .with(jwtTokenFactory.allRoles()))
