@@ -55,6 +55,9 @@ http:
 spring:
   application:
     name: semantics-services
+  mvc:
+    pathmatch:
+      matching-strategy: ant-path-matcher
   banner:
     location: "classpath:banner.txt"
   servlet:
