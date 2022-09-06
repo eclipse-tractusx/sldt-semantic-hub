@@ -6,9 +6,11 @@ package org.eclipse.tractusx.semantics.hub;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 import org.eclipse.tractusx.semantics.hub.domain.ModelPackageStatus;
 import org.eclipse.tractusx.semantics.hub.domain.ModelPackageUrn;
+import org.eclipse.tractusx.semantics.hub.model.AasFormat;
 import org.eclipse.tractusx.semantics.hub.model.SemanticModel;
 import org.eclipse.tractusx.semantics.hub.model.SemanticModelList;
 import org.eclipse.tractusx.semantics.hub.model.SemanticModelStatus;
@@ -19,6 +21,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.common.collect.Lists;
 
 import io.openmanufacturing.sds.aspectmodel.resolver.services.VersionedModel;
 import io.openmanufacturing.sds.aspectmodel.urn.AspectModelUrn;
@@ -42,25 +45,17 @@ public class AspectModelService implements ModelsApiDelegate {
    public ResponseEntity<SemanticModelList> getModelList(Integer pageSize,
                                                          Integer page,
                                                          String namespaceFilter,
-                                                         String nameFilter,
-                                                         String nameType,
                                                          SemanticModelStatus status ) {
 
       try {
-         String decodedType = null;
-         if ( nameType != null ) {
-            decodedType = URLDecoder.decode( nameType, StandardCharsets.UTF_8.name() );
-         }
          final String decodedNamespace = URLDecoder.decode( namespaceFilter,
-               StandardCharsets.UTF_8.name() );
-         final String decodedName = java.net.URLDecoder.decode( nameFilter,
                StandardCharsets.UTF_8.name() );
 
          ModelPackageStatus modelPackageStatus = null;
          if ( status != null ) {
             modelPackageStatus = ModelPackageStatus.valueOf( status.name() );
          }
-         final SemanticModelList list = persistenceLayer.getModels( decodedNamespace, decodedName, decodedType,
+         final SemanticModelList list = persistenceLayer.getModels( decodedNamespace,
                modelPackageStatus, page,
                pageSize );
 
@@ -140,6 +135,47 @@ public class AspectModelService implements ModelsApiDelegate {
       return new ResponseEntity( openApiJson, HttpStatus.OK );
    }
 
+   @Override
+   public ResponseEntity<Void> getModelExamplePayloadJson( final String modelId ) {
+      final Aspect bammAspect = getBamAspect( modelId );
+      final Try<String> result = bammHelper.getExamplePayloadJson( bammAspect );
+      if ( result.isFailure() ) {
+         throw new RuntimeException( String.format( "Failed to generate example payload for urn %s", modelId ) );
+      }
+      return new ResponseEntity( result.get(), HttpStatus.OK );
+   }
+
+   @Override
+   public ResponseEntity getAasSubmodelTemplate(String urn, AasFormat aasFormat) {
+      final Aspect bammAspect = getBamAspect( urn );
+      final Try result = bammHelper.getAasSubmodelTemplate(bammAspect, aasFormat);
+      if ( result.isFailure() ) {
+         throw new RuntimeException( String.format( "Failed to generate AASX submodel template for model with urn %s", urn ) );
+      }
+      HttpHeaders responseHeaders = new HttpHeaders();
+
+      if(aasFormat.equals(AasFormat.FILE)) {
+         responseHeaders.set("Content-Type", "application/octet-stream");
+      } else {
+         responseHeaders.set("Content-Type", "application/xml");
+      }
+
+      return new ResponseEntity( result.get(), responseHeaders, HttpStatus.OK );
+   }
+
+   @Override
+   public ResponseEntity<SemanticModelList> getModelListByUrns(Integer pageSize, Integer page, List<String> requestBody) {
+      List<AspectModelUrn> urnList = Lists.transform(requestBody, (String urn) -> AspectModelUrn.fromUrn(urn));
+
+      final SemanticModelList models = persistenceLayer.findModelListByUrns( urnList, page, pageSize );
+
+      if ( models == null ) {
+         return new ResponseEntity<>( HttpStatus.NOT_FOUND );
+      }
+
+      return new ResponseEntity<SemanticModelList>( models, HttpStatus.OK );
+   }
+
    private Aspect getBamAspect( String urn ) {
       final Try<Aspect> aspect = bammHelper.getAspectFromVersionedModel( getVersionedModel( urn ) );
       if ( aspect.isFailure() ) {
@@ -157,15 +193,5 @@ public class AspectModelService implements ModelsApiDelegate {
          throw new RuntimeException( "Failed to load versioned model", versionedModel.getCause() );
       }
       return versionedModel.get();
-   }
-
-   @Override
-   public ResponseEntity<Void> getModelExamplePayloadJson( final String modelId ) {
-      final Aspect bammAspect = getBamAspect( modelId );
-      final Try<String> result = bammHelper.getExamplePayloadJson( bammAspect );
-      if ( result.isFailure() ) {
-         throw new RuntimeException( String.format( "Failed to generate example payload for urn %s", modelId ) );
-      }
-      return new ResponseEntity( result.get(), HttpStatus.OK );
    }
 }

@@ -20,6 +20,8 @@
 
 package org.eclipse.tractusx.semantics.hub.persistence;
 
+import java.util.List;
+
 import javax.annotation.Nullable;
 
 import org.eclipse.tractusx.semantics.hub.domain.ModelPackageStatus;
@@ -47,8 +49,7 @@ public interface PersistenceLayer {
     * @param pageSize size of the pages to batch the results in
     * @return a list of models belonging to the searched page
     */
-   SemanticModelList getModels(String namespaceFilter, String nameFilter,
-                               @Nullable String nameType, @Nullable ModelPackageStatus status, Integer page, Integer pageSize );
+   SemanticModelList getModels(String namespaceFilter, @Nullable ModelPackageStatus status, Integer page, Integer pageSize );
 
    SemanticModel getModel(AspectModelUrn urn );
 
@@ -59,4 +60,6 @@ public interface PersistenceLayer {
    void deleteModelsPackage( ModelPackageUrn urn );
 
    boolean echo();
+
+   public SemanticModelList findModelListByUrns(List<AspectModelUrn> urns, int page, int pageSize);
 }

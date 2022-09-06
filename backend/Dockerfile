@@ -18,7 +18,7 @@
 # SPDX-License-Identifier: Apache-2.0
 ###############################################################
 
-FROM openjdk:11-jre-buster
+FROM eclipse-temurin:11-jre
 
 RUN apt-get -y upgrade \
     && apt-get -y update \

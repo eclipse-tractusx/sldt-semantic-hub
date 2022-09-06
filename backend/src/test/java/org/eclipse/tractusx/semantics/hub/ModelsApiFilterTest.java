@@ -77,22 +77,6 @@ public class ModelsApiFilterTest extends AbstractModelsApiTest{
    }
 
    @Test
-   public void testGetModelListByNotAvailablePropertyTypeExpectEmptyResult() throws Exception {
-      mvc.perform(
-               MockMvcRequestBuilders.get(
-                                           "/api/v1/models?nameType=bamm:SingleEntity&nameFilter=SpatialPositionCharacteristic" )
-                                     .accept( MediaType.APPLICATION_JSON )
-                                     .with(jwtTokenFactory.allRoles())
-         )
-         .andDo( MockMvcResultHandlers.print() )
-         .andExpect( jsonPath( "$.items" ).isArray() )
-         .andExpect( jsonPath( "$.items" ).isEmpty() )
-         .andExpect( jsonPath( "$.totalItems", equalTo( 0 ) ) )
-         .andExpect( jsonPath( "$.itemCount", equalTo( 0 ) ) )
-         .andExpect( MockMvcResultMatchers.status().isOk() );
-   }
-
-   @Test
    public void testGetModelListByAvailablePropertyTypeExpectResultsFound() throws Exception {
       mvc.perform(
                MockMvcRequestBuilders.get(
@@ -109,23 +93,10 @@ public class ModelsApiFilterTest extends AbstractModelsApiTest{
    }
 
    @Test
-   public void testGetByCombinedFilters() throws Exception {
+   public void testGetByNamespaceExpectEmptyResultList() throws Exception {
       mvc.perform(
                MockMvcRequestBuilders.get(
-                                           "/api/v1/models?namespaceFilter=urn:bamm:org.eclipse.tractusx.traceability&nameType=bamm:Property&nameFilter=Static%20Data" )
-                                     .accept( MediaType.APPLICATION_JSON )
-                                     .with(jwtTokenFactory.allRoles())
-         )
-         .andDo( MockMvcResultHandlers.print() )
-         .andExpect( jsonPath( "$.items" ).isArray() )
-         .andExpect( jsonPath( "$.items.length()" ).value( 1 ) )
-         .andExpect( jsonPath( "$.totalItems", equalTo( 1 ) ) )
-         .andExpect( jsonPath( "$.itemCount", equalTo( 1 ) ) )
-         .andExpect( MockMvcResultMatchers.status().isOk() );
-
-      mvc.perform(
-               MockMvcRequestBuilders.get(
-                                           "/api/v1/models?namespaceFilter=urn:bamm:org.eclipse.tractusx.modelwithreferencetotraceability&nameType=bamm:Property&nameFilter=Individual%20Data" )
+                                           "/api/v1/models?namespaceFilter=urn:bamm:org.eclipse.tractusx.modelwithreferencetotraceabilitynonexisting" )
                                      .accept( MediaType.APPLICATION_JSON )
                                      .with(jwtTokenFactory.allRoles())
          )
@@ -134,27 +105,6 @@ public class ModelsApiFilterTest extends AbstractModelsApiTest{
          .andExpect( jsonPath( "$.items.length()" ).value( 0 ) )
          .andExpect( jsonPath( "$.totalItems", equalTo( 0 ) ) )
          .andExpect( jsonPath( "$.itemCount", equalTo( 0 ) ) )
-         .andExpect( MockMvcResultMatchers.status().isOk() );
-   }
-
-   @Test
-   public void testGetModelListByDescriptionExpectSuccess() throws Exception {
-      mvc.perform(
-               MockMvcRequestBuilders.get(
-                                           "/api/v1/models?nameType=_DESCRIPTION_&nameFilter=This%20model%20references" )
-                                     .accept( MediaType.APPLICATION_JSON )
-                                     .with(jwtTokenFactory.allRoles())
-         )
-         .andDo( MockMvcResultHandlers.print() )
-         .andExpect( jsonPath( "$.items.length()" ).value( 1 ) )
-         .andExpect( jsonPath( "$.items[*].urn", hasItem(
-               "urn:bamm:org.eclipse.tractusx.modelwithreferencetotraceability:0.1.1#ModelWithReferenceToTraceability" ) ) )
-         .andExpect( jsonPath( "$.items[*].version", hasItem( "0.1.1" ) ) )
-         .andExpect( jsonPath( "$.items[*].name", hasItem( "ModelWithReferenceToTraceability" ) ) )
-         .andExpect( jsonPath( "$.items[*].type", hasItem( "BAMM" ) ) )
-         .andExpect( jsonPath( "$.items[*].status", hasItem( "DRAFT" ) ) )
-         .andExpect( jsonPath( "$.totalItems", equalTo( 1 ) ) )
-         .andExpect( jsonPath( "$.itemCount", equalTo( 1 ) ) )
          .andExpect( MockMvcResultMatchers.status().isOk() );
    }
 

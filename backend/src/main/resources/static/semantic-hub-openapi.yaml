@@ -21,18 +21,6 @@ paths:
             type: string
             description: substring to search in the model`s namespace
         - in: query
-          name: nameFilter
-          schema:
-            default: ""
-            type: string
-            description: substring to search in the name of a model's definitions (see nameType)
-        - in: query
-          name: nameType
-          schema:
-            default: "_NAME_"
-            type: string
-            description: RDF object whose name is searched (_NAME_ means bamm-c:Aspect or owl:Schema, _DESCRIPTION_ means search inside bamm:Description, otherwise the short-qualified name of the object)
-        - in: query
           name: status
           schema:
             $ref: '#/components/schemas/SemanticModelStatus'
@@ -120,6 +108,50 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/SemanticModel'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /models/lookup:
+    post:
+      tags:
+        - SemanticHub
+      operationId: getModelListByUrns
+      description: This endpoint allows to filter for a specific set of URNs. The endpoint returns the metadata, such as the model status. For URNs that are not in the database there is no entry in the result set. Therefore, a search array with 10 URNs can result in a response containing 9 or less result entries.
+      parameters:
+        - in: query
+          name: pageSize
+          required: true
+          schema:
+            default: 10
+            type: integer
+            enum:
+              - 10
+              - 50
+              - 100
+            description: Size of the pages that the results should be partitioned in
+        - in: query
+          name: page
+          required: true
+          schema:
+            default: 0
+            type: integer
+            description: The page to return
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/SemanticModelList'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -308,6 +340,33 @@ paths:
           $ref: '#/components/responses/NotFound'
         '500':
           $ref: '#/components/responses/InternalServerError'
+  '/models/{urn}/aas':
+    get:
+      tags:
+        - SemanticHub
+      operationId: getAasSubmodelTemplate
+      parameters:
+        - in: path
+          name: urn
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: aasFormat
+          schema:
+            $ref: '#/components/schemas/AasFormat'
+          required: false
+      responses:
+        '200':
+          $ref: '#/components/responses/AasxSubmodelTemplate'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 components:
   schemas:
     ErrorResponse:
@@ -403,6 +462,12 @@ components:
             The actual model definition in the format defined by the type
             property.
           type: string
+    AasFormat:
+      type: string
+      default: XML
+      enum:
+        - FILE
+        - XML
   responses:
     SemanticModelJsonSchema:
       description: OK
@@ -435,6 +500,18 @@ components:
           schema:
             type: string
             format: binary
+    AasxSubmodelTemplate:
+      description: OK
+      content:
+        application/xml:
+          schema:
+            type: string
+        application/octet-stream:
+          schema:
+            type: string
+            format: binary
+
+
     SemanticModelDocumentation:
       description: OK
       content:
