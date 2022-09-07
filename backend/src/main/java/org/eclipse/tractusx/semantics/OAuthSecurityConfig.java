@@ -33,11 +33,11 @@ public class OAuthSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
           .authorizeRequests(auth -> auth
-            .antMatchers(HttpMethod.OPTIONS).permitAll()
-            .mvcMatchers(HttpMethod.GET,"/**/models/**").access("@authorizationEvaluator.hasRoleViewSemanticModel()")
-            .mvcMatchers(HttpMethod.POST,"/**/models/**").access("@authorizationEvaluator.hasRoleAddSemanticModel()")
-            .mvcMatchers(HttpMethod.PUT,"/**/models/**").access("@authorizationEvaluator.hasRoleUpdateSemanticModel()")
-            .mvcMatchers(HttpMethod.DELETE,"/**/models/**").access("@authorizationEvaluator.hasRoleDeleteSemanticModel()"))
+            .mvcMatchers(HttpMethod.OPTIONS).permitAll()
+            .antMatchers(HttpMethod.GET,"/**/models/**").access("@authorizationEvaluator.hasRoleViewSemanticModel()")
+            .antMatchers(HttpMethod.POST,"/**/models/**").access("@authorizationEvaluator.hasRoleAddSemanticModel()")
+            .antMatchers(HttpMethod.PUT,"/**/models/**").access("@authorizationEvaluator.hasRoleUpdateSemanticModel()")
+            .antMatchers(HttpMethod.DELETE,"/**/models/**").access("@authorizationEvaluator.hasRoleDeleteSemanticModel()"))
             .csrf().disable()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
             .oauth2ResourceServer().jwt();

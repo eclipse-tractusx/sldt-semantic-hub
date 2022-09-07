@@ -18,7 +18,7 @@
 # SPDX-License-Identifier: Apache-2.0
 ###############################################################
 
-FROM eclipse-temurin:11-jre
+FROM eclipse-temurin:11.0.16.1_1-jre-jammy
 
 RUN apt-get -y upgrade \
     && apt-get -y update \
