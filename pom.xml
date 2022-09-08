@@ -83,20 +83,9 @@
 		<slf4j.version>1.7.32</slf4j.version>
 		<logback.version>1.2.11</logback.version>
 
-		<!-- communication -->
-		<httpcomponents.version>4.5.13</httpcomponents.version>
-		<feign-version>11.7</feign-version>
-		<feign-form-version>2.1.0</feign-form-version>
-		<ids-framework.version>4.0.3</ids-framework.version>
-		<edc.version>0.0.1-SNAPSHOT</edc.version>
-		<javax.servlet>4.0.1</javax.servlet>
-
 		<!-- json, xml, formats, ... -->
 		<jackson.version>2.13.1</jackson.version>
 		<json.version>20211205</json.version>
-
-		<!-- authentication -->
-		<oltu-version>1.0.2</oltu-version>
 
 		<!-- semantics -->
 		<bamm.sdk.version>2.0.0</bamm.sdk.version>
@@ -106,10 +95,6 @@
 		<!-- persistence -->
 		<mapstruct.version>1.4.2.Final</mapstruct.version>
 		<mapstruct.lombok.version>0.2.0</mapstruct.lombok.version>
-		<postgresql.version>42.2.25</postgresql.version>
-		<h2.version>2.1.210</h2.version>
-		<liquibase.version>4.9.1</liquibase.version>
-
 		<!-- test libs -->
 		<assertj.version>3.18.1</assertj.version>
 		<junit.version>5.6.3</junit.version>
@@ -151,11 +136,6 @@
 				<groupId>commons-io</groupId>
 				<artifactId>commons-io</artifactId>
 				<version>${commons-io.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>javax.servlet</groupId>
-				<artifactId>javax.servlet-api</artifactId>
-				<version>${javax.servlet}</version>
 			</dependency>
 			<dependency>
 				<groupId>com.google.code.findbugs</groupId>
@@ -226,12 +206,6 @@
 				<artifactId>springfox-swagger2</artifactId>
 				<version>${springfox.version}</version>
 			</dependency>
-			<dependency>
-				<groupId>io.springfox</groupId>
-				<artifactId>springfox-swagger-ui</artifactId>
-				<version>${springfox.version}</version>
-				<scope>runtime</scope>
-			</dependency>
 
 			<!-- Communication -->
 			<dependency>
@@ -257,35 +231,11 @@
 				<version>${jackson.version}</version>
 			</dependency>
 
-			<!-- Authentication -->
-			<dependency>
-				<groupId>org.apache.oltu.oauth2</groupId>
-				<artifactId>org.apache.oltu.oauth2.client</artifactId>
-				<version>${oltu-version}</version>
-			</dependency>
-
 			<!-- Persistence Mapping -->
 			<dependency>
 				<groupId>org.mapstruct</groupId>
 				<artifactId>mapstruct</artifactId>
 				<version>${mapstruct.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.liquibase</groupId>
-				<artifactId>liquibase-core</artifactId>
-				<version>${liquibase.version}</version>
-			</dependency>
-
-			<!-- Persistence -->
-			<dependency>
-				<groupId>org.postgresql</groupId>
-				<artifactId>postgresql</artifactId>
-				<version>${postgresql.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.h2database</groupId>
-				<artifactId>h2</artifactId>
-				<version>${h2.version}</version>
 			</dependency>
 
 			<!-- Semantics Libraries -->
