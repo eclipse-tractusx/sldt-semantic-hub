@@ -2,6 +2,11 @@ openapi: 3.0.3
 info:
   title: Semantic Hub
   version: v1
+
+security:
+  - OpenIdProfile:
+      - profile
+
 servers:
   - url: ./api/{api-version}
     variables:
@@ -578,3 +583,8 @@ components:
       description: Not Found
     InternalServerError:
       description: Internal Server Error
+
+  securitySchemes:
+    OpenIdProfile:
+      type: openIdConnect
+      openIdConnectUrl: ../.well-known/openid-configuration
