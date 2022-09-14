@@ -6,6 +6,7 @@ package org.eclipse.tractusx.semantics.hub;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 import org.eclipse.tractusx.semantics.hub.domain.ModelPackageStatus;
 import org.eclipse.tractusx.semantics.hub.domain.ModelPackageUrn;
@@ -20,6 +21,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.common.collect.Lists;
 
 import io.openmanufacturing.sds.aspectmodel.resolver.services.VersionedModel;
 import io.openmanufacturing.sds.aspectmodel.urn.AspectModelUrn;
@@ -159,6 +161,19 @@ public class AspectModelService implements ModelsApiDelegate {
       }
 
       return new ResponseEntity( result.get(), responseHeaders, HttpStatus.OK );
+   }
+
+   @Override
+   public ResponseEntity<SemanticModelList> getModelListByUrns(Integer pageSize, Integer page, List<String> requestBody) {
+      List<AspectModelUrn> urnList = Lists.transform(requestBody, (String urn) -> AspectModelUrn.fromUrn(urn));
+
+      final SemanticModelList models = persistenceLayer.findModelListByUrns( urnList, page, pageSize );
+
+      if ( models == null ) {
+         return new ResponseEntity<>( HttpStatus.NOT_FOUND );
+      }
+
+      return new ResponseEntity<SemanticModelList>( models, HttpStatus.OK );
    }
 
    private Aspect getBamAspect( String urn ) {

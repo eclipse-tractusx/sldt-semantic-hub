@@ -55,6 +55,9 @@ http:
 spring:
   application:
     name: semantics-services
+  mvc:
+    pathmatch:
+      matching-strategy: ant-path-matcher
   banner:
     location: "classpath:banner.txt"
   servlet:
@@ -81,7 +84,7 @@ springdoc:
       use-pkce-with-authorization-code-grant: true
       # the scopes and client id will be prefilled in the swagger ui
       scopes: openid profile
-      client-id: catenax-portal
+      client-id: ${hub.general.idm.public-client-id}
 
 title: '@project.name@'
 project_desc: '@project.description@'
