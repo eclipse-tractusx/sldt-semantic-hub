@@ -18,14 +18,15 @@
 # SPDX-License-Identifier: Apache-2.0
 ###############################################################
 
-FROM eclipse-temurin:11-jre
+FROM eclipse-temurin:11-jre-alpine
 
-RUN apt-get -y upgrade \
-    && apt-get -y update \
-    && apt-get -y install graphviz \
-    && apt-get clean
+RUN apk upgrade \
+    && apk update \
+    && apk add graphviz \
+    && rm -rf /var/cache/apk/*
 
-RUN adduser --system --group spring \
+RUN addgroup -S spring \
+    && adduser -S spring -G spring \
     && mkdir -p /service \
     && chown spring:spring /service
 

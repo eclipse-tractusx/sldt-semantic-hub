@@ -172,6 +172,28 @@ public class TripleStorePersistence implements PersistenceLayer {
       deleteByUrn( urn );
    }
 
+   @Override
+   public SemanticModelList findModelListByUrns(List<AspectModelUrn> urns, int page, int pageSize) {
+      final Query query = SparqlQueries.buildFindListByUrns( urns, page, pageSize );
+      final AtomicReference<List<SemanticModel>> aspectModels = new AtomicReference<>();
+      try ( final RDFConnection rdfConnection = rdfConnectionRemoteBuilder.build() ) {
+         rdfConnection.queryResultSet( query, resultSet -> {
+            final List<QuerySolution> querySolutions = ResultSetFormatter.toList( resultSet );
+            aspectModels.set( TripleStorePersistence.aspectModelFrom( querySolutions ) );
+         } );
+      }
+      int totalSemanticModelCount = getSelectiveItemsCount( null, null, null, null, urns );
+      int totalPages =  getTotalPages(totalSemanticModelCount, pageSize );
+      SemanticModelList modelList = new SemanticModelList();
+      List<SemanticModel> semanticModels = aspectModels.get();
+      modelList.setCurrentPage( page );
+      modelList.setItemCount( semanticModels.size() );
+      modelList.setTotalPages( totalPages );
+      modelList.setTotalItems( totalSemanticModelCount );
+      modelList.setItems( aspectModels.get() );
+      return modelList;
+   }
+
    public boolean echo() {
       final RDFConnection rdfConnection = rdfConnectionRemoteBuilder.build();
 
@@ -205,6 +227,21 @@ public class TripleStorePersistence implements PersistenceLayer {
          AtomicReference<Integer> count = new AtomicReference<>();
          rdfConnection.querySelect(
                SparqlQueries.buildCountAspectModelsQuery( namespaceFilter, status ),
+               querySolution -> {
+                  int countResult = querySolution.getLiteral( "aspectModelCount" ).getInt();
+                  count.set( countResult );
+               } );
+         return count.get();
+      }
+   }
+
+   private Integer getSelectiveItemsCount( @Nullable String namespaceFilter, @Nullable String nameFilter,
+         @Nullable String nameType,
+         @Nullable ModelPackageStatus status, List<AspectModelUrn> urns ) {
+      try ( final RDFConnection rdfConnection = rdfConnectionRemoteBuilder.build() ) {
+         AtomicReference<Integer> count = new AtomicReference<>();
+         rdfConnection.querySelect(
+               SparqlQueries.buildCountSelectiveAspectModelsQuery( namespaceFilter, nameFilter, nameType, status, urns ),
                querySolution -> {
                   int countResult = querySolution.getLiteral( "aspectModelCount" ).getInt();
                   count.set( countResult );
