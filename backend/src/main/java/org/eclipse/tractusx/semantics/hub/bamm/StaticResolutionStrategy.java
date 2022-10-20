@@ -19,28 +19,60 @@
  ********************************************************************************/
 package org.eclipse.tractusx.semantics.hub.bamm;
 
-import org.apache.jena.rdf.model.Model;
-
+import io.openmanufacturing.sds.aspectmetamodel.KnownVersion;
 import io.openmanufacturing.sds.aspectmodel.resolver.AbstractResolutionStrategy;
 import io.openmanufacturing.sds.aspectmodel.urn.AspectModelUrn;
+import io.openmanufacturing.sds.aspectmodel.vocabulary.BAMM;
+import io.vavr.NotImplementedError;
 import io.vavr.control.Try;
 
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.StmtIterator;
+import org.apache.jena.vocabulary.RDF;
+
+import java.util.List;
+import java.util.Optional;
+
 public class StaticResolutionStrategy extends AbstractResolutionStrategy {
-    private int counter;
-    private final Try<Model> model;
+   private int counter;
+   private final Try<Model> model;
 
-    public StaticResolutionStrategy(Try<Model> model) {
-        this.model = model;
-    }
+   public StaticResolutionStrategy( Try<Model> model ) {
+      this.model = model;
+   }
 
-    @Override
-    public Try<Model> apply(AspectModelUrn t) {
-        counter++;
-        
-        return this.model;
-    }
+   @Override
+   public Try<Model> apply( AspectModelUrn t ) {
+      counter++;
+      return this.model;
+   }
 
-    public int getResolvementCounter() {
-        return counter;
-    }
+   public int getResolvementCounter() {
+      return counter;
+   }
+
+   public AspectModelUrn getAspectModelUrn() {
+      final Optional<StmtIterator> stmtIterator = getStmtIterator();
+
+      final String aspectModelUrn = stmtIterator.orElseThrow(
+                  () -> new NotImplementedError( "AspectModelUrn cannot be found." ) )
+            .next().getSubject().getURI();
+
+      return AspectModelUrn.fromUrn( aspectModelUrn );
+   }
+
+   private Optional<StmtIterator> getStmtIterator() {
+      for ( final KnownVersion version : KnownVersion.getVersions() ) {
+         final BAMM bamm = new BAMM( version );
+         final List<Resource> resources = List.of( bamm.Aspect(), bamm.Property(), bamm.Entity(),
+               bamm.Characteristic() );
+
+         return resources.stream().filter(
+                     resource -> model.get().listStatements( null, RDF.type, resource ).hasNext() )
+               .map( resource -> model.get().listStatements( null, RDF.type, resource ) ).findFirst();
+      }
+
+      return Optional.empty();
+   }
 }

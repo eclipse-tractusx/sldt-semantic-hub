@@ -30,6 +30,9 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
+import io.openmanufacturing.sds.aspectmodel.urn.UrnSyntaxException;
+import io.vavr.control.Try;
+
 import org.eclipse.tractusx.semantics.hub.AspectModelNotFoundException;
 import org.eclipse.tractusx.semantics.hub.ModelPackageNotFoundException;
 import org.eclipse.tractusx.semantics.hub.domain.ModelPackage;
@@ -52,6 +55,7 @@ import org.apache.jena.update.UpdateRequest;
 
 import io.openmanufacturing.sds.aspectmodel.resolver.AspectModelResolver;
 import io.openmanufacturing.sds.aspectmodel.urn.AspectModelUrn;
+
 import org.eclipse.tractusx.semantics.hub.InvalidStateTransitionException;
 import org.eclipse.tractusx.semantics.hub.persistence.PersistenceLayer;
 
@@ -67,8 +71,8 @@ public class TripleStorePersistence implements PersistenceLayer {
    }
 
    @Override
-   public SemanticModelList getModels(String namespaceFilter,
-                                      @Nullable ModelPackageStatus status, Integer page, Integer pageSize ) {
+   public SemanticModelList getModels( String namespaceFilter,
+         @Nullable ModelPackageStatus status, Integer page, Integer pageSize ) {
       final Query query = SparqlQueries.buildFindAllQuery( namespaceFilter, status, page,
             pageSize );
       final AtomicReference<List<SemanticModel>> aspectModels = new AtomicReference<>();
@@ -79,7 +83,7 @@ public class TripleStorePersistence implements PersistenceLayer {
          } );
       }
       int totalSemanticModelCount = getTotalItemsCount( namespaceFilter, status );
-      int totalPages =  getTotalPages(totalSemanticModelCount, pageSize );
+      int totalPages = getTotalPages( totalSemanticModelCount, pageSize );
       SemanticModelList modelList = new SemanticModelList();
       List<SemanticModel> semanticModels = aspectModels.get();
       modelList.setCurrentPage( page );
@@ -90,11 +94,11 @@ public class TripleStorePersistence implements PersistenceLayer {
       return modelList;
    }
 
-   private static int getTotalPages(int totalItemsCount, int pageSize){
-      if(totalItemsCount == 0 || pageSize == 0){
+   private static int getTotalPages( int totalItemsCount, int pageSize ) {
+      if ( totalItemsCount == 0 || pageSize == 0 ) {
          return 0;
       }
-      return (int) Math.ceil( ((double) totalItemsCount) / (double) pageSize);
+      return (int) Math.ceil( ((double) totalItemsCount) / (double) pageSize );
    }
 
    @Override
@@ -103,35 +107,35 @@ public class TripleStorePersistence implements PersistenceLayer {
    }
 
    @Override
-   public SemanticModel save(SemanticModelType type, String newModel, SemanticModelStatus status ) {
+   public SemanticModel save( SemanticModelType type, String newModel, SemanticModelStatus status ) {
       final Model rdfModel = sdsSdk.load( newModel.getBytes( StandardCharsets.UTF_8 ) );
       final AspectModelUrn modelUrn = sdsSdk.getAspectUrn( rdfModel );
       Optional<ModelPackage> existsByPackage = findByPackageByUrn( ModelPackageUrn.fromUrn( modelUrn ) );
 
       if ( existsByPackage.isPresent() ) {
          ModelPackageStatus persistedModelStatus = existsByPackage.get().getStatus();
-         final ModelPackageStatus desiredModelStatus  = ModelPackageStatus.valueOf( status.name() );
+         final ModelPackageStatus desiredModelStatus = ModelPackageStatus.valueOf( status.name() );
          switch ( persistedModelStatus ) {
-            case DRAFT:
-               if(desiredModelStatus.equals(ModelPackageStatus.RELEASED) && !hasReferenceToDraftPackage(modelUrn, rdfModel)) {
-                  throw new InvalidStateTransitionException("It is not allowed to release an aspect that has dependencies in DRAFT state.");
-               }
+         case DRAFT:
+            if ( desiredModelStatus.equals( ModelPackageStatus.RELEASED ) && !hasReferenceToDraftPackage( modelUrn, rdfModel ) ) {
+               throw new InvalidStateTransitionException( "It is not allowed to release an aspect that has dependencies in DRAFT state." );
+            }
+            deleteByUrn( ModelPackageUrn.fromUrn( modelUrn ) );
+            break;
+         case RELEASED:
+            // released models can only be updated when the new state is deprecated
+            if ( desiredModelStatus.equals( ModelPackageStatus.DEPRECATED ) ) {
                deleteByUrn( ModelPackageUrn.fromUrn( modelUrn ) );
-               break;
-            case RELEASED:
-               // released models can only be updated when the new state is deprecated
-               if(desiredModelStatus.equals(ModelPackageStatus.DEPRECATED)){
-                  deleteByUrn( ModelPackageUrn.fromUrn( modelUrn ) );
-               } else {
-                  throw new IllegalArgumentException(
-                          String.format( "The package %s is already in status %s and cannot be modified. Only a transition to DEPRECATED is possible.",
-                                  ModelPackageUrn.fromUrn( modelUrn ).getUrn(), persistedModelStatus.name() ) );
-               }
-               break;
-            case DEPRECATED:
+            } else {
                throw new IllegalArgumentException(
-                     String.format( "The package %s is already in status %s and cannot be modified.",
+                     String.format( "The package %s is already in status %s and cannot be modified. Only a transition to DEPRECATED is possible.",
                            ModelPackageUrn.fromUrn( modelUrn ).getUrn(), persistedModelStatus.name() ) );
+            }
+            break;
+         case DEPRECATED:
+            throw new IllegalArgumentException(
+                  String.format( "The package %s is already in status %s and cannot be modified.",
+                        ModelPackageUrn.fromUrn( modelUrn ).getUrn(), persistedModelStatus.name() ) );
          }
       }
 
@@ -173,7 +177,7 @@ public class TripleStorePersistence implements PersistenceLayer {
    }
 
    @Override
-   public SemanticModelList findModelListByUrns(List<AspectModelUrn> urns, int page, int pageSize) {
+   public SemanticModelList findModelListByUrns( List<AspectModelUrn> urns, int page, int pageSize ) {
       final Query query = SparqlQueries.buildFindListByUrns( urns, page, pageSize );
       final AtomicReference<List<SemanticModel>> aspectModels = new AtomicReference<>();
       try ( final RDFConnection rdfConnection = rdfConnectionRemoteBuilder.build() ) {
@@ -183,7 +187,7 @@ public class TripleStorePersistence implements PersistenceLayer {
          } );
       }
       int totalSemanticModelCount = getSelectiveItemsCount( null, null, null, null, urns );
-      int totalPages =  getTotalPages(totalSemanticModelCount, pageSize );
+      int totalPages = getTotalPages( totalSemanticModelCount, pageSize );
       SemanticModelList modelList = new SemanticModelList();
       List<SemanticModel> semanticModels = aspectModels.get();
       modelList.setCurrentPage( page );
@@ -197,22 +201,21 @@ public class TripleStorePersistence implements PersistenceLayer {
    public boolean echo() {
       final RDFConnection rdfConnection = rdfConnectionRemoteBuilder.build();
 
-      return rdfConnection.queryAsk(SparqlQueries.echoQuery());
+      return rdfConnection.queryAsk( SparqlQueries.echoQuery() );
    }
 
-   private boolean hasReferenceToDraftPackage(AspectModelUrn modelUrn, Model model) {
-      Pattern pattern = Pattern.compile(SparqlQueries.ALL_BAMM_ASPECT_URN_PREFIX);
-         
-      List<String> urns = AspectModelResolver.getAllUrnsInModel(model).stream().map((AspectModelUrn urn) -> {
-         return urn.getUrnPrefix();
-      })
-      .distinct()
-      .collect(Collectors.toList());
+   private boolean hasReferenceToDraftPackage( AspectModelUrn modelUrn, Model model ) {
+      Pattern pattern = Pattern.compile( SparqlQueries.ALL_BAMM_ASPECT_URN_PREFIX );
 
-      for(var entry : urns) {
-         Matcher matcher = pattern.matcher(entry);
-         if(!matcher.find() && !modelUrn.getUrnPrefix().equals(entry)) {
-            if(findByPackageByUrn(ModelPackageUrn.fromUrn(entry)).get().getStatus().equals(ModelPackageStatus.DRAFT)) {
+      List<String> urns = AspectModelResolver.getAllUrnsInModel( model ).stream().filter( urn -> getAspectModelUrn( urn ).isSuccess() )
+            .map( urn -> getAspectModelUrn( urn ).get().getUrnPrefix() )
+            .distinct()
+            .collect( Collectors.toList() );
+
+      for ( var entry : urns ) {
+         Matcher matcher = pattern.matcher( entry );
+         if ( !matcher.find() && !modelUrn.getUrnPrefix().equals( entry ) ) {
+            if ( findByPackageByUrn( ModelPackageUrn.fromUrn( entry ) ).get().getStatus().equals( ModelPackageStatus.DRAFT ) ) {
                return false;
             }
          }
@@ -294,12 +297,20 @@ public class TripleStorePersistence implements PersistenceLayer {
       }
    }
 
+   private Try<AspectModelUrn> getAspectModelUrn( String urn ) {
+      try {
+         return Try.success( AspectModelUrn.fromUrn( urn ) );
+      } catch ( UrnSyntaxException var2 ) {
+         return Try.failure( var2 );
+      }
+   }
+
    private static List<SemanticModel> aspectModelFrom(
          final List<QuerySolution> querySolutions ) {
-      return  querySolutions
-              .stream()
-              .map( TripleStorePersistence::aspectModelFrom )
-              .collect(Collectors.toList());
+      return querySolutions
+            .stream()
+            .map( TripleStorePersistence::aspectModelFrom )
+            .collect( Collectors.toList() );
    }
 
    private static SemanticModel aspectModelFrom( final QuerySolution querySolution ) {
