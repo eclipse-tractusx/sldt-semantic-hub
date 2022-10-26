@@ -21,7 +21,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update of Spring Boot version to 2.7.3
 
 ## 0.1.0-M1
-- [ ] doublecheck the correct version
 
 ### Added
 - The Semantic Hub allows the creation, update, deletion of Semantic models in the RDF based format BAMM Aspect Meta Model (short BAMM)
