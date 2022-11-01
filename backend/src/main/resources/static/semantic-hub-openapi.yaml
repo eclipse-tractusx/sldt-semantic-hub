@@ -152,6 +152,7 @@ paths:
           application/json:
             schema:
               type: array
+              maxItems: 10000
               items:
                 type: string
       responses:
@@ -441,6 +442,7 @@ components:
         items:
           title: Items
           type: array
+          maxItems: 10000
           items:
             $ref: '#/components/schemas/SemanticModel'
         totalItems:
