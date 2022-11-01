@@ -1,8 +1,7 @@
-##Architectural Overview
+## Architectural Overview
 The SLDT Semantic Hub stores Semantic Model definitions and allows the generation of several artifacts. It restricts access to the models by authentication via a token and authorization via roles in the token claims. Therefore, the Hub interacts with a Keycloak instance. The models are created in the Hub during our governance process as depicted below.
+
 ![](img/image001.png)
-
-
 
 ## Implementation
 The following section describes the use cases implemented for the semantic hub.
@@ -38,7 +37,7 @@ bamm:preferredName "documents"@en;
 bamm:description "Set of documents"@en;
 ```
 
-The semantic hub will add the release status as triple upon upload:
+The Semantic Hub will add the release status as triple upon upload:
 Release Status
 ```
 @prefix aux: <urn:bamm:io.openmanufacturing:aspect-model:aux#>
@@ -53,7 +52,7 @@ Release Status
 | 2. | A package can contain one or multiple aspects. | Example 1: net.catenax.semantics.traceability:1.2.0#Traceability Example 2: net.catenax.semantics.product:1.2.0#ProductDescription net.catenax.semantics.product:1.2.0#ProductUsage net.catenax.semantics.product:1.2.0#ProductDetails|
 | 3. | Multiple versions of a package can exists. | Possible: net.catenax.semantics.product:1.2.0 net.catenax.semantics.product:4.2.0 |
 | 4. | The versioning applies to the package.  All aspects and model elements scoped to a package have the same version.| Possible: net.catenax.semantics.product:1.2.0#ProductDescription  net.catenax.semantics.product:1.2.0#ProductUsage net.catenax.semantics.product:1.2.0#ProductDetails  Possible:net.catenax.semantics.product:4.3.0#ProductDescription  net.catenax.semantics.product:4.3.0#ProductUsage net.catenax.semantics.product:4.3.0#ProductDetails  Not Possible: net.catenax.semantics.product:1.3.0#ProductDescription net.catenax.semantics.product:1.2.0#ProductUsage net.catenax.semantics.product:3.2.0#ProductDetails |
-| 5. | All aspect models and model elements scoped to a package have the same status. | Possible: net.catenax.semantics.product:1.2.0#ProductDescription → RELEASE, net.catenax.semantics.product:1.2.0#ProductUsage → RELEASE net.catenax.semantics.product:1.2.0#ProductDetails → RELEASE Not Possible: net.catenax.semantics.product:1.2.0#ProductDescription → RELEASE net.catenax.semantics.product:1.2.
+| 5. | All aspect models and model elements scoped to a package have the same status. | Possible: net.catenax.semantics.product:1.2.0#ProductDescription → RELEASE, net.catenax.semantics.product:1.2.0#ProductUsage → RELEASE net.catenax.semantics.product:1.2.0#ProductDetails → RELEASE Not Possible: net.catenax.semantics.product:1.2.0#ProductDescription → RELEASE, net.catenax.semantics.product:1.2.0#ProductUsage → DRAFT
 
 
 
