@@ -1,6 +1,0 @@
-{
-    "yaml.schemas": {
-        "https://json.schemastore.org/github-workflow.json": "/.github/workflows/*.yml",
-        "https://json.schemastore.org/helmfile.json": "file:///Users/ROL2BE/development/CATENA-X/sldt-semantic-hub-aas/backend/deployment/semantic-hub/templates/hub/hub-deployment.yaml"
-    }
-}
