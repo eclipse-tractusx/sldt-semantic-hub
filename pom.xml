@@ -25,7 +25,7 @@
 	<parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.3</version> <!-- need to be repeated in properties section for technical purposes -->
+        <version>2.7.5</version> <!-- need to be repeated in properties section for technical purposes -->
         <relativePath/> <!-- lookup parent from repository and not the filesystem -->
     </parent>
 
@@ -65,10 +65,11 @@
 
 		<!-- version properties -->
 		<!-- framework and base stuff -->
-		<spring.boot.version>2.7.3</spring.boot.version>
+		<spring.boot.version>2.7.5</spring.boot.version>
 		<spring.feign.version>3.1.3</spring.feign.version>
 		<springdoc.version>1.6.6</springdoc.version>
 		<springfox.version>2.9.2</springfox.version>
+		<spring.security.version>5.7.5</spring.security.version>
 		<collection-utlis.version>4.4</collection-utlis.version>
 		<lombok.version>1.18.22</lombok.version>
 		<javax-annotation-api.version>1.3.2</javax-annotation-api.version>
@@ -159,6 +160,14 @@
 						<artifactId>spring-boot-starter-tomcat</artifactId>
 					</exclusion>
 				</exclusions>
+			</dependency>
+			<!-- must be set explicitly cause of CVE-2022-31692. The newest springboot version not includes the fix.
+			TODO: Check if the newest version of springboot includes the security-core version > 5.7.5
+			 and if it applies remove the following dependency -->
+			<dependency>
+				<groupId>org.springframework.security</groupId>
+				<artifactId>spring-security-core</artifactId>
+				<version>${spring.security.version}</version>
 			</dependency>
 			<!-- Tempory fix for a finding in snakeyaml v1.30, remove once new Spring Boot release contains fix -->
 			<dependency>
