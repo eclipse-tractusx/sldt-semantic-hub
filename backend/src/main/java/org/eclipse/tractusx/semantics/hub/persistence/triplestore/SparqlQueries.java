@@ -148,7 +148,7 @@ public class SparqlQueries {
            + "BIND(iri(concat(strbefore(str(?aspect ), \"#\"), \"#\")) AS ?package)\n"
            + "?package  aux:status  ?status\n"
            + "FILTER ( !bound(?statusFilter) || contains(str(?status), ?statusFilter) )\n"
-           + "FILTER ( !bound(?namespaceFilter) || contains(str(?aspect), ?namespaceFilter ) )\n"
+           + "FILTER ( !bound(?namespaceFilter) || contains(lcase(str(?aspect)), lcase(?namespaceFilter) ) )\n"
            + "}\n";
 
    private static final String FILTER_QUERY_MINIMAL_WHERE_CLAUSE_SELECTIVE = "WHERE {\n"
@@ -163,7 +163,7 @@ public class SparqlQueries {
            + "BIND(iri(concat(strbefore(str(?aspect ), \"#\"), \"#\")) AS ?package)\n"
            + "?package  aux:status  ?status\n"
            + "FILTER ( !bound(?statusFilter) || contains(str(?status), ?statusFilter) )\n"
-           + "FILTER ( !bound(?namespaceFilter) || contains(str(?aspect), ?namespaceFilter ) )\n"
+           + "FILTER ( !bound(?namespaceFilter) || contains(lcase(str(?aspect)), lcase(?namespaceFilter) ) )\n"
            + "FILTER ( str(?aspect) IN (?urns) ) "
            + "}\n";
 
