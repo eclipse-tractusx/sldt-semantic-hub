@@ -87,7 +87,9 @@
 		<!-- json, xml, formats, ... -->
 		<jackson.version>2.13.1</jackson.version>
 		<jackson.databind.version>2.13.4.2</jackson.databind.version>
+		<jackson.dataformat.version>2.12.7</jackson.dataformat.version>
 		<json.version>20211205</json.version>
+		<woodstoxcore.version>6.4.0</woodstoxcore.version>
 
 		<!-- semantics -->
 		<bamm.sdk.version>2.0.6</bamm.sdk.version>
@@ -260,6 +262,16 @@
 				<groupId>com.fasterxml.jackson.datatype</groupId>
 				<artifactId>jackson-datatype-jsr310</artifactId>
 				<version>${jackson.version}</version>
+			</dependency>
+			<dependency>
+				<artifactId>jackson-dataformat-xml</artifactId>
+				<groupId>com.fasterxml.jackson.dataformat</groupId>
+				<version>${jackson.dataformat.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.fasterxml.woodstox</groupId>
+				<artifactId>woodstox-core</artifactId>
+				<version>${woodstoxcore.version}</version>
 			</dependency>
 
 			<!-- Persistence Mapping -->
