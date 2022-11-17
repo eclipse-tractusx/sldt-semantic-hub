@@ -25,10 +25,11 @@ hub:
   containerPort: 4242
   ## Use in-memory triple store that is not persistent
   embeddedTripleStore: false
-  host: host
+  host: minikube
   ## If 'authentication' is set to false, no OAuth authentication is enforced
   authentication: false
   idpIssuerUri: https://idp-url
+  idpClientId: idpClientID
   ## Ignored if 'graphdb.enabled' is set to true
   graphdbBaseUrl: http://graphdb:3030
   service:
