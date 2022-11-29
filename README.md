@@ -27,7 +27,7 @@ The source code under this folder contains reference implementations of the SLDT
 Run `mvn install` to run unit tests, build and install the package.
 
 ## Run Package Locally
-To check whether the build was successful, you can start the resulting JAR file from the build process by running `java -jar target/semantic-hub-{current-version}.jar`.
+To check whether the build was successful, you can start the resulting JAR file from the build process by running `java -jar target/semantic-hub-backend-{current-version}.jar`.
 
 ## Build Docker
 Run `docker build -t semantic-hub .`
@@ -46,6 +46,8 @@ Before deploying the Semantic Hub, enable a few add-ons in your minikube cluster
 `minikube addons enable default-storageclass`
 
 `minikube addons enable ingress`
+
+If you want to use the in-memory triple store that is not persistent (useful for local deployments) set `embeddedTripleStore: true`. 
 
 In order to deploy the helm chart, first create a new namespace "semantics": `kubectl create namespace semantics`.
 
