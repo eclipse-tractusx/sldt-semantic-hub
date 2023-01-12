@@ -19,7 +19,7 @@
 ###############################################################
 
 hub:
-  image: semantic-hub:0.1.0-M1
+  image: semantic-hub:0.1.0-M2
   imagePullPolicy: IfNotPresent
   replicaCount: 1
   containerPort: 4242
@@ -29,6 +29,7 @@ hub:
   ## If 'authentication' is set to false, no OAuth authentication is enforced
   authentication: false
   idpIssuerUri: https://idp-url
+  idpClientId: idpClientID
   ## Ignored if 'graphdb.enabled' is set to true
   graphdbBaseUrl: http://graphdb:3030
   service:
