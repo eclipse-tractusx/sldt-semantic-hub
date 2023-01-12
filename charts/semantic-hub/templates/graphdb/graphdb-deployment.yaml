@@ -40,6 +40,8 @@ spec:
         - name: {{ $deployment_name }}
           image: {{ .Values.graphdb.image }}
           imagePullPolicy: {{ .Values.graphdb.imagePullPolicy }}
+          securityContext:
+            allowPrivilegeEscalation: false
           env:
             - name: JAVA_OPTIONS 
               value: {{ .Values.graphdb.javaOptions }}
