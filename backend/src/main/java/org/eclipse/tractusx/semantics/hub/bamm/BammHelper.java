@@ -58,129 +58,122 @@ import io.vavr.control.Try;
 
 @Component
 public class BammHelper {
-    public Try<VersionedModel> loadBammModel(String ttl) {
-        InputStream targetStream = new ByteArrayInputStream(ttl.getBytes());
+   public Try<VersionedModel> loadBammModel( String ttl ) {
+      InputStream targetStream = new ByteArrayInputStream( ttl.getBytes() );
 
-        Try<Model> model = TurtleLoader.loadTurtle(targetStream);
+      Try<Model> model = TurtleLoader.loadTurtle( targetStream );
 
-        StaticResolutionStrategy resolutionStrategy = new StaticResolutionStrategy(model);
+      StaticResolutionStrategy resolutionStrategy = new StaticResolutionStrategy( model );
 
+      AspectModelResolver resolver = new AspectModelResolver();
 
-        AspectModelUrn startUrn = AspectModelUrn
-            .fromUrn( "urn:bamm:org.eclipse.tractusx:1.0.0#Aspect" );
+      Try<VersionedModel> versionedModel = resolver.resolveAspectModel( resolutionStrategy, resolutionStrategy.getAspectModelUrn() );
 
-            
-        AspectModelResolver resolver = new AspectModelResolver();
+      if ( resolutionStrategy.getResolvementCounter() > 1 ) {
+         return Try.failure( new ResolutionException( "The definition must be self contained!" ) );
+      }
 
-        Try<VersionedModel> versionedModel = resolver.resolveAspectModel(resolutionStrategy, startUrn);
+      return versionedModel;
+   }
 
-        if(resolutionStrategy.getResolvementCounter() > 1) {
-            return Try.failure(new ResolutionException("The definition must be self contained!"));
-        }
+   public Try<Aspect> getAspectFromVersionedModel( VersionedModel versionedModel ) {
 
-        return versionedModel;
-    }
+      return AspectModelLoader.fromVersionedModel( versionedModel );
+   }
 
-    public Try<Aspect> getAspectFromVersionedModel(VersionedModel versionedModel) {
+   public ValidationReport validateModel( Try<VersionedModel> model ) {
+      final AspectModelValidator validator = new AspectModelValidator();
+      final ValidationReport validationReport = validator.validate( model );
 
-        return AspectModelLoader.fromVersionedModel(versionedModel);
-    }
+      return validationReport;
+   }
 
-    public ValidationReport validateModel(Try<VersionedModel> model) {
-        final AspectModelValidator validator = new AspectModelValidator();
-        final ValidationReport validationReport = validator.validate(model);
+   public byte[] generatePng( VersionedModel versionedModel ) {
+      final AspectModelDiagramGenerator generator = new AspectModelDiagramGenerator( versionedModel );
 
-        return validationReport;
-    }
+      try {
+         ByteArrayOutputStream output = new ByteArrayOutputStream();
+         generator.generateDiagram( Format.PNG, Locale.ENGLISH, output );
+         final byte[] bytes = output.toByteArray();
 
-    public byte[] generatePng(VersionedModel versionedModel) {
-        final AspectModelDiagramGenerator generator = new AspectModelDiagramGenerator(versionedModel);
-            
-        try {
-            ByteArrayOutputStream output = new ByteArrayOutputStream();
-            generator.generateDiagram(Format.PNG, Locale.ENGLISH, output);
+         return bytes;
+      } catch ( IOException e ) {
+         e.printStackTrace();
 
-            final byte[] bytes = output.toByteArray();
-            
-            return bytes;
-        } catch (IOException e) {
-            e.printStackTrace();
+         return null;
+      }
+   }
 
-            return null;
-        }
-    }
+   public JsonNode getJsonSchema( Aspect aspect ) {
+      AspectModelJsonSchemaGenerator jsonSchemaGenerator = new AspectModelJsonSchemaGenerator();
 
-    public JsonNode getJsonSchema(Aspect aspect) {
-        AspectModelJsonSchemaGenerator jsonSchemaGenerator = new AspectModelJsonSchemaGenerator();
+      JsonNode json = jsonSchemaGenerator.apply( aspect );
 
-        JsonNode json = jsonSchemaGenerator.apply(aspect);
+      return json;
+   }
 
-        return json;
-    }
+   public Try<byte[]> getHtmlDocu( VersionedModel versionedModel ) {
+      ByteArrayOutputStream output = new ByteArrayOutputStream();
+      AspectModelDocumentationGenerator documentationGenerator = new AspectModelDocumentationGenerator( versionedModel );
 
-    public Try<byte[]> getHtmlDocu(VersionedModel versionedModel) {
-        ByteArrayOutputStream output = new ByteArrayOutputStream();
-        AspectModelDocumentationGenerator documentationGenerator = new AspectModelDocumentationGenerator(versionedModel);
+      Map<AspectModelDocumentationGenerator.HtmlGenerationOption, String> options = new HashMap();
 
-        Map<AspectModelDocumentationGenerator.HtmlGenerationOption, String> options = new HashMap();
+      try {
+         InputStream ompCSS = getClass().getResourceAsStream( "/catena-template.css" );
+         String defaultCSS = CharStreams.toString( new InputStreamReader( ompCSS ) );
 
-        try {
-            InputStream ompCSS = getClass().getResourceAsStream("/catena-template.css");
-            String defaultCSS = CharStreams.toString(new InputStreamReader(ompCSS));
+         options.put( HtmlGenerationOption.STYLESHEET, defaultCSS );
+      } catch ( IOException e ) {
+         return Try.failure( e );
+      }
 
-            options.put(HtmlGenerationOption.STYLESHEET, defaultCSS);
-        } catch (IOException e) {
-            return Try.failure(e);
-        }
+      try {
+         documentationGenerator.generate( ( String a ) -> {
+            return output;
+         }, options );
 
+         return Try.success( output.toByteArray() );
+      } catch ( IOException e ) {
+         return Try.failure( e );
+      }
+   }
 
-        try {
-            documentationGenerator.generate((String a) -> {
-                return output;
-            }, options);
+   public String getOpenApiDefinitionJson( Aspect aspect, String baseUrl ) {
+      AspectModelOpenApiGenerator openApiGenerator = new AspectModelOpenApiGenerator();
 
-            return Try.success(output.toByteArray());
-        } catch (IOException e) {
-            return Try.failure(e);
-        }
-    }
+      JsonNode resultJson = openApiGenerator.applyForJson( aspect, true, baseUrl, Optional.empty(), Optional.empty(), false, Optional.empty() );
 
-    public String getOpenApiDefinitionJson(Aspect aspect, String baseUrl) {
-        AspectModelOpenApiGenerator openApiGenerator = new AspectModelOpenApiGenerator();
+      return resultJson.toString();
+   }
 
-        JsonNode resultJson = openApiGenerator.applyForJson(aspect, true, baseUrl, Optional.empty(), Optional.empty(), false, Optional.empty());
+   public Try<String> getExamplePayloadJson( Aspect aspect ) {
+      AspectModelJsonPayloadGenerator payloadGenerator = new AspectModelJsonPayloadGenerator( aspect );
 
-        return resultJson.toString();
-    }
+      return Try.of( payloadGenerator::generateJson );
+   }
 
-    public Try<String> getExamplePayloadJson(Aspect aspect) {
-        AspectModelJsonPayloadGenerator payloadGenerator = new AspectModelJsonPayloadGenerator(aspect);
+   public Try getAasSubmodelTemplate( Aspect aspect, AasFormat aasFormat ) {
+      AspectModelAASGenerator aasGenerator = new AspectModelAASGenerator();
+      ByteArrayOutputStream stream = new ByteArrayOutputStream();
 
-        return Try.of(payloadGenerator::generateJson);
-    }
+      try {
+         switch ( aasFormat ) {
+         case FILE:
+            aasGenerator.generateAASXFile( aspect, ( String s ) -> {
+               return stream;
+            } );
+            return Try.of( stream::toByteArray );
+         case XML:
+            aasGenerator.generateAasXmlFile( aspect, ( String s ) -> {
+               return stream;
+            } );
+            return Try.of( stream::toString );
+         default:
+            return Try.failure( new Exception( String.format( "Wrong AAS output format %s", aasFormat.toString() ) ) );
 
-    public Try getAasSubmodelTemplate(Aspect aspect, AasFormat aasFormat) {
-        AspectModelAASGenerator aasGenerator = new AspectModelAASGenerator();
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        
-        try {
-            switch(aasFormat) {
-                case FILE:
-                    aasGenerator.generateAASXFile(aspect, (String s) -> {
-                        return stream;
-                    });
-                    return Try.of(stream::toByteArray);
-                case XML:
-                    aasGenerator.generateAasXmlFile(aspect, (String s) -> {
-                        return stream;
-                    });
-                    return Try.of(stream::toString);
-                default:
-                    return Try.failure(new Exception(String.format("Wrong AAS output format %s", aasFormat.toString())));
-                        
-            }
-        } catch (IOException e) {
-            return Try.failure(e);
-        }
-    }
+         }
+      } catch ( IOException e ) {
+         return Try.failure( e );
+      }
+   }
 }

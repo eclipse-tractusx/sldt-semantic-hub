@@ -25,13 +25,13 @@
 	<parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.3</version> <!-- need to be repeated in properties section for technical purposes -->
+        <version>2.7.6</version> <!-- need to be repeated in properties section for technical purposes -->
         <relativePath/> <!-- lookup parent from repository and not the filesystem -->
     </parent>
 
 	<groupId>org.eclipse.tractusx</groupId>
 	<artifactId>semantic-hub</artifactId>
-	<version>0.1.0-M2</version>
+	<version>DEV-SNAPSHOT</version>
 	<name>Tractus-X Semantic Hub</name>
 	<description>Root Module of the Tractus-X Semantic Hub</description>
 	<packaging>pom</packaging>
@@ -65,7 +65,7 @@
 
 		<!-- version properties -->
 		<!-- framework and base stuff -->
-		<spring.boot.version>2.7.3</spring.boot.version>
+		<spring.boot.version>2.7.6</spring.boot.version>
 		<spring.feign.version>3.1.3</spring.feign.version>
 		<springdoc.version>1.6.6</springdoc.version>
 		<springfox.version>2.9.2</springfox.version>
@@ -78,7 +78,7 @@
 		<vavr.version>0.10.3</vavr.version>
 		<commons-io.version>2.11.0</commons-io.version>
 		<google.findbugs.version>3.0.2</google.findbugs.version>
-		<snakeyaml.version>1.31</snakeyaml.version>
+		<snakeyaml.version>1.33</snakeyaml.version>
 
 		<!-- logging -->
 		<slf4j.version>1.7.32</slf4j.version>
@@ -86,10 +86,13 @@
 
 		<!-- json, xml, formats, ... -->
 		<jackson.version>2.13.1</jackson.version>
+		<jackson.databind.version>2.14.0</jackson.databind.version>
+		<jackson.dataformat.version>2.12.7</jackson.dataformat.version>
 		<json.version>20211205</json.version>
+		<woodstoxcore.version>6.4.0</woodstoxcore.version>
 
 		<!-- semantics -->
-		<bamm.sdk.version>2.0.0</bamm.sdk.version>
+		<bamm.sdk.version>2.0.6</bamm.sdk.version>
 		<jena.version>4.2.0</jena.version>
 		<shacl.version>1.3.1</shacl.version>
 
@@ -240,6 +243,18 @@
 				<groupId>org.openapitools</groupId>
 				<artifactId>jackson-databind-nullable</artifactId>
 				<version>0.1.0</version>
+				<!-- Exclusion of jackson-databind is required because of CV https://avd.aquasec.com/nvd/2022/cve-2022-42004 and https://avd.aquasec.com/nvd/2022/cve-2022-42003 -->
+				<exclusions>
+					<exclusion>
+						<groupId>com.fasterxml.jackson.core</groupId>
+						<artifactId>jackson-databind</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-databind</artifactId>
+				<version>${jackson.databind.version}</version>
 			</dependency>
 
 			<!-- Formats -->
@@ -247,6 +262,16 @@
 				<groupId>com.fasterxml.jackson.datatype</groupId>
 				<artifactId>jackson-datatype-jsr310</artifactId>
 				<version>${jackson.version}</version>
+			</dependency>
+			<dependency>
+				<artifactId>jackson-dataformat-xml</artifactId>
+				<groupId>com.fasterxml.jackson.dataformat</groupId>
+				<version>${jackson.dataformat.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.fasterxml.woodstox</groupId>
+				<artifactId>woodstox-core</artifactId>
+				<version>${woodstoxcore.version}</version>
 			</dependency>
 
 			<!-- Persistence Mapping -->
@@ -257,16 +282,28 @@
 			</dependency>
 
 			<!-- Semantics Libraries -->
-			<dependency>
-				<groupId>io.openmanufacturing</groupId>
-				<artifactId>sds-aspect-model-starter</artifactId>
-				<version>${bamm.sdk.version}</version>
-			</dependency>	
+			<dependency>   
+				<groupId>io.openmanufacturing</groupId>   
+				<artifactId>sds-aspect-model-starter</artifactId>   
+				<version>${bamm.sdk.version}</version>   
+				<!-- Exclusion of commons-text is required because of CVE https://avd.aquasec.com/nvd/2022/cve-2022-42889 -->   
+				<exclusions>      
+					<exclusion>         
+						<groupId>org.apache.commons</groupId>         
+						<artifactId>commons-text</artifactId>      
+					</exclusion>   
+				</exclusions>
+			</dependency>
+			<dependency>   
+				<groupId>org.apache.commons</groupId>   
+				<artifactId>commons-text</artifactId>   
+				<version>1.10.0</version>
+			</dependency>
 			<dependency>
 				<groupId>io.openmanufacturing</groupId>
 				<artifactId>sds-aspect-model-aas-generator</artifactId>
 				<version>${bamm.sdk.version}</version>
-			</dependency>		
+			</dependency>
 			<dependency>
 				<groupId>org.apache.jena</groupId>
 				<artifactId>jena-core</artifactId>

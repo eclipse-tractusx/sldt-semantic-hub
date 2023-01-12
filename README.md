@@ -27,7 +27,7 @@ The source code under this folder contains reference implementations of the SLDT
 Run `mvn install` to run unit tests, build and install the package.
 
 ## Run Package Locally
-To check whether the build was successful, you can start the resulting JAR file from the build process by running `java -jar target/semantic-hub-{current-version}.jar`.
+To check whether the build was successful, you can start the resulting JAR file from the build process by running `java -jar target/semantic-hub-backend-{current-version}.jar`.
 
 ## Build Docker
 Run `docker build -t semantic-hub .`
@@ -35,7 +35,7 @@ Run `docker build -t semantic-hub .`
 In case you want to publish your image into a remote container registry, apply the tag accordingly and `docker push` the image.
 
 ## Deploy using Helm and K8s
-If you have a running Kubernetes cluster available, you can deploy the Semantic Hub using our Helm Chart, which is located under `./deployment/semantic-hub`.
+If you have a running Kubernetes cluster available, you can deploy the Semantic Hub using our Helm Chart, which is located under `./charts/semantic-hub`.
 In case you don't have a running cluster, you can set up one by yourself locally, using [minikube](https://minikube.sigs.k8s.io/docs/start/).
 In the following, we will use a minikube cluster for reference.
 
@@ -47,9 +47,11 @@ Before deploying the Semantic Hub, enable a few add-ons in your minikube cluster
 
 `minikube addons enable ingress`
 
+If you want to use the in-memory triple store that is not persistent (useful for local deployments) set `embeddedTripleStore: true`. 
+
 In order to deploy the helm chart, first create a new namespace "semantics": `kubectl create namespace semantics`.
 
-Then run `helm install hub -n semantics ./deployment/semantic-hub`. This will set up a new helm deployment in the semantics namespace. By default, the deployment contains the Semantic Hub instance itself, and a Fuseki Triplestore.
+Then run `helm install hub -n semantics ./charts/semantic-hub`. This will set up a new helm deployment in the semantics namespace. By default, the deployment contains the Semantic Hub instance itself, and a Fuseki Triplestore.
 
 Check that the two containers are running by calling `kubectl get pod -n semantics`.
 

@@ -25,7 +25,7 @@
     <parent>
         <groupId>org.eclipse.tractusx</groupId>
         <artifactId>semantic-hub</artifactId>
-        <version>0.1.0-M2</version>
+        <version>DEV-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -110,7 +110,16 @@
         <dependency>
             <artifactId>jackson-dataformat-xml</artifactId>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
-            <version>2.12.7</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.fasterxml.woodstox</groupId>
+                    <artifactId>woodstox-core</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.woodstox</groupId>
+            <artifactId>woodstox-core</artifactId>
         </dependency>
         <dependency>
             <groupId>io.openmanufacturing</groupId>
