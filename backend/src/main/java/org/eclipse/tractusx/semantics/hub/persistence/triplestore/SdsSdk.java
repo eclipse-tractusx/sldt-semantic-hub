@@ -55,9 +55,8 @@ import io.openmanufacturing.sds.aspectmodel.resolver.ResolutionStrategy;
 import io.openmanufacturing.sds.aspectmodel.resolver.services.SdsAspectMetaModelResourceResolver;
 import io.openmanufacturing.sds.aspectmodel.resolver.services.TurtleLoader;
 import io.openmanufacturing.sds.aspectmodel.resolver.services.VersionedModel;
+import io.openmanufacturing.sds.aspectmodel.shacl.violation.Violation;
 import io.openmanufacturing.sds.aspectmodel.urn.AspectModelUrn;
-import io.openmanufacturing.sds.aspectmodel.validation.report.ValidationError;
-import io.openmanufacturing.sds.aspectmodel.validation.report.ValidationReport;
 import io.openmanufacturing.sds.aspectmodel.validation.services.AspectModelValidator;
 import io.vavr.control.Try;
 
@@ -65,6 +64,7 @@ public class SdsSdk {
 
    private static final String MESSAGE_MISSING_METAMODEL_VERSION = "Unable to parse metamodel version";
    private static final String MESSAGE_MULTIPLE_METAMODEL_VERSIONS = "Multiple metamodel versions detected, unable to parse";
+   public static final String MESSAGE_BAMM_VERSION_NOT_SUPPORTED = "The used meta model version is not supported";
 
    private final AspectMetaModelResourceResolver aspectMetaModelResourceResolver;
    private final AspectModelResolver aspectModelResolver;
@@ -110,15 +110,9 @@ public class SdsSdk {
       if ( resolvedModel.isFailure() ) {
          throw new InvalidAspectModelException( resolvedModel.getCause().getMessage() );
       }
-
-      final ValidationReport validationReport = aspectModelValidator.validate( resolvedModel );
-      if ( !validationReport.conforms() ) {
-         final List<String> details = validationReport.getValidationErrors().stream().map( ValidationError::toString )
-                                                      .collect( Collectors.toList() );
-         final Map<String, String> detailsMap = IntStream.range( 0, details.size() ).boxed().collect(
-               Collectors.toMap( index -> "validationError" + (index + 1), details::get,
-                     ( e1, e2 ) -> e1,
-                     LinkedHashMap::new ) );
+      final List<Violation> violations = aspectModelValidator.validateModel( resolvedModel );
+      if ( !violations.isEmpty() ) {
+         final Map<String, String> detailsMap=violations.stream().collect( Collectors.toMap( Violation::errorCode,Violation::message ) );
          throw new InvalidAspectModelException( detailsMap );
       }
    }
@@ -129,14 +123,14 @@ public class SdsSdk {
    public AspectModelUrn getAspectUrn( final Model model ) {
       final StmtIterator stmtIterator = model.listStatements( null, RDF.type, (RDFNode) null );
       return StreamSupport.stream( Spliterators.spliteratorUnknownSize( stmtIterator, ORDERED ), false )
-                          .filter( statement -> statement.getObject().isURIResource() )
-                          .filter( statement -> statement.getObject().asResource().toString()
-                                                         .matches( SparqlQueries.BAMM_ASPECT_URN_REGEX ) )
-                          .map( Statement::getSubject )
-                          .map( Resource::toString )
-                          .map( AspectModelUrn::fromUrn )
-                          .findAny()
-                          .orElseThrow( () -> new InvalidAspectModelException( "Unable to parse Aspect Model URN" ) );
+            .filter( statement -> statement.getObject().isURIResource() )
+            .filter( statement -> statement.getObject().asResource().toString()
+                  .matches( SparqlQueries.BAMM_ASPECT_URN_REGEX ) )
+            .map( Statement::getSubject )
+            .map( Resource::toString )
+            .map( AspectModelUrn::fromUrn )
+            .findAny()
+            .orElseThrow( () -> new InvalidAspectModelException( "Unable to parse Aspect Model URN" ) );
    }
 
    public VersionNumber getKnownVersion( final Model rawModel ) {
@@ -152,7 +146,7 @@ public class SdsSdk {
                   } )
             .onFailure( UnsupportedVersionException.class,
                   e -> {
-                     throw new InvalidAspectModelException( ValidationError.MESSAGE_BAMM_VERSION_NOT_SUPPORTED );
+                     throw new InvalidAspectModelException( MESSAGE_BAMM_VERSION_NOT_SUPPORTED );
                   } ).get();
    }
 
