@@ -94,7 +94,7 @@
         </dependency>
         <dependency>
             <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-ui</artifactId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
         </dependency>
         <!-- Semantics Libraries -->
         <dependency>
@@ -190,6 +190,51 @@
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+        </dependency>
+
+        <!-- Springboot 3 requires Jakarta 6. But Jetty is not compatible with Jakarta 6 yet. But the tests needs jakarta in version 6.0.0.
+          Temporary solution until jetty will be compatible with Jakarta (version +12.See https://www.eclipse.org/lists/jetty-users/msg10348.html):
+          1. Define jakarta dependency with 6.0.0 and scope test. Add dot to end of groupId.
+          2. Define jakarta dependency with 5.0.0 to run the application successfuly.
+          -> Maven run the tests first then compile.
+          TODO: If new jetty is available, remove the test dependency and use jakarta in version 6.0.0
+          -->
+        <dependency>
+            <groupId>jakarta.servlet.</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <version>6.0.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>testcontainers</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -225,6 +270,7 @@
                                 <delegatePattern>true</delegatePattern>
                                 <packageName>org.eclipse.tractusx</packageName>
                                 <useSpringfox>false</useSpringfox>
+                                <useSpringBoot3>true</useSpringBoot3>
                             </configOptions>
                             <invokerPackage>org.eclipse.tractusx.semantics.hub</invokerPackage>
                         </configuration>
@@ -246,7 +292,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-deploy-plugin</artifactId>
             </plugin>
-
         </plugins>
 
         <resources>

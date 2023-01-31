@@ -43,6 +43,7 @@ public class ModelsApiFilterTest extends AbstractModelsApiTest{
 
    @BeforeAll
    public void init() throws Exception {
+      deleteAllData();
       createModel( TestUtils.TRACEABILITY_MODEL_PATH, "RELEASED" );
       createModel( TestUtils.MODEL_WITH_REFERENCE_TO_TRACEABILITY_MODEL_PATH, "DRAFT" );
    }

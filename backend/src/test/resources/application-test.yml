@@ -24,3 +24,11 @@ spring:
       resourceserver:
         jwt:
           issuer-uri:
+hub:
+  triple-store:
+    ## this properties will be overwrite in FusekiTestContainer
+    baseUrl: "http://localhost:3030/ds"
+    username: admin
+    password: admin
+    queryEndpoint: query
+    updateEndpoint: update

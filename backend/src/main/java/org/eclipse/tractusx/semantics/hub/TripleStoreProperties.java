@@ -22,7 +22,6 @@ package org.eclipse.tractusx.semantics.hub;
 import java.net.URL;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.util.SocketUtils;
 
 @ConfigurationProperties( "hub.triple-store" )
 public class TripleStoreProperties {
@@ -72,7 +71,7 @@ public class TripleStoreProperties {
        * <p>
        * Default is 0
        */
-      private int port = 0;
+      private int port = 3335;
 
       /**
        * Is the embedded fuseki server enabled?
@@ -112,9 +111,6 @@ public class TripleStoreProperties {
       }
 
       public int getPort() {
-         if ( port == 0 ) {
-            port = SocketUtils.findAvailableTcpPort();
-         }
          return port;
       }
    }

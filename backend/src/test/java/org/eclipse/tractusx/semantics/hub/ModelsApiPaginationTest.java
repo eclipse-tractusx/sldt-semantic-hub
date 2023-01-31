@@ -28,6 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.List;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.http.MediaType;
@@ -42,6 +43,11 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 @TestInstance( TestInstance.Lifecycle.PER_CLASS )
 @DirtiesContext( classMode = DirtiesContext.ClassMode.AFTER_CLASS )
 public class ModelsApiPaginationTest extends AbstractModelsApiTest {
+
+   @BeforeAll
+   void init(){
+      deleteAllData();
+   }
 
    @Test
    public void testGetModelsWithPaginationExpectSuccess() throws Exception {

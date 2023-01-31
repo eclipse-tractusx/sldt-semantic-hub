@@ -19,7 +19,6 @@
  ********************************************************************************/
 package org.eclipse.tractusx.semantics.hub;
 
-import com.nimbusds.jose.shaded.json.JSONArray;
 import org.eclipse.tractusx.semantics.AuthorizationEvaluator;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -32,6 +31,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.authentication;
+
+import net.minidev.json.JSONArray;
 
 public class JwtTokenFactory {
 
