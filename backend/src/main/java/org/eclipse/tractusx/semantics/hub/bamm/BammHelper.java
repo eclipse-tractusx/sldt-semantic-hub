@@ -83,9 +83,7 @@ public class BammHelper {
 
    public List<Violation> validateModel( Try<VersionedModel> model ) {
       final AspectModelValidator validator = new AspectModelValidator();
-      final List<Violation> violation = validator.validateModel( model );
-
-      return violation;
+      return validator.validateModel( model );
    }
 
    public byte[] generatePng( VersionedModel versionedModel ) {

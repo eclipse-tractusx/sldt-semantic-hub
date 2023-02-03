@@ -24,13 +24,11 @@ import static java.util.Spliterator.ORDERED;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Spliterators;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import java.util.stream.StreamSupport;
 
 import org.eclipse.tractusx.semantics.hub.InvalidAspectModelException;
@@ -64,7 +62,7 @@ public class SdsSdk {
 
    private static final String MESSAGE_MISSING_METAMODEL_VERSION = "Unable to parse metamodel version";
    private static final String MESSAGE_MULTIPLE_METAMODEL_VERSIONS = "Multiple metamodel versions detected, unable to parse";
-   public static final String MESSAGE_BAMM_VERSION_NOT_SUPPORTED = "The used meta model version is not supported";
+   private static final String MESSAGE_BAMM_VERSION_NOT_SUPPORTED = "The used meta model version is not supported";
 
    private final AspectMetaModelResourceResolver aspectMetaModelResourceResolver;
    private final AspectModelResolver aspectModelResolver;
