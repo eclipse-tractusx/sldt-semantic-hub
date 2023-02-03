@@ -104,10 +104,7 @@ public class BammHelper {
 
    public JsonNode getJsonSchema( Aspect aspect ) {
       AspectModelJsonSchemaGenerator jsonSchemaGenerator = new AspectModelJsonSchemaGenerator();
-
-      JsonNode json = jsonSchemaGenerator.apply( aspect, Locale.ENGLISH );
-
-      return json;
+      return jsonSchemaGenerator.apply( aspect, Locale.ENGLISH );
    }
 
    public Try<byte[]> getHtmlDocu( VersionedModel versionedModel ) {
