@@ -60,7 +60,7 @@
 		<licence_distribution>repo</licence_distribution>
 		<licence_comments>An Eclipse Project</licence_comments>
 		<!-- build properties -->
-		<java.version>11</java.version>
+		<java.version>17</java.version>
 		<maven.minimum.version>3.3.9</maven.minimum.version>
 
 		<!-- version properties -->
@@ -92,7 +92,7 @@
 		<woodstoxcore.version>6.4.0</woodstoxcore.version>
 
 		<!-- semantics -->
-		<bamm.sdk.version>2.0.6</bamm.sdk.version>
+		<bamm.sdk.version>2.1.1</bamm.sdk.version>
 		<jena.version>4.2.0</jena.version>
 		<shacl.version>1.3.1</shacl.version>
 
