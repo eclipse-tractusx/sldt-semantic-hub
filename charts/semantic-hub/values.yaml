@@ -71,7 +71,7 @@ graphdb:
   password: admin
   javaOptions: "-Xmx1048m -Xms1048m"
   args: ["--tdb2", "--update", "--loc", "databases/", "/ds"]
-  storageClassName: standard
+  storageClassName: default
   storageSize: 50Gi
   pvcAccessModes:
     - ReadWriteOnce
