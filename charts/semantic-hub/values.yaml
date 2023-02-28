@@ -19,12 +19,12 @@
 ###############################################################
 
 hub:
-  image: semantic-hub:0.1.0-M2
+  image: ghcr.io/catenax-ng/semantic-hub:0.1.0-M3
   imagePullPolicy: IfNotPresent
   replicaCount: 1
   containerPort: 4242
   ## Use in-memory triple store that is not persistent
-  embeddedTripleStore: false
+  embeddedTripleStore: true
   host: minikube
   ## If 'authentication' is set to false, no OAuth authentication is enforced
   authentication: false
@@ -37,21 +37,15 @@ hub:
     type: ClusterIP
   ingress:
     ## Enable ingress for the Semantic Hub
-    enabled: true
+    enabled: false
     ## Enable TLS (e.g. by using cert-manager)
     tls: true
     ## The secret name that contains the necessary 'tls.crt' and 'tls.key' entries
     ## When using cert-manager this secret is created automatically
-    tlsSecretName: hub-certificate-secret
+    tlsSecretName: ""
     urlPrefix: /semantics/hub
-    className: nginx
-    annotations:
-      cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
-      nginx.ingress.kubernetes.io/rewrite-target: /$2
-      nginx.ingress.kubernetes.io/use-regex: "true"
-      nginx.ingress.kubernetes.io/enable-cors: "true"
-      nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
-      nginx.ingress.kubernetes.io/x-forwarded-prefix: /semantics/hub
+    className: ""
+    annotations: []
   resources:
     limits:
       memory: "1024Mi"
@@ -60,8 +54,8 @@ hub:
   
 graphdb:
   ## Include Fuski deployment or deploy separately
-  enabled: true
-  image: "jena-fuseki:4.1.0"
+  enabled: false
+  image: ghcr.io/catenax-ng/jena-fuseki:4.1.0
   imagePullPolicy: IfNotPresent
   replicaCount: 1
   containerPort: 3030
