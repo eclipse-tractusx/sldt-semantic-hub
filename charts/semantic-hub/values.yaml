@@ -75,7 +75,6 @@ graphdb:
   storageSize: 50Gi
   pvcAccessModes:
     - ReadWriteOnce
-    - ReadWriteMany
   resources:
     limits:
       memory: "1024Mi"
