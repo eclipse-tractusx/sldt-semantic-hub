@@ -18,6 +18,12 @@
 # SPDX-License-Identifier: Apache-2.0
 ###############################################################
 
+# Docker buildfile to containerize the semantics layer
+FROM maven:3-eclipse-temurin-17-alpine AS builder
+COPY . /build
+WORKDIR /build
+RUN mvn package -DskipTests
+
 FROM eclipse-temurin:17-jre-alpine
 
 RUN apk upgrade \
@@ -34,10 +40,11 @@ USER spring:spring
 
 WORKDIR /service
 
-COPY ./target/semantic-hub*.jar app.jar
+COPY --from=builder /build/backend/target/semantic-hub*.jar app.jar
+
+COPY backend/Dockerfile *legal /legal/
 
 ENV JAVA_TOOL_OPTIONS "-Xms512m -Xmx2048m"
-
 EXPOSE 4242
 
 ENTRYPOINT [ "java","-jar","/service/app.jar" ]
