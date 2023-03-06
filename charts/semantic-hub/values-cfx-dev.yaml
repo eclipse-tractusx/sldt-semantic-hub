@@ -1,0 +1,60 @@
+hub:
+  image: ghcr.io/catenax-ng/semantic-hub:0.1.0-M3
+  imagePullPolicy: IfNotPresent
+  replicaCount: 1
+  ## Use in-memory triple store that is not persistent
+  embeddedTripleStore: false
+  host: semantic-hub.dev.cofinity-x.com
+  ## If 'authentication' is set to false, no OAuth authentication is enforced
+  authentication: false
+  idpIssuerUri: http://centralidp.dev.cofinity-x.com/auth/realms/CX-Central/.well-known/openid-configuration
+  idpClientId: Cl3-CX-Semantic
+  ## Ignored if 'graphdb.enabled' is set to true
+  graphdbBaseUrl: http://graphdb:3030
+  service:
+    port: 8080
+    type: ClusterIP
+  ingress:
+    enabled: true
+    tls: true
+    tlsSecretName: tls-secret
+    urlPrefix: /semantics/hub
+    className: nginx
+    annotations:
+      nginx.ingress.kubernetes.io/rewrite-target: /$2
+      nginx.ingress.kubernetes.io/use-regex: "true"
+      nginx.ingress.kubernetes.io/enable-cors: "false"
+      nginx.ingress.kubernetes.io/x-forwarded-prefix: /semantics/hub
+  resources:
+    limits:
+      memory: "1024Mi"
+      cpu: 1
+    requests:
+      memory: "512Mi"
+      cpu: "200m"
+  
+graphdb:
+  ## Include Fuski deployment or deploy separately
+  enabled: true
+  image: "jena-fuseki:4.1.0"
+  imagePullPolicy: IfNotPresent
+  replicaCount: 1
+  containerPort: 3030
+  queryEndpoint: /ds/query
+  updateEndpoint: /ds/update
+  username: ""
+  password: ""
+  javaOptions: "-Xmx1048m -Xms1048m"
+  args: ["--tdb2", "--update", "--loc", "databases/", "/ds"]
+  storageClassName: standard-ssd-lrs-retain
+  storageSize: 20Gi
+  pvcAccessModes:
+    - ReadWriteOnce
+    - ReadWriteMany
+  resources:
+    limits:
+      memory: "1024Mi"
+    requests:
+      memory: "512Mi"
+  service:
+    port: 3030
