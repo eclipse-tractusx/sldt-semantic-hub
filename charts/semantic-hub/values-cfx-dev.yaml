@@ -1,7 +1,8 @@
 hub:
   image: ghcr.io/cofinity-x/semantic-hub:0.1.7-dev
   imagePullPolicy: IfNotPresent
-  imagePullSecrets: image-pull-secret
+  imagePullSecrets: 
+    - name: image-pull-secret
   imagePullSecretsPath: <path:semantics/data/dev/semantics-hub-secrets#image-pull-secret>
   replicaCount: 1
   ## Use in-memory triple store that is not persistent
