@@ -41,6 +41,8 @@ graphdb:
   enabled: true
   image: "ghcr.io/cofinity-x/jena-fuseki:4.1.0"
   imagePullPolicy: IfNotPresent
+  imagePullSecrets: 
+    - name: image-pull-secret
   replicaCount: 1
   containerPort: 3030
   queryEndpoint: /ds/query
