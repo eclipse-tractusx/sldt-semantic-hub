@@ -45,7 +45,7 @@ graphdb:
   queryEndpoint: /ds/query
   updateEndpoint: /ds/update
   username: "<path:semantics/data/dev/semantics-hub-secrets#graphdb-username>"
-  password: "<path:semantics/data/dev/semantics-hub-secrets#graphdb-passwordt>"
+  password: "<path:semantics/data/dev/semantics-hub-secrets#graphdb-password>"
   javaOptions: "-Xmx1048m -Xms1048m"
   args: ["--tdb2", "--update", "--loc", "databases/", "/ds"]
   storageClassName: azurefile-standard-lrs-retain
