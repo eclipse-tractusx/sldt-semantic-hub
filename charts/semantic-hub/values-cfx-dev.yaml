@@ -1,6 +1,8 @@
 hub:
-  image: ghcr.io/catenax-ng/semantic-hub:0.1.0-M3
+  image: ghcr.io/cofinity-x/semantic-hub:0.1.7-dev
   imagePullPolicy: IfNotPresent
+  imagePullSecrets: image-pull-secret
+  imagePullSecretsPath: <path:semantics/data/dev/semantics-hub-secrets#image-pull-secret>
   replicaCount: 1
   ## Use in-memory triple store that is not persistent
   embeddedTripleStore: false
@@ -42,11 +44,11 @@ graphdb:
   containerPort: 3030
   queryEndpoint: /ds/query
   updateEndpoint: /ds/update
-  username: ""
-  password: ""
+  username: "<path:semantics/data/dev/semantics-hub-secrets#graphdb-username>"
+  password: "<path:semantics/data/dev/semantics-hub-secrets#graphdb-passwordt>"
   javaOptions: "-Xmx1048m -Xms1048m"
   args: ["--tdb2", "--update", "--loc", "databases/", "/ds"]
-  storageClassName: standard-ssd-lrs-retain
+  storageClassName: azurefile-standard-lrs-retain
   storageSize: 20Gi
   pvcAccessModes:
     - ReadWriteOnce
