@@ -10,7 +10,7 @@ hub:
   host: semantic-hub.dev.cofinity-x.com
   ## If 'authentication' is set to false, no OAuth authentication is enforced
   authentication: false
-  idpIssuerUri: http://centralidp.dev.cofinity-x.com/auth/realms/CX-Central
+  idpIssuerUri: https://centralidp.dev.cofinity-x.com/auth/realms/CX-Central
   idpClientId: Cl3-CX-Semantic
   ## Ignored if 'graphdb.enabled' is set to true
   graphdbBaseUrl: http://graphdb:3030
