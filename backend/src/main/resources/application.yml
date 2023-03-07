@@ -42,7 +42,7 @@ hub:
 #   password: uThhL1IlENjtCKH
   general:
     idm:
-      public-client-id: catenax-portal
+      public-client-id: Cl3-CX-Semantic
 
 
 http:
@@ -53,6 +53,8 @@ http:
     read: 10000
 
 spring:
+  profiles:
+    active: ${ENVIRONMENT}
   application:
     name: semantics-services
   mvc:

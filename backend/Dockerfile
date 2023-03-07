@@ -22,7 +22,7 @@
 FROM maven:3-eclipse-temurin-17-alpine AS builder
 COPY . /build
 WORKDIR /build
-RUN mvn package -DskipTests
+RUN mvn package
 
 FROM eclipse-temurin:17-jre-alpine
 
