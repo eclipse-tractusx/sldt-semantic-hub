@@ -88,3 +88,26 @@ The Helm Chart can be configured using the following parameters (incomplete list
 | `graphdb.enabled`     | Configures, whether a separate Fuseki Triplestore should be deployed in the cluster.   | `true` |
 | `graphdb.storageClassName`     | Defines the storage class name of the `PersistentVolumeClaim` that is used to persist the GraphDB data.  | `standard` |
 | `graphdb.storageSize`     | Size of the `PersistentVolumeClaim`  | `50Gi` |
+
+## Notice for Docker image
+
+This application provides container images for demonstration purposes.
+
+GitHub Container Registry (GHCR): https://github.com/catenax-ng/product-semantics/pkgs/container/sldt-semantic-hub
+
+Eclipse Tractus-X product(s) installed within the image:
+
+- GitHub: https://github.com/eclipse-tractusx/sldt-semantic-hub
+- Project home: https://projects.eclipse.org/projects/automotive.tractusx
+- Dockerfile: https://github.com/eclipse-tractusx/sldt-semantic-hub/blob/main/backend/Dockerfile
+- Project license: [Apache License, Version 2.0](https://github.com/eclipse-tractusx/sldt-semantic-hub/blob/main/LICENSE)
+
+**Used base image**
+- [eclipse-temurin:17-jre-alpine](https://github.com/adoptium/containers)
+- Official Eclipse Temurin DockerHub page: https://hub.docker.com/_/eclipse-temurin  
+- Eclipse Temurin Project: https://projects.eclipse.org/projects/adoptium.temurin  
+- Additional information about the Eclipse Temurin images: https://github.com/docker-library/repo-info/tree/master/repos/eclipse-temurin
+
+As with all Docker images, these likely also contain other software which may be under other licenses (such as Bash, etc from the base distribution, along with any direct or indirect dependencies of the primary software being contained).
+
+As for any pre-built image usage, it is the image user's responsibility to ensure that any use of this image complies with any relevant licenses for all software contained within.
