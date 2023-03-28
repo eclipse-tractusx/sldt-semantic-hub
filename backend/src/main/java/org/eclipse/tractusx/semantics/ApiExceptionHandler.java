@@ -24,8 +24,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -46,10 +44,11 @@ import org.eclipse.tractusx.semantics.hub.ModelPackageNotFoundException;
 import org.eclipse.tractusx.semantics.hub.model.Error;
 import org.eclipse.tractusx.semantics.hub.model.ErrorResponse;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
-   @Override
    protected ResponseEntity<Object> handleMethodArgumentNotValid( final MethodArgumentNotValidException ex,
          final HttpHeaders headers,
          final HttpStatus status, final WebRequest request ) {

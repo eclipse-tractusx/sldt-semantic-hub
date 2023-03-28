@@ -33,7 +33,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class SwaggerUITest {
+public class SwaggerUITest extends FusekiTestContainer {
    @Autowired
    private MockMvc mockMvc;
 

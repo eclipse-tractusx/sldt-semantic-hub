@@ -19,6 +19,9 @@
  ********************************************************************************/
 package org.eclipse.tractusx.semantics.hub;
 
+import java.net.Authenticator;
+import java.net.http.HttpClient;
+
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -26,13 +29,13 @@ import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.jena.fuseki.main.FusekiServer;
 import org.apache.jena.query.DatasetFactory;
+import org.apache.jena.rdfconnection.LibSec;
 import org.apache.jena.rdfconnection.RDFConnectionRemote;
 import org.apache.jena.rdfconnection.RDFConnectionRemoteBuilder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.util.SocketUtils;
 
 import org.eclipse.tractusx.semantics.hub.bamm.BammHelper;
 import org.eclipse.tractusx.semantics.hub.persistence.PersistenceLayer;
@@ -78,16 +81,16 @@ public class TripleStoreConfiguration {
       Credentials credentials = new UsernamePasswordCredentials( properties.getUsername(), properties.getPassword() );
       BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
       credentialsProvider.setCredentials( AuthScope.ANY, credentials );
+      Authenticator basicAuth = LibSec.authenticator( properties.getUsername(), properties.getPassword() );
       return RDFConnectionRemote
             .create()
-            .httpClient( HttpClients.custom().setDefaultCredentialsProvider( credentialsProvider ).build() )
+            .httpClient(  HttpClient.newBuilder().authenticator(basicAuth).build())
             .destination( properties.getBaseUrl().toString() )
             .queryEndpoint( properties.getQueryEndpoint() )
             .updateEndpoint( properties.getUpdateEndpoint() );
    }
 
    private static String localDestination( final TripleStoreProperties.EmbeddedTripleStore embedded ) {
-      final int port = embedded.getPort() == 0 ? SocketUtils.findAvailableTcpPort() : embedded.getPort();
-      return "http://localhost:" + port + embedded.getContextPath() + embedded.getDefaultDataset();
+      return "http://localhost:" + embedded.getPort() + embedded.getContextPath() + embedded.getDefaultDataset();
    }
 }

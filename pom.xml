@@ -25,7 +25,7 @@
 	<parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.6</version> <!-- need to be repeated in properties section for technical purposes -->
+        <version>3.0.1</version> <!-- need to be repeated in properties section for technical purposes -->
         <relativePath/> <!-- lookup parent from repository and not the filesystem -->
     </parent>
 
@@ -65,20 +65,26 @@
 
 		<!-- version properties -->
 		<!-- framework and base stuff -->
-		<spring.boot.version>2.7.6</spring.boot.version>
+		<spring.boot.version>3.0.1</spring.boot.version>
 		<spring.feign.version>3.1.3</spring.feign.version>
-		<springdoc.version>1.6.6</springdoc.version>
+		<springdoc.version>1.6.14</springdoc.version>
 		<springfox.version>2.9.2</springfox.version>
 		<collection-utlis.version>4.4</collection-utlis.version>
 		<lombok.version>1.18.22</lombok.version>
 		<javax-annotation-api.version>1.3.2</javax-annotation-api.version>
 		<swagger-annotations.version>1.5.20</swagger-annotations.version>
 		<swagger-core-version>2.0.0</swagger-core-version>
+		<openapi-starter-webmvc-ui.version>2.0.2</openapi-starter-webmvc-ui.version>
 		<guava.version>31.0.1-jre</guava.version>
 		<vavr.version>0.10.3</vavr.version>
 		<commons-io.version>2.11.0</commons-io.version>
 		<google.findbugs.version>3.0.2</google.findbugs.version>
 		<snakeyaml.version>1.33</snakeyaml.version>
+		<snakeyaml.version>1.33</snakeyaml.version>
+		<jakarta.validation.version>3.0.2</jakarta.validation.version>
+		<jakarta.servlet.api.version>5.0.0</jakarta.servlet.api.version>
+		<json.version>20220924</json.version>
+		<jakarta.xml.bind.version>4.0.0</jakarta.xml.bind.version>
 
 		<!-- logging -->
 		<slf4j.version>1.7.32</slf4j.version>
@@ -90,10 +96,11 @@
 		<jackson.dataformat.version>2.12.7</jackson.dataformat.version>
 		<json.version>20211205</json.version>
 		<woodstoxcore.version>6.4.0</woodstoxcore.version>
+		<jaxb-api.version>2.3.1</jaxb-api.version>
 
 		<!-- semantics -->
 		<bamm.sdk.version>2.1.1</bamm.sdk.version>
-		<jena.version>4.2.0</jena.version>
+		<jena.version>4.7.0</jena.version>
 		<shacl.version>1.3.1</shacl.version>
 
 		<!-- persistence -->
@@ -101,7 +108,9 @@
 		<mapstruct.lombok.version>0.2.0</mapstruct.lombok.version>
 		<!-- test libs -->
 		<assertj.version>3.18.1</assertj.version>
-		<junit.version>5.6.3</junit.version>
+		<junit-jupiter.version>5.6.3</junit-jupiter.version>
+		<junit.version>4.13.2</junit.version>
+		<testcontainer.version>1.17.6</testcontainer.version>
 
 		<!-- build -->
 		<maven.compiler.version>3.8.1</maven.compiler.version>
@@ -120,6 +129,11 @@
 				<groupId>javax.annotation</groupId>
 				<artifactId>javax.annotation-api</artifactId>
 				<version>${javax-annotation-api.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>javax.xml.bind</groupId>
+				<artifactId>jaxb-api</artifactId>
+				<version>${jaxb-api.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.projectlombok</groupId>
@@ -173,6 +187,26 @@
 						<artifactId>snakeyaml</artifactId>
 					</exclusion>
 				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>jakarta.validation</groupId>
+				<artifactId>jakarta.validation-api</artifactId>
+				<version>${jakarta.validation.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>jakarta.servlet</groupId>
+				<artifactId>jakarta.servlet-api</artifactId>
+				<version>${jakarta.servlet.api.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>jakarta.xml.bind</groupId>
+				<artifactId>jakarta.xml.bind-api</artifactId>
+				<version>${jakarta.xml.bind.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.json</groupId>
+				<artifactId>json</artifactId>
+				<version>${json.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.yaml</groupId>
@@ -238,6 +272,11 @@
 				<groupId>io.swagger</groupId>
 				<artifactId>swagger-annotations</artifactId>
 				<version>${swagger-annotations.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springdoc</groupId>
+				<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+				<version>${openapi-starter-webmvc-ui.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.openapitools</groupId>
@@ -340,7 +379,25 @@
 			<dependency>
 				<groupId>org.junit.jupiter</groupId>
 				<artifactId>junit-jupiter</artifactId>
+				<version>${junit-jupiter.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
 				<version>${junit.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.testcontainers</groupId>
+				<artifactId>testcontainers</artifactId>
+				<version>${testcontainer.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.testcontainers</groupId>
+				<artifactId>junit-jupiter</artifactId>
+				<version>${testcontainer.version}</version>
 				<scope>test</scope>
 			</dependency>
 		</dependencies>
@@ -436,7 +493,7 @@
 				<plugin>
 				<groupId>org.openapitools</groupId>
 				<artifactId>openapi-generator-maven-plugin</artifactId>
-				<version>5.4.0</version>
+				<version>6.2.1</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>
