@@ -44,6 +44,6 @@ jobs:
           distribution: 'adopt'
           cache: maven
       - name: Build and Deploy with Maven
-        run: mvn clean -X install
+        run: mvn clean install
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
