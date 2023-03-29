@@ -84,6 +84,7 @@
 		<jakarta.servlet.api.version>5.0.0</jakarta.servlet.api.version>
 		<json.version>20220924</json.version>
 		<jakarta.xml.bind.version>4.0.0</jakarta.xml.bind.version>
+		<apache.commons.fileupload.version>1.5</apache.commons.fileupload.version>
 
 		<!-- logging -->
 		<slf4j.version>1.7.32</slf4j.version>
@@ -356,6 +357,18 @@
 				<groupId>org.apache.jena</groupId>
 				<artifactId>jena-fuseki-main</artifactId>
 				<version>${jena.version}</version>
+				<exclusions>
+					<!-- Exclusion of commons-fileupload is required because of CV https://avd.aquasec.com/nvd/2023/cve-2023-24998-->
+					<exclusion>
+						<groupId>commons-fileupload</groupId>
+						<artifactId>commons-fileupload</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>commons-fileupload</groupId>
+				<artifactId>commons-fileupload</artifactId>
+				<version>${apache.commons.fileupload.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.jena</groupId>
