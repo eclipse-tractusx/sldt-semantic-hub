@@ -40,7 +40,7 @@ spec:
     spec:
       containers:
         - name: {{ $deployment_name }}
-          image: {{ .Values.hub.image }}
+          image: {{ .Values.hub.image.registry }}/{{ .Values.hub.image.repository }}:{{ .Values.hub.image.version | default .Chart.AppVersion }}
           imagePullPolicy: {{ .Values.hub.imagePullPolicy }}
           {{- if not .Values.hub.authentication }}
           args: ["--spring.profiles.active=local"]
