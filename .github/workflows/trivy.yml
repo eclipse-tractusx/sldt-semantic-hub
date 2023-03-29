@@ -67,7 +67,7 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
       - name: Build JAR
-        run: mvn clean package
+        run: mvn clean package -DskipTests
         
       - name: Build Image
         run: docker build -t semantic-hub ./backend
