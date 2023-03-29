@@ -96,9 +96,7 @@ public class BammHelper {
 
          return Try.success(bytes);
       } catch ( IOException e ) {
-         e.printStackTrace();
-
-         return null;
+         return Try.failure( e );
       }
    }
 
