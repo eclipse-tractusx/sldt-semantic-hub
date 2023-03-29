@@ -26,7 +26,7 @@ RUN mvn package -DskipTests
 
 FROM eclipse-temurin:17-jre-alpine
 
-RUN apk upgrade \
+RUN apk --no-cache upgrade \
     && apk update \
     && apk add graphviz \
     && rm -rf /var/cache/apk/*
