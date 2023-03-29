@@ -52,7 +52,7 @@ spec:
               value: "{{ .Values.hub.embeddedTripleStore }}"
             - name: HUB_TRIPLE_STORE_BASE_URL
               {{- if .Values.graphdb.enabled }}
-              value: {{ printf "http://%s:%v" $graphdb_svc_name .Values.graphdb.service.port }}
+              value: {{ printf "http://%s:%v" $graphdb_svc_name .Values.graphdb.service.port }}/ds
               {{- else }}
               value: {{ .Values.hub.graphdbBaseUrl }}
               {{- end }}

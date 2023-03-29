@@ -59,12 +59,12 @@ hub:
 graphdb:
   ## Include Fuski deployment or deploy separately
   enabled: false
-  image: ghcr.io/catenax-ng/jena-fuseki:4.1.0
+  image: ghcr.io/catenax-ng/jena-fuseki:4.7.0
   imagePullPolicy: IfNotPresent
   replicaCount: 1
   containerPort: 3030
-  queryEndpoint: /ds/query
-  updateEndpoint: /ds/update
+  queryEndpoint: query
+  updateEndpoint: update
   username: admin
   password: admin
   javaOptions: "-Xmx1048m -Xms1048m"
