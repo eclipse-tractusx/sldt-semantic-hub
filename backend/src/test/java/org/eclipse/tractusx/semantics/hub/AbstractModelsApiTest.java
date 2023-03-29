@@ -20,6 +20,10 @@
 package org.eclipse.tractusx.semantics.hub;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.apache.jena.rdfconnection.RDFConnection;
+import org.apache.jena.rdfconnection.RDFConnectionRemoteBuilder;
+import org.eclipse.tractusx.semantics.FusekiTestContainer;
 import org.eclipse.tractusx.semantics.GeneralProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -30,11 +34,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-
 @SpringBootTest
 @AutoConfigureMockMvc
 @EnableConfigurationProperties(GeneralProperties.class)
-public abstract class AbstractModelsApiTest {
+public abstract class AbstractModelsApiTest extends FusekiTestContainer {
 
     @Autowired
     protected MockMvc mvc;
@@ -44,6 +47,9 @@ public abstract class AbstractModelsApiTest {
 
     @Autowired
     protected JwtTokenFactory jwtTokenFactory;
+
+    @Autowired
+    private RDFConnectionRemoteBuilder rdfConnectionRemoteBuilder;
 
     public MockHttpServletRequestBuilder post(String payload) {
         return post(payload, "DRAFT");
@@ -76,6 +82,12 @@ public abstract class AbstractModelsApiTest {
                         "/api/v1/models/{urn}",
                         urnPrefix )
                 .with(jwtTokenFactory.allRoles());
+    }
+
+    public void deleteAllData(){
+        try ( final RDFConnection rdfConnection = rdfConnectionRemoteBuilder.build() ) {
+            rdfConnection.update( "CLEAR DEFAULT" );
+        }
     }
 
 }

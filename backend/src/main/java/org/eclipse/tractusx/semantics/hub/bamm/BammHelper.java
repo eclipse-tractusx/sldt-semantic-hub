@@ -27,6 +27,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.io.FileOutputStream;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
@@ -49,8 +50,7 @@ import io.openmanufacturing.sds.aspectmodel.generator.openapi.AspectModelOpenApi
 import io.openmanufacturing.sds.aspectmodel.resolver.AspectModelResolver;
 import io.openmanufacturing.sds.aspectmodel.resolver.services.TurtleLoader;
 import io.openmanufacturing.sds.aspectmodel.resolver.services.VersionedModel;
-import io.openmanufacturing.sds.aspectmodel.urn.AspectModelUrn;
-import io.openmanufacturing.sds.aspectmodel.validation.report.ValidationReport;
+import io.openmanufacturing.sds.aspectmodel.shacl.violation.Violation;
 import io.openmanufacturing.sds.aspectmodel.validation.services.AspectModelValidator;
 import io.openmanufacturing.sds.metamodel.Aspect;
 import io.openmanufacturing.sds.metamodel.loader.AspectModelLoader;
@@ -81,11 +81,9 @@ public class BammHelper {
       return AspectModelLoader.fromVersionedModel( versionedModel );
    }
 
-   public ValidationReport validateModel( Try<VersionedModel> model ) {
+   public List<Violation> validateModel( Try<VersionedModel> model ) {
       final AspectModelValidator validator = new AspectModelValidator();
-      final ValidationReport validationReport = validator.validate( model );
-
-      return validationReport;
+      return validator.validateModel( model );
    }
 
    public byte[] generatePng( VersionedModel versionedModel ) {
@@ -106,10 +104,7 @@ public class BammHelper {
 
    public JsonNode getJsonSchema( Aspect aspect ) {
       AspectModelJsonSchemaGenerator jsonSchemaGenerator = new AspectModelJsonSchemaGenerator();
-
-      JsonNode json = jsonSchemaGenerator.apply( aspect );
-
-      return json;
+      return jsonSchemaGenerator.apply( aspect, Locale.ENGLISH );
    }
 
    public Try<byte[]> getHtmlDocu( VersionedModel versionedModel ) {
