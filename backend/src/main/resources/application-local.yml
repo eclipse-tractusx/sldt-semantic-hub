@@ -24,3 +24,11 @@ spring:
       resourceserver:
         jwt:
           issuer-uri:
+
+hub:
+  triple-store:
+    baseUrl: http://localhost:3030/ds
+    username:
+    password:
+    queryEndpoint: query
+    updateEndpoint: update

@@ -33,7 +33,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class HealthCheckTest {
+public class HealthCheckTest extends AbstractModelsApiTest {
     private static final String HEALTH_ENDPOINT = "/actuator/health";
     private static final String LIVENESS_ENDPOINT = HEALTH_ENDPOINT + "/liveness";
     private static final String READINESS_ENDPOINT = HEALTH_ENDPOINT + "/readiness";
