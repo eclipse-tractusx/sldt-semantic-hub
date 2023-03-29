@@ -79,8 +79,7 @@
 		<vavr.version>0.10.3</vavr.version>
 		<commons-io.version>2.11.0</commons-io.version>
 		<google.findbugs.version>3.0.2</google.findbugs.version>
-		<snakeyaml.version>1.33</snakeyaml.version>
-		<snakeyaml.version>1.33</snakeyaml.version>
+		<snakeyaml.version>2.0</snakeyaml.version>
 		<jakarta.validation.version>3.0.2</jakarta.validation.version>
 		<jakarta.servlet.api.version>5.0.0</jakarta.servlet.api.version>
 		<json.version>20220924</json.version>
