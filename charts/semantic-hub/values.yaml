@@ -19,7 +19,11 @@
 ###############################################################
 
 hub:
-  image: ghcr.io/catenax-ng/semantic-hub:0.1.0-M3
+  image:
+    registry: ghcr.io/catenax-ng
+    repository: sldt-semantic-hub
+    # This version property overwrites the default image version. The default image version is the appVersion of the Chart.yaml.
+    version: ""
   imagePullPolicy: IfNotPresent
   replicaCount: 1
   containerPort: 4242

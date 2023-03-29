@@ -25,6 +25,9 @@ on:
         description: 'Version'
         required: true
 
+env:
+  FUSEKI_VERSION: 4.7.0
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -48,6 +51,13 @@ jobs:
       - name: Merge changes from main
         run: |
           git merge origin/main
+      - name: Pull Fuseki sources
+        run: curl https://repo1.maven.org/maven2/org/apache/jena/jena-fuseki-docker/$FUSEKI_VERSION/jena-fuseki-docker-$FUSEKI_VERSION.zip > ./jena-fuseki.zip
+      - name: Build Fuseki image
+        run: |
+          unzip jena-fuseki.zip
+          cd jena-fuseki-docker-$FUSEKI_VERSION
+          docker build --build-arg JENA_VERSION=$FUSEKI_VERSION -t jena-fuseki-docker .
       - name: Run tests and adjust version
         run: |
           mvn clean package

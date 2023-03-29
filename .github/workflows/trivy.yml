@@ -67,10 +67,10 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
       - name: Build JAR
-        run: mvn clean package
+        run: mvn clean package -DskipTests
         
       - name: Build Image
-        run: docker build -t semantic-hub ./backend
+        run: docker build -t semantic-hub -f ./backend/Dockerfile .
         
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
