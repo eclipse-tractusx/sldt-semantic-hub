@@ -86,7 +86,7 @@ public class BammHelper {
       return validator.validateModel( model );
    }
 
-   public byte[] generatePng( VersionedModel versionedModel ) {
+   public Try<byte[]> generatePng( VersionedModel versionedModel ) {
       final AspectModelDiagramGenerator generator = new AspectModelDiagramGenerator( versionedModel );
 
       try {
@@ -94,11 +94,9 @@ public class BammHelper {
          generator.generateDiagram( Format.PNG, Locale.ENGLISH, output );
          final byte[] bytes = output.toByteArray();
 
-         return bytes;
+         return Try.success(bytes);
       } catch ( IOException e ) {
-         e.printStackTrace();
-
-         return null;
+         return Try.failure( e );
       }
    }
 
