@@ -3,6 +3,16 @@ entries:
   semantic-hub:
   - apiVersion: v2
     appVersion: 0.2.0-M1
+    created: "2023-03-30T09:28:55.799999325Z"
+    description: Helm Chart for the Catena-X Semantic Hub Application
+    digest: 38e4ea950748cce4db9e2428101a20fd0eccddaa0e6993463999faa106e9f3f6
+    name: semantic-hub
+    type: application
+    urls:
+    - https://github.com/eclipse-tractusx/sldt-semantic-hub/releases/download/semantic-hub-0.1.9/semantic-hub-0.1.9.tgz
+    version: 0.1.9
+  - apiVersion: v2
+    appVersion: 0.2.0-M1
     created: "2023-03-29T12:16:19.927843703Z"
     description: Helm Chart for the Catena-X Semantic Hub Application
     digest: 73baa8b88f09fe5d157ca4b0e9c1085fb202834d5548358e2fc6c6aff21087ec
@@ -61,4 +71,4 @@ entries:
     urls:
     - https://github.com/eclipse-tractusx/sldt-semantic-hub/releases/download/semantic-hub-0.1.3/semantic-hub-0.1.3.tgz
     version: 0.1.3
-generated: "2023-03-29T12:16:19.927863303Z"
+generated: "2023-03-30T09:28:55.800026225Z"
