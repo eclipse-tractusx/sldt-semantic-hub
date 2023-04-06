@@ -63,6 +63,8 @@ jobs:
           mvn clean package
           mvn versions:set -DnewVersion=${{ inputs.version }}
           mvn versions:commit
+      - name: Remove jena-fuseki.zip and jena fuseki-docker before commit
+        run: rm -rf ./jena-fuseki.zip jena-fuseki-docker-$FUSEKI_VERSION
       - name: Create tag, commit and push
         run: |
           git add .
