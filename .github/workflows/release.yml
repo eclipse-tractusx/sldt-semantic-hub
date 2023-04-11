@@ -52,8 +52,11 @@ jobs:
         run: |
           git merge origin/main
       - name: Pull Fuseki sources
-        run: curl https://repo1.maven.org/maven2/org/apache/jena/jena-fuseki-docker/$FUSEKI_VERSION/jena-fuseki-docker-$FUSEKI_VERSION.zip > ./jena-fuseki.zip
+        run: |
+          mkdir temp
+          curl https://repo1.maven.org/maven2/org/apache/jena/jena-fuseki-docker/$FUSEKI_VERSION/jena-fuseki-docker-$FUSEKI_VERSION.zip > ./temp/jena-fuseki.zip
       - name: Build Fuseki image
+        working-directory: temp
         run: |
           unzip jena-fuseki.zip
           cd jena-fuseki-docker-$FUSEKI_VERSION
@@ -63,6 +66,8 @@ jobs:
           mvn clean package
           mvn versions:set -DnewVersion=${{ inputs.version }}
           mvn versions:commit
+      - name: Remove temp folder (include jena-fuseki.zip and jena fuseki-docker) before commit
+        run: rm -rf ./temp
       - name: Create tag, commit and push
         run: |
           git add .
