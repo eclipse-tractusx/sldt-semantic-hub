@@ -82,7 +82,6 @@
 		<snakeyaml.version>2.0</snakeyaml.version>
 		<jakarta.validation.version>3.0.2</jakarta.validation.version>
 		<jakarta.servlet.api.version>5.0.0</jakarta.servlet.api.version>
-		<json.version>20230227</json.version>
 		<jakarta.xml.bind.version>4.0.0</jakarta.xml.bind.version>
 		<apache.commons.fileupload.version>1.5</apache.commons.fileupload.version>
 
@@ -94,7 +93,7 @@
 		<jackson.version>2.13.1</jackson.version>
 		<jackson.databind.version>2.14.0</jackson.databind.version>
 		<jackson.dataformat.version>2.12.7</jackson.dataformat.version>
-		<json.version>20211205</json.version>
+		<json.version>20230227</json.version>
 		<woodstoxcore.version>6.4.0</woodstoxcore.version>
 		<jaxb-api.version>2.3.1</jaxb-api.version>
 
