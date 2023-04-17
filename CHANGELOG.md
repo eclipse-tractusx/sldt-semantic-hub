@@ -4,6 +4,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.2.1-M1
+### Added
+
+### Fixed
+- Update application to springboot 3.0.5 to fix vulnerability spring-expression
+
+### Changed
+
+## 0.2.0-M1
+### Added
+- Add --no-cache to run apk in Dockerfile
+- Update application to springboot 3.0.1
+
+### Fixed
+
+### Changed
+
 ## 0.1.0-M3
 ### Added
 
