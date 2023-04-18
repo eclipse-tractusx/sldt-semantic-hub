@@ -36,10 +36,15 @@ spec:
       labels:
         app: {{ $deployment_name }}
     spec:
+      securityContext:
+        runAsUser: 1000
       containers:
         - name: {{ $deployment_name }}
           image: {{ .Values.graphdb.image }}
           imagePullPolicy: {{ .Values.graphdb.imagePullPolicy }}
+          securityContext:
+            runAsUser: 1000
+            allowPrivilegeEscalation: false
           env:
             - name: JAVA_OPTIONS 
               value: {{ .Values.graphdb.javaOptions }}
