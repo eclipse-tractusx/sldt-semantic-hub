@@ -89,6 +89,11 @@ The Helm Chart can be configured using the following parameters (incomplete list
 | `graphdb.storageClassName`     | Defines the storage class name of the `PersistentVolumeClaim` that is used to persist the GraphDB data.  | `standard` |
 | `graphdb.storageSize`     | Size of the `PersistentVolumeClaim`  | `50Gi` |
 
+### Prerequisites
+- Kubernetes 1.19+
+- Helm 3.10.2+
+- PV provisioner support in the underlying infrastructure
+
 ## Notice for Docker image
 
 This application provides container images for demonstration purposes.
