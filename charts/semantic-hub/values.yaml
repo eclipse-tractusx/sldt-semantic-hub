@@ -18,6 +18,10 @@
 # SPDX-License-Identifier: Apache-2.0
 ###############################################################
 
+
+# enables the default keycloak identity provider
+enableKeycloak: true
+
 hub:
   image:
     registry: ghcr.io/catenax-ng
@@ -28,12 +32,17 @@ hub:
   replicaCount: 1
   containerPort: 4242
   ## Use in-memory triple store that is not persistent
-  embeddedTripleStore: true
+  embeddedTripleStore: false
   host: minikube
   ## If 'authentication' is set to false, no OAuth authentication is enforced
   authentication: false
-  idpIssuerUri: https://idp-url
-  idpClientId: idpClientID
+  # Issuer url for the hub (resource server),
+  # make sure that the url points to an externally resolvable hostname.
+  # If no value is committed, and the integrated Keycloak is enabled,
+  # the K8s internal service name is used, which is a problem, when
+  # validating the issuer claim in an access token
+  idpIssuerUri: ""
+  idpClientId: default-client
   ## Ignored if 'graphdb.enabled' is set to true
   graphdbBaseUrl: http://graphdb:3030
   service:
@@ -55,7 +64,7 @@ hub:
       memory: "1024Mi"
     requests:
       memory: "512Mi"
-  
+
 graphdb:
   ## Include Fuski deployment or deploy separately
   enabled: false
@@ -80,3 +89,29 @@ graphdb:
       memory: "512Mi"
   service:
     port: 3030
+
+keycloak:
+  postgresql:
+    enabled: true
+  auth:
+    adminUser: admin
+    adminPassword: "admin"
+  service:
+    type: ClusterIP
+  extraVolumes:
+    - name: init-script-vol
+      configMap:
+        name: init-script-vol
+  # Mounting a keycloak realm configuration file
+  fullnameOverride: hub-keycloak
+  extraVolumeMounts:
+    - mountPath: /opt/keycloak/data/import/default-realm-import.json
+      subPath: default-realm-import.json
+      name: init-script-vol
+  # Using a pre-configured Keycloak with a default realm,
+  # containing a test client and user with the necessary roles to
+  # authorize requests to the semantic hub.
+  # Make sure to remove the '--hostname' property when deploying
+  # in a non-test scenario
+  command: ["/bin/sh", "-c"]
+  args: ["kc.sh import --file /opt/keycloak/data/import/default-realm-import.json; kc.sh start-dev --hostname=registry-keycloak --hostname-strict=false --proxy=edge --proxy=edge"]
