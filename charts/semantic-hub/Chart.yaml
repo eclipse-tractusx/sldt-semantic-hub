@@ -3,8 +3,8 @@ name: semantic-hub
 description: Helm Chart for the Catena-X Semantic Hub Application
 
 type: application
-version: 0.1.13
-appVersion: 0.2.2-M1
+version: 0.1.15
+appVersion: 0.2.3-M1
 dependencies:
   - repository: https://charts.bitnami.com/bitnami
     name: keycloak
