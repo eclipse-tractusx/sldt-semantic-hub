@@ -119,11 +119,24 @@ public class TripleStorePersistence implements PersistenceLayer {
          case DRAFT:
             if ( desiredModelStatus.equals( ModelPackageStatus.RELEASED ) && !hasReferenceToDraftPackage( modelUrn, rdfModel ) ) {
                throw new InvalidStateTransitionException( "It is not allowed to release an aspect that has dependencies in DRAFT state." );
+            } else if ( desiredModelStatus.equals( ModelPackageStatus.STANDARDIZED ) ) {
+               throw new IllegalArgumentException(
+                     String.format( "The package %s is in status %s. Only a transition to RELEASED or DEPRECATED is possible.",
+                           ModelPackageUrn.fromUrn( modelUrn ).getUrn(), persistedModelStatus.name() ) );
             }
             deleteByUrn( ModelPackageUrn.fromUrn( modelUrn ) );
             break;
          case RELEASED:
-            // released models can only be updated when the new state is deprecated
+            // released models can only be updated when the new state is deprecated or standardized
+            if ( desiredModelStatus.equals( ModelPackageStatus.DEPRECATED ) || desiredModelStatus.equals( ModelPackageStatus.STANDARDIZED ) ) {
+               deleteByUrn( ModelPackageUrn.fromUrn( modelUrn ) );
+            } else {
+               throw new IllegalArgumentException(
+                     String.format( "The package %s is already in status %s and cannot be modified. Only a transition to STANDARDIZED or DEPRECATED is possible.",
+                           ModelPackageUrn.fromUrn( modelUrn ).getUrn(), persistedModelStatus.name() ) );
+            }
+            break;
+         case STANDARDIZED:
             if ( desiredModelStatus.equals( ModelPackageStatus.DEPRECATED ) ) {
                deleteByUrn( ModelPackageUrn.fromUrn( modelUrn ) );
             } else {
@@ -168,7 +181,7 @@ public class TripleStorePersistence implements PersistenceLayer {
             .orElseThrow( () -> new ModelPackageNotFoundException( urn ) );
 
       ModelPackageStatus status = modelsPackage.getStatus();
-      if ( ModelPackageStatus.RELEASED.equals( status ) ) {
+      if ( ModelPackageStatus.RELEASED.equals( status ) || ModelPackageStatus.STANDARDIZED.equals( status ) ) {
          throw new IllegalArgumentException(
                String.format( "The package %s is already in status %s and cannot be deleted.",
                      urn.getUrn(), status.name() ) );

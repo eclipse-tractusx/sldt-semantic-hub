@@ -22,5 +22,6 @@ package org.eclipse.tractusx.semantics.hub.domain;
 public enum ModelPackageStatus {
    RELEASED,
    DRAFT,
-   DEPRECATED
+   DEPRECATED,
+   STANDARDIZED
 }
