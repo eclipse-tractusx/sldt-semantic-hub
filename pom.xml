@@ -93,7 +93,7 @@
 		<jackson.version>2.13.1</jackson.version>
 		<jackson.databind.version>2.14.0</jackson.databind.version>
 		<jackson.dataformat.version>2.12.7</jackson.dataformat.version>
-		<json.version>20230227</json.version>
+		<json.version>2.0.1</json.version>
 		<woodstoxcore.version>6.4.0</woodstoxcore.version>
 		<jaxb-api.version>2.3.1</jaxb-api.version>
 
@@ -215,8 +215,8 @@
 				<version>${jakarta.xml.bind.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>org.json</groupId>
-				<artifactId>json</artifactId>
+				<groupId>org.glassfish</groupId>
+				<artifactId>jakarta.json</artifactId>
 				<version>${json.version}</version>
 			</dependency>
 			<dependency>
