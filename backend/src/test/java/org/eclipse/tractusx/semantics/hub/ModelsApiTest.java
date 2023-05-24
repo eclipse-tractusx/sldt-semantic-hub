@@ -43,9 +43,11 @@ import java.util.List;
 import org.apache.jena.atlas.json.JSON;
 import org.apache.poi.hpsf.Array;
 import org.json.JSONArray;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
@@ -57,8 +59,14 @@ import com.jayway.jsonpath.internal.function.text.Length;
 
 import jakarta.json.JsonArray;
 
+@TestInstance( TestInstance.Lifecycle.PER_CLASS )
 @DirtiesContext( classMode = DirtiesContext.ClassMode.AFTER_CLASS )
 public class ModelsApiTest extends AbstractModelsApiTest{
+
+    @BeforeAll
+    public void init() throws Exception {
+        deleteAllData();
+   }
 
    @Test
    public void testWithoutAuthenticationTokenProvidedExpectForbidden() throws Exception {
