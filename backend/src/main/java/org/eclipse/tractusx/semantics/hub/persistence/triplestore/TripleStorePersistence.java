@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
-import io.openmanufacturing.sds.aspectmodel.urn.UrnSyntaxException;
+import org.eclipse.esmf.aspectmodel.urn.UrnSyntaxException;
 import io.vavr.control.Try;
 
 import org.eclipse.tractusx.semantics.hub.AspectModelNotFoundException;
@@ -53,8 +53,8 @@ import org.apache.jena.rdfconnection.RDFConnection;
 import org.apache.jena.rdfconnection.RDFConnectionRemoteBuilder;
 import org.apache.jena.update.UpdateRequest;
 
-import io.openmanufacturing.sds.aspectmodel.resolver.AspectModelResolver;
-import io.openmanufacturing.sds.aspectmodel.urn.AspectModelUrn;
+import org.eclipse.esmf.aspectmodel.resolver.AspectModelResolver;
+import org.eclipse.esmf.aspectmodel.urn.AspectModelUrn;
 
 import org.eclipse.tractusx.semantics.hub.InvalidStateTransitionException;
 import org.eclipse.tractusx.semantics.hub.persistence.PersistenceLayer;

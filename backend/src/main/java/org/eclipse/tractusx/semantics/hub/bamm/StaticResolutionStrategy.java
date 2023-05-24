@@ -19,10 +19,10 @@
  ********************************************************************************/
 package org.eclipse.tractusx.semantics.hub.bamm;
 
-import io.openmanufacturing.sds.aspectmetamodel.KnownVersion;
-import io.openmanufacturing.sds.aspectmodel.resolver.AbstractResolutionStrategy;
-import io.openmanufacturing.sds.aspectmodel.urn.AspectModelUrn;
-import io.openmanufacturing.sds.aspectmodel.vocabulary.BAMM;
+import org.eclipse.esmf.samm.KnownVersion;
+import org.eclipse.esmf.aspectmodel.resolver.AbstractResolutionStrategy;
+import org.eclipse.esmf.aspectmodel.urn.AspectModelUrn;
+import org.eclipse.esmf.aspectmodel.vocabulary.SAMM;
 import io.vavr.NotImplementedError;
 import io.vavr.control.Try;
 

@@ -32,8 +32,8 @@ import org.eclipse.tractusx.semantics.hub.InvalidAspectModelException;
 import org.eclipse.tractusx.semantics.hub.TestUtils;
 import org.eclipse.tractusx.semantics.hub.persistence.triplestore.ResourceDefinitionNotFoundException;
 import org.eclipse.tractusx.semantics.hub.persistence.triplestore.SdsSdk;
-import io.openmanufacturing.sds.aspectmodel.resolver.ResolutionStrategy;
-import io.openmanufacturing.sds.aspectmodel.urn.AspectModelUrn;
+import org.eclipse.esmf.aspectmodel.resolver.ResolutionStrategy;
+import org.eclipse.esmf.aspectmodel.urn.AspectModelUrn;
 import io.vavr.control.Try;
 
 public class SdsSdkTest {

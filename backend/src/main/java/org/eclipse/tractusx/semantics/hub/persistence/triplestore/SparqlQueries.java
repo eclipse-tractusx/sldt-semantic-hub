@@ -48,7 +48,7 @@ import org.apache.jena.rdf.model.impl.RDFListImpl;
 import org.apache.jena.reasoner.rulesys.FunctorDatatype;
 import org.apache.jena.update.UpdateRequest;
 
-import io.openmanufacturing.sds.aspectmodel.urn.AspectModelUrn;
+import org.eclipse.esmf.aspectmodel.urn.AspectModelUrn;
 
 public class SparqlQueries {
    private static final String AUXILIARY_NAMESPACE = "urn:bamm:io.openmanufacturing:aspect-model:aux#";

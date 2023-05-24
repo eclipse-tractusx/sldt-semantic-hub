@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-import io.openmanufacturing.sds.aspectmodel.resolver.services.VersionedModel;
+import org.eclipse.esmf.aspectmodel.resolver.services.VersionedModel;
 import io.vavr.NotImplementedError;
 import io.vavr.control.Try;
 

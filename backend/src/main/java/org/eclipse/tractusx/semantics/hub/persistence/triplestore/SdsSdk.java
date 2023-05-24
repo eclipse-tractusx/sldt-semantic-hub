@@ -42,20 +42,20 @@ import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
 import org.apache.jena.vocabulary.RDF;
 
-import io.openmanufacturing.sds.aspectmodel.MissingMetaModelVersionException;
-import io.openmanufacturing.sds.aspectmodel.MultipleMetaModelVersionsException;
-import io.openmanufacturing.sds.aspectmodel.UnsupportedVersionException;
-import io.openmanufacturing.sds.aspectmodel.VersionNumber;
-import io.openmanufacturing.sds.aspectmodel.resolver.AspectMetaModelResourceResolver;
-import io.openmanufacturing.sds.aspectmodel.resolver.AspectModelResolver;
-import io.openmanufacturing.sds.aspectmodel.resolver.EitherStrategy;
-import io.openmanufacturing.sds.aspectmodel.resolver.ResolutionStrategy;
-import io.openmanufacturing.sds.aspectmodel.resolver.services.SdsAspectMetaModelResourceResolver;
-import io.openmanufacturing.sds.aspectmodel.resolver.services.TurtleLoader;
-import io.openmanufacturing.sds.aspectmodel.resolver.services.VersionedModel;
-import io.openmanufacturing.sds.aspectmodel.shacl.violation.Violation;
-import io.openmanufacturing.sds.aspectmodel.urn.AspectModelUrn;
-import io.openmanufacturing.sds.aspectmodel.validation.services.AspectModelValidator;
+import org.eclipse.esmf.aspectmodel.MissingMetaModelVersionException;
+import org.eclipse.esmf.aspectmodel.MultipleMetaModelVersionsException;
+import org.eclipse.esmf.aspectmodel.UnsupportedVersionException;
+import org.eclipse.esmf.aspectmodel.VersionNumber;
+import org.eclipse.esmf.aspectmodel.resolver.AspectMetaModelResourceResolver;
+import org.eclipse.esmf.aspectmodel.resolver.AspectModelResolver;
+import org.eclipse.esmf.aspectmodel.resolver.EitherStrategy;
+import org.eclipse.esmf.aspectmodel.resolver.ResolutionStrategy;
+import org.eclipse.esmf.aspectmodel.resolver.services.SammAspectMetaModelResourceResolver;
+import org.eclipse.esmf.aspectmodel.resolver.services.TurtleLoader;
+import org.eclipse.esmf.aspectmodel.resolver.services.VersionedModel;
+import org.eclipse.esmf.aspectmodel.shacl.violation.Violation;
+import org.eclipse.esmf.aspectmodel.urn.AspectModelUrn;
+import org.eclipse.esmf.aspectmodel.validation.services.AspectModelValidator;
 import io.vavr.control.Try;
 
 public class SdsSdk {
@@ -69,7 +69,7 @@ public class SdsSdk {
    private final AspectModelValidator aspectModelValidator;
 
    public SdsSdk() {
-      aspectMetaModelResourceResolver = new SdsAspectMetaModelResourceResolver();
+      aspectMetaModelResourceResolver = new SammAspectMetaModelResourceResolver();
       aspectModelResolver = new AspectModelResolver();
       aspectModelValidator = new AspectModelValidator();
    }
