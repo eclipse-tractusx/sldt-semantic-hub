@@ -410,7 +410,7 @@ components:
     SemanticModelType:
       type: string
       enum:
-        - BAMM
+        - SAMM
     SemanticModel:
       type: object
       properties:
@@ -537,22 +537,22 @@ components:
       content:
         text/turtle:
           example: >
-            @prefix : <urn:bamm:net.catenax.semantics:1.0.0#> .
+            @prefix : <urn:samm:net.catenax.semantics:1.0.0#> .
 
-            @prefix bamm: <urn:bamm:io.openmanufacturing:meta-model:1.0.0#> .
+            @prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:1.0.0#> .
 
             @prefix bamm-c:
-            <urn:bamm:io.openmanufacturing:characteristic:1.0.0#> .
+            <urn:samm:org.eclipse.esmf.samm:characteristic:1.0.0#> .
 
             @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 
-            :TestAspect a bamm:Aspect ;
-               bamm:name "Test" ;
-               bamm:preferredName "Test Aspect"@en ;
-               bamm:description "This is a Test Aspect."@en ;
-               bamm:properties (  ) ;
-               bamm:operations (  ) .
+            :TestAspect a samm:Aspect ;
+               samm:name "Test" ;
+               samm:preferredName "Test Aspect"@en ;
+               samm:description "This is a Test Aspect."@en ;
+               samm:properties (  ) ;
+               samm:operations (  ) .
     ModelOpenApiJson:
       description: OK
       content:

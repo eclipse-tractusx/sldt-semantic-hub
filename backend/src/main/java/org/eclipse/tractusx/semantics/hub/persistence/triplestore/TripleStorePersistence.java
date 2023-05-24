@@ -319,7 +319,7 @@ public class TripleStorePersistence implements PersistenceLayer {
       AspectModelUrn aspectModelUrn = AspectModelUrn.fromUrn( urn );
       SemanticModel model = new SemanticModel();
       model.setUrn( aspectModelUrn.getUrn().toString() );
-      model.setType( SemanticModelType.BAMM );
+      model.setType( SemanticModelType.SAMM );
       model.setVersion( aspectModelUrn.getVersion() );
       model.setName( aspectModelUrn.getName() );
       model.setStatus( SemanticModelStatus.fromValue( status ) );

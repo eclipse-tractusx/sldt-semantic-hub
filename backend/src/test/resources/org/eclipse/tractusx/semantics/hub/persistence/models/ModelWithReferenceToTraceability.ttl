@@ -19,21 +19,21 @@
 ###############################################################
 
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-@prefix bamm: <urn:bamm:io.openmanufacturing:meta-model:1.0.0#> .
-@prefix unit: <urn:bamm:io.openmanufacturing:unit:1.0.0#> .
-@prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:1.0.0#> .
-@prefix bamm-e: <urn:bamm:io.openmanufacturing:entity:1.0.0#> .
-@prefix traceability: <urn:bamm:org.eclipse.tractusx.traceability:0.1.1#> .
-@prefix : <urn:bamm:org.eclipse.tractusx.modelwithreferencetotraceability:0.1.1#> .
+@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:1.0.0#> .
+@prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:1.0.0#> .
+@prefix bamm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:1.0.0#> .
+@prefix bamm-e: <urn:samm:org.eclipse.esmf.samm:entity:1.0.0#> .
+@prefix traceability: <urn:samm:org.eclipse.tractusx.traceability:0.1.1#> .
+@prefix : <urn:samm:org.eclipse.tractusx.modelwithreferencetotraceability:0.1.1#> .
 
-:ModelWithReferenceToTraceability a bamm:Aspect ;
-   bamm:name "ModelWithReferenceToTraceability" ;
-   bamm:preferredName "ModelWithReferenceToTraceability"@en ;
-   bamm:description "This model references a Characteristic from the Traceability model"@en ;
-   bamm:properties ( :staticData ) ;
-   bamm:operations () .
+:ModelWithReferenceToTraceability a samm:Aspect ;
+   samm:name "ModelWithReferenceToTraceability" ;
+   samm:preferredName "ModelWithReferenceToTraceability"@en ;
+   samm:description "This model references a Characteristic from the Traceability model"@en ;
+   samm:properties ( :staticData ) ;
+   samm:operations () .
 
-:staticData a bamm:Property ;
-   bamm:name "staticData" ;
-   bamm:preferredName "Static Data"@en ;
-   bamm:characteristic traceability:PartDataCharacteristic .
+:staticData a samm:Property ;
+   samm:name "staticData" ;
+   samm:preferredName "Static Data"@en ;
+   samm:characteristic traceability:PartDataCharacteristic .

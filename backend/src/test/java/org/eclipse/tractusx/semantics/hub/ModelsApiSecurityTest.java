@@ -76,7 +76,7 @@ public class ModelsApiSecurityTest extends AbstractModelsApiTest {
 
     @Test
     public void testReadSemanticModelExpectForbidden() throws Exception {
-        String url = "/api/v1/models/urn:bamm:org.eclipse.tractusx.security.a:1.0.0#Test";
+        String url = "/api/v1/models/urn:samm:org.eclipse.tractusx.security.a:1.0.0#Test";
         verifyReadIsForbiddenForUrl(url);
         verifyReadIsForbiddenForUrl( url + "/file");
         verifyReadIsForbiddenForUrl( url + "/diagram");
@@ -100,7 +100,7 @@ public class ModelsApiSecurityTest extends AbstractModelsApiTest {
        mvc.perform(MockMvcRequestBuilders.post( "/api/v1/models" )
                    .accept( MediaType.APPLICATION_JSON )
                    .contentType( MediaType.APPLICATION_JSON )
-                   .content( TestUtils.createValidModelRequest("urn:bamm:org.eclipse.tractusx.security.a:1.0.0#" )   )
+                   .content( TestUtils.createValidModelRequest("urn:samm:org.eclipse.tractusx.security.a:1.0.0#" )   )
                    .with(jwtTokenFactory.readModel())
                )
                .andDo( MockMvcResultHandlers.print() )
@@ -112,7 +112,7 @@ public class ModelsApiSecurityTest extends AbstractModelsApiTest {
         mvc.perform(MockMvcRequestBuilders.put( "/api/v1/models" )
                         .accept( MediaType.APPLICATION_JSON )
                         .contentType( MediaType.APPLICATION_JSON )
-                        .content( TestUtils.createValidModelRequest("urn:bamm:org.eclipse.tractusx.security.a:1.0.0#" )   )
+                        .content( TestUtils.createValidModelRequest("urn:samm:org.eclipse.tractusx.security.a:1.0.0#" )   )
                         .with(jwtTokenFactory.addModel())
                 )
                 .andDo( MockMvcResultHandlers.print() )
@@ -121,7 +121,7 @@ public class ModelsApiSecurityTest extends AbstractModelsApiTest {
 
     @Test
     public void testDeleteSemanticModelExpectForbidden() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.delete( "/api/v1/models/urn:bamm:org.eclipse.tractusx.security.a:1.0.0#Test" )
+        mvc.perform(MockMvcRequestBuilders.delete( "/api/v1/models/urn:samm:org.eclipse.tractusx.security.a:1.0.0#Test" )
                         .accept( MediaType.APPLICATION_JSON )
                         .with(jwtTokenFactory.readModel())
                 )

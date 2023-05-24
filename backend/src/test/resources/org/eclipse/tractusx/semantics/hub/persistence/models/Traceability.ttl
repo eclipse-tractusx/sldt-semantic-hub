@@ -19,40 +19,40 @@
 ###############################################################
 
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-@prefix bamm: <urn:bamm:io.openmanufacturing:meta-model:1.0.0#> .
-@prefix unit: <urn:bamm:io.openmanufacturing:unit:1.0.0#> .
-@prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:1.0.0#> .
-@prefix bamm-e: <urn:bamm:io.openmanufacturing:entity:1.0.0#> .
-@prefix : <urn:bamm:org.eclipse.tractusx.traceability:0.1.1#> .
+@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:1.0.0#> .
+@prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:1.0.0#> .
+@prefix bamm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:1.0.0#> .
+@prefix bamm-e: <urn:samm:org.eclipse.esmf.samm:entity:1.0.0#> .
+@prefix : <urn:samm:org.eclipse.tractusx.traceability:0.1.1#> .
 
-:Traceability a bamm:Aspect ;
-   bamm:name "Traceability" ;
-   bamm:preferredName "Traceability"@en ;
-   bamm:description "Traceability"@en ;
-   bamm:properties ( :staticData ) ;
-   bamm:operations () .
+:Traceability a samm:Aspect ;
+   samm:name "Traceability" ;
+   samm:preferredName "Traceability"@en ;
+   samm:description "Traceability"@en ;
+   samm:properties ( :staticData ) ;
+   samm:operations () .
 
-:staticData a bamm:Property ;
-   bamm:name "staticData" ;
-   bamm:preferredName "Static Data"@en ;
-   bamm:characteristic :PartDataCharacteristic .
+:staticData a samm:Property ;
+   samm:name "staticData" ;
+   samm:preferredName "Static Data"@en ;
+   samm:characteristic :PartDataCharacteristic .
 
 :PartDataCharacteristic a bamm-c:SingleEntity ;
-   bamm:name "PartDataCharacteristic" ;
-   bamm:dataType :PartDataEntity .
+   samm:name "PartDataCharacteristic" ;
+   samm:dataType :PartDataEntity .
 
-:PartDataEntity a bamm:Entity ;
-   bamm:name "PartDataEntity" ;
-   bamm:properties ( :customerId ) ;
-   bamm:preferredName "Static Data"@en .
+:PartDataEntity a samm:Entity ;
+   samm:name "PartDataEntity" ;
+   samm:properties ( :customerId ) ;
+   samm:preferredName "Static Data"@en .
 
-:customerId a bamm:Property ;
-   bamm:name "customerContractOneID" ;
-   bamm:preferredName "Customer Contract OneID"@en ;
-   bamm:description "OneID of customer contract partner"@en ;
-   bamm:characteristic :BusinessPartner .
+:customerId a samm:Property ;
+   samm:name "customerContractOneID" ;
+   samm:preferredName "Customer Contract OneID"@en ;
+   samm:description "OneID of customer contract partner"@en ;
+   samm:characteristic :BusinessPartner .
 
 :BusinessPartner a bamm-c:Code ;
-   bamm:name "BusinessPartner" ;
-   bamm:preferredName "BusinessPartner"@en ;
-   bamm:dataType xsd:string .
+   samm:name "BusinessPartner" ;
+   samm:preferredName "BusinessPartner"@en ;
+   samm:dataType xsd:string .

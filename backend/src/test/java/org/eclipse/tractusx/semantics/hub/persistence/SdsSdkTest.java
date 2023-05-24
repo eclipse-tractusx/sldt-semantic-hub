@@ -46,9 +46,9 @@ public class SdsSdkTest {
       final AspectModelUrn aspectUrn = sdsSdk.getAspectUrn( model );
       assertThat( aspectUrn.getNamespace() ).isEqualTo( "org.eclipse.tractusx.semantics.test.productusage" );
       assertThat( aspectUrn.getUrnPrefix() )
-            .isEqualTo( "urn:bamm:org.eclipse.tractusx.semantics.test.productusage:1.2.0#" );
+            .isEqualTo( "urn:samm:org.eclipse.tractusx.semantics.test.productusage:1.2.0#" );
       assertThat( aspectUrn.getUrn().toString() ).isEqualTo(
-            "urn:bamm:org.eclipse.tractusx.semantics.test.productusage:1.2.0#ProductUsage" );
+            "urn:samm:org.eclipse.tractusx.semantics.test.productusage:1.2.0#ProductUsage" );
    }
 
    @Test

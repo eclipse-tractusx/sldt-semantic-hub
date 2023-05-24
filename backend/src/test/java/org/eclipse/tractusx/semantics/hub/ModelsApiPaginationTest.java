@@ -52,10 +52,10 @@ public class ModelsApiPaginationTest extends AbstractModelsApiTest {
    @Test
    public void testGetModelsWithPaginationExpectSuccess() throws Exception {
       List<String> prefixes = List.of(
-              "urn:bamm:org.eclipse.tractusx.pagination.a:1.0.0#",
-              "urn:bamm:org.eclipse.tractusx.pagination.b:1.0.0#",
-              "urn:bamm:org.eclipse.tractusx.pagination.c:1.0.0#",
-              "urn:bamm:org.eclipse.tractusx.pagination.d:1.0.0#"
+              "urn:samm:org.eclipse.tractusx.pagination.a:1.0.0#",
+              "urn:samm:org.eclipse.tractusx.pagination.b:1.0.0#",
+              "urn:samm:org.eclipse.tractusx.pagination.c:1.0.0#",
+              "urn:samm:org.eclipse.tractusx.pagination.d:1.0.0#"
       );
 
       prefixes.forEach(urnPrefix -> {

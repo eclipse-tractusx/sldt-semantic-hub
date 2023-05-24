@@ -51,18 +51,18 @@ import org.apache.jena.update.UpdateRequest;
 import org.eclipse.esmf.aspectmodel.urn.AspectModelUrn;
 
 public class SparqlQueries {
-   private static final String AUXILIARY_NAMESPACE = "urn:bamm:io.openmanufacturing:aspect-model:aux#";
+   private static final String AUXILIARY_NAMESPACE = "urn:samm:org.eclipse.esmf.samm:aspect-model:aux#";
 
    private static final String NAME_TYPE_NAME = "_NAME_";
    private static final String NAME_TYPE_DESCRIPTION = "_DESCRIPTION_";
 
    public static final String ASPECT = "aspect";
    public static final String STATUS_RESULT = "statusResult";
-   public static final String SAMM_ASPECT_URN_REGEX = "urn:bamm:io.openmanufacturing:meta-model:\\d\\.\\d\\.\\d#Aspect";
-   public static final String ALL_SAMM_ASPECT_URN_PREFIX = "urn:bamm:io.openmanufacturing:([a-z]|-)+:\\d\\.\\d\\.\\d#";
-   public static final String SAMM_ASPECT_URN_PREFIX = "urn:bamm:io.openmanufacturing:meta-model:\\d\\.\\d\\.\\d#";
-   public static final String SAMM_PREFERRED_NAME = "urn:bamm:io.openmanufacturing:meta-model:1.0.0#preferredName";
-   public static final String SAMM_DESCRIPTION = "urn:bamm:io.openmanufacturing:meta-model:1.0.0#description";
+   public static final String SAMM_ASPECT_URN_REGEX = "urn:samm:org.eclipse.esmf.samm:meta-model:\\d\\.\\d\\.\\d#Aspect";
+   public static final String ALL_SAMM_ASPECT_URN_PREFIX = "urn:samm:org.eclipse.esmf.samm:([a-z]|-)+:\\d\\.\\d\\.\\d#";
+   public static final String SAMM_ASPECT_URN_PREFIX = "urn:samm:org.eclipse.esmf.samm:meta-model:\\d\\.\\d\\.\\d#";
+   public static final String SAMM_PREFERRED_NAME = "urn:samm:org.eclipse.esmf.samm:meta-model:1.0.0#preferredName";
+   public static final String SAMM_DESCRIPTION = "urn:samm:org.eclipse.esmf.samm:meta-model:1.0.0#description";
    public static final Property STATUS_PROPERTY = ResourceFactory.createProperty( AUXILIARY_NAMESPACE, "status" );
 
    private static final String DELETE_BY_URN_QUERY =
@@ -313,7 +313,7 @@ public class SparqlQueries {
          pss.setLiteral( "$bammFieldToSearchInParam", SAMM_DESCRIPTION );
          pss.setLiteral( "$bammFieldSearchValueParam", nameFilter );
       } else if ( StringUtils.isNotBlank( nameType ) && nameFilterExists ) {
-         pss.setLiteral( "$bammTypeUrnRegexParam", SAMM_ASPECT_URN_PREFIX + nameType.replace( "bamm:", "" ).strip() );
+         pss.setLiteral( "$bammTypeUrnRegexParam", SAMM_ASPECT_URN_PREFIX + nameType.replace( "samm:", "" ).strip() );
          pss.setLiteral( "$bammFieldToSearchInParam", SAMM_PREFERRED_NAME );
          pss.setLiteral( "$bammFieldSearchValueParam", nameFilter );
       } else {

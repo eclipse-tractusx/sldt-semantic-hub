@@ -52,7 +52,7 @@ public class ModelsApiFilterTest extends AbstractModelsApiTest{
    public void testGetByNamespaceExpectResultsFound() throws Exception {
       mvc.perform(
                MockMvcRequestBuilders.get(
-                                           "/api/v1/models?namespaceFilter=urn:bamm:org.eclipse" )
+                                           "/api/v1/models?namespaceFilter=urn:samm:org.eclipse" )
                                      .accept( MediaType.APPLICATION_JSON )
                                      .with(jwtTokenFactory.allRoles())
          )
@@ -65,7 +65,7 @@ public class ModelsApiFilterTest extends AbstractModelsApiTest{
 
       mvc.perform(
                MockMvcRequestBuilders.get(
-                                           "/api/v1/models?namespaceFilter=urn:bamm:org.eclipse.tractusx.traceability" )
+                                           "/api/v1/models?namespaceFilter=urn:samm:org.eclipse.tractusx.traceability" )
                                      .accept( MediaType.APPLICATION_JSON )
                                      .with(jwtTokenFactory.allRoles())
          )
@@ -81,7 +81,7 @@ public class ModelsApiFilterTest extends AbstractModelsApiTest{
    public void testGetByNamespaceWithCaseInsensitiveExpectResultsFound() throws Exception {
       mvc.perform(
                   MockMvcRequestBuilders.get(
-                              "/api/v1/models?namespaceFilter=urn:bamm:org.eclipse.TRACtusx.TraceaBiliTy" )
+                              "/api/v1/models?namespaceFilter=urn:samm:org.eclipse.TRACtusx.TraceaBiliTy" )
                         .accept( MediaType.APPLICATION_JSON )
                         .with(jwtTokenFactory.allRoles())
             )
@@ -97,7 +97,7 @@ public class ModelsApiFilterTest extends AbstractModelsApiTest{
    public void testGetModelListByAvailablePropertyTypeExpectResultsFound() throws Exception {
       mvc.perform(
                MockMvcRequestBuilders.get(
-                                           "/api/v1/models?nameType=bamm:Property&nameFilter=Static%20Data" )
+                                           "/api/v1/models?nameType=samm:Property&nameFilter=Static%20Data" )
                                      .accept( MediaType.APPLICATION_JSON )
                                      .with(jwtTokenFactory.allRoles())
          )
@@ -113,7 +113,7 @@ public class ModelsApiFilterTest extends AbstractModelsApiTest{
    public void testGetByNamespaceExpectEmptyResultList() throws Exception {
       mvc.perform(
                MockMvcRequestBuilders.get(
-                                           "/api/v1/models?namespaceFilter=urn:bamm:org.eclipse.tractusx.modelwithreferencetotraceabilitynonexisting" )
+                                           "/api/v1/models?namespaceFilter=urn:samm:org.eclipse.tractusx.modelwithreferencetotraceabilitynonexisting" )
                                      .accept( MediaType.APPLICATION_JSON )
                                      .with(jwtTokenFactory.allRoles())
          )
@@ -135,7 +135,7 @@ public class ModelsApiFilterTest extends AbstractModelsApiTest{
          .andDo( MockMvcResultHandlers.print() )
          .andExpect( jsonPath( "$.items" ).isArray() )
          .andExpect( jsonPath( "$.items[*].urn", hasItem(
-               "urn:bamm:org.eclipse.tractusx.modelwithreferencetotraceability:0.1.1#ModelWithReferenceToTraceability" ) ) )
+               "urn:samm:org.eclipse.tractusx.modelwithreferencetotraceability:0.1.1#ModelWithReferenceToTraceability" ) ) )
          .andExpect( jsonPath( "$.items[*].version", hasItem( "0.1.1" ) ) )
          .andExpect( jsonPath( "$.items[*].name", hasItem( "ModelWithReferenceToTraceability" ) ) )
          .andExpect( jsonPath( "$.items[*].type", hasItem( "SAMM" ) ) )
@@ -152,7 +152,7 @@ public class ModelsApiFilterTest extends AbstractModelsApiTest{
          .andDo( MockMvcResultHandlers.print() )
          .andExpect( jsonPath( "$.items" ).isArray() )
          .andExpect( jsonPath( "$.items[*].urn", hasItem(
-               "urn:bamm:org.eclipse.tractusx.traceability:0.1.1#Traceability" ) ) )
+               "urn:samm:org.eclipse.tractusx.traceability:0.1.1#Traceability" ) ) )
          .andExpect( jsonPath( "$.items[*].version", hasItem( "0.1.1" ) ) )
          .andExpect( jsonPath( "$.items[*].name", hasItem( "Traceability" ) ) )
          .andExpect( jsonPath( "$.items[*].type", hasItem( "SAMM" ) ) )
