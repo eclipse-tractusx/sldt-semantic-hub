@@ -205,7 +205,7 @@ public class TripleStorePersistence implements PersistenceLayer {
    }
 
    private boolean hasReferenceToDraftPackage( AspectModelUrn modelUrn, Model model ) {
-      Pattern pattern = Pattern.compile( SparqlQueries.ALL_BAMM_ASPECT_URN_PREFIX );
+      Pattern pattern = Pattern.compile( SparqlQueries.ALL_SAMM_ASPECT_URN_PREFIX );
 
       List<String> urns = AspectModelResolver.getAllUrnsInModel( model ).stream().filter( urn -> getAspectModelUrn( urn ).isSuccess() )
             .map( urn -> getAspectModelUrn( urn ).get().getUrnPrefix() )

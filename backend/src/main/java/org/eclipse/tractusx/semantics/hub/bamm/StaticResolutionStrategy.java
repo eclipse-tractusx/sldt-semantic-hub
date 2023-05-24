@@ -64,7 +64,7 @@ public class StaticResolutionStrategy extends AbstractResolutionStrategy {
 
    private Optional<StmtIterator> getStmtIterator() {
       for ( final KnownVersion version : KnownVersion.getVersions() ) {
-         final BAMM bamm = new BAMM( version );
+         final SAMM bamm = new SAMM( version );
          final List<Resource> resources = List.of( bamm.Aspect(), bamm.Property(), bamm.Entity(), bamm.Characteristic() );
          final Optional<StmtIterator> stmtIterator = resources.stream().filter(
                      resource -> model.get().listStatements( null, RDF.type, resource ).hasNext() ).findFirst()

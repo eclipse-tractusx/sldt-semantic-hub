@@ -60,7 +60,7 @@ public class SdsSdkTest {
    }
 
    /**
-    * This test case fails currently. It's seams to be a bug in the BAMM sdk. I issue for this is created.
+    * This test case fails currently. It's seams to be a bug in the SAMM sdk. I issue for this is created.
     *
     * @throws IOException
     */

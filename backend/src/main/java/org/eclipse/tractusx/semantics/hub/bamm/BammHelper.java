@@ -53,6 +53,7 @@ import org.eclipse.esmf.aspectmodel.resolver.services.VersionedModel;
 import org.eclipse.esmf.aspectmodel.shacl.violation.Violation;
 import org.eclipse.esmf.aspectmodel.validation.services.AspectModelValidator;
 import org.eclipse.esmf.metamodel.Aspect;
+import org.eclipse.esmf.metamodel.AspectContext;
 import org.eclipse.esmf.metamodel.loader.AspectModelLoader;
 import io.vavr.control.Try;
 
@@ -76,9 +77,9 @@ public class BammHelper {
       return versionedModel;
    }
 
-   public Try<Aspect> getAspectFromVersionedModel( VersionedModel versionedModel ) {
+   public Try<List<Aspect>> getAspectFromVersionedModel( VersionedModel versionedModel ) {
 
-      return AspectModelLoader.fromVersionedModel( versionedModel );
+      return AspectModelLoader.getAspects( versionedModel );
    }
 
    public List<Violation> validateModel( Try<VersionedModel> model ) {
@@ -107,7 +108,10 @@ public class BammHelper {
 
    public Try<byte[]> getHtmlDocu( VersionedModel versionedModel ) {
       ByteArrayOutputStream output = new ByteArrayOutputStream();
-      AspectModelDocumentationGenerator documentationGenerator = new AspectModelDocumentationGenerator( versionedModel );
+
+      final Aspect aspect = AspectModelLoader.getAspects(versionedModel).get().get(0);
+      
+      AspectModelDocumentationGenerator documentationGenerator = new AspectModelDocumentationGenerator( new AspectContext(versionedModel, aspect) );
 
       Map<AspectModelDocumentationGenerator.HtmlGenerationOption, String> options = new HashMap();
 

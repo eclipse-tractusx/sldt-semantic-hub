@@ -62,7 +62,7 @@ public class SdsSdk {
 
    private static final String MESSAGE_MISSING_METAMODEL_VERSION = "Unable to parse metamodel version";
    private static final String MESSAGE_MULTIPLE_METAMODEL_VERSIONS = "Multiple metamodel versions detected, unable to parse";
-   private static final String MESSAGE_BAMM_VERSION_NOT_SUPPORTED = "The used meta model version is not supported";
+   private static final String MESSAGE_SAMM_VERSION_NOT_SUPPORTED = "The used meta model version is not supported";
 
    private final AspectMetaModelResourceResolver aspectMetaModelResourceResolver;
    private final AspectModelResolver aspectModelResolver;
@@ -85,7 +85,7 @@ public class SdsSdk {
    }
 
    /**
-    * Resolves the given model with the provided resolution strategy and validates the conformidity using the BAMM
+    * Resolves the given model with the provided resolution strategy and validates the conformidity using the SAMM
     * tooling.
     *
     * @param model - the model to validate
@@ -123,7 +123,7 @@ public class SdsSdk {
       return StreamSupport.stream( Spliterators.spliteratorUnknownSize( stmtIterator, ORDERED ), false )
             .filter( statement -> statement.getObject().isURIResource() )
             .filter( statement -> statement.getObject().asResource().toString()
-                  .matches( SparqlQueries.BAMM_ASPECT_URN_REGEX ) )
+                  .matches( SparqlQueries.SAMM_ASPECT_URN_REGEX ) )
             .map( Statement::getSubject )
             .map( Resource::toString )
             .map( AspectModelUrn::fromUrn )
@@ -133,7 +133,7 @@ public class SdsSdk {
 
    public VersionNumber getKnownVersion( final Model rawModel ) {
       return aspectMetaModelResourceResolver
-            .getBammVersion( rawModel )
+            .getMetaModelVersion( rawModel )
             .onFailure( MissingMetaModelVersionException.class,
                   e -> {
                      throw new InvalidAspectModelException( MESSAGE_MISSING_METAMODEL_VERSION );
@@ -144,7 +144,7 @@ public class SdsSdk {
                   } )
             .onFailure( UnsupportedVersionException.class,
                   e -> {
-                     throw new InvalidAspectModelException( MESSAGE_BAMM_VERSION_NOT_SUPPORTED );
+                     throw new InvalidAspectModelException( MESSAGE_SAMM_VERSION_NOT_SUPPORTED );
                   } ).get();
    }
 

@@ -177,11 +177,11 @@ public class AspectModelService implements ModelsApiDelegate {
    }
 
    private Aspect getBamAspect( String urn ) {
-      final Try<Aspect> aspect = bammHelper.getAspectFromVersionedModel( getVersionedModel( urn ) );
-      if ( aspect.isFailure() ) {
-         throw new RuntimeException( "Failed to load aspect model", aspect.getCause() );
+      final Try<List<Aspect>> aspects = bammHelper.getAspectFromVersionedModel( getVersionedModel( urn ) );
+      if ( aspects.isFailure() ) {
+         throw new RuntimeException( "Failed to load aspect model", aspects.getCause() );
       }
-      return aspect.get();
+      return aspects.get().get(0);
    }
 
    private VersionedModel getVersionedModel( String urn ) {
