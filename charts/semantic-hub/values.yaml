@@ -24,8 +24,8 @@ enableKeycloak: true
 
 hub:
   image:
-    registry: ghcr.io/catenax-ng
-    repository: sldt-semantic-hub
+    registry: docker.io
+    repository: tractusx/sldt-semantic-hub
     # This version property overwrites the default image version. The default image version is the appVersion of the Chart.yaml.
     version: ""
   imagePullPolicy: IfNotPresent
