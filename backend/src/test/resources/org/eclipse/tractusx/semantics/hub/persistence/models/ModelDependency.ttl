@@ -18,39 +18,39 @@
 # SPDX-License-Identifier: Apache-2.0
 ###############################################################
 
-@prefix :       <urn:bamm:org.eclipse.tractusx.dependency:1.0.0#> .
-@prefix bamm:   <urn:bamm:io.openmanufacturing:meta-model:1.0.0#> .
-@prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:1.0.0#> .
+@prefix :       <urn:samm:org.eclipse.tractusx.dependency:1.0.0#> .
+@prefix samm:   <urn:samm:org.eclipse.esmf.samm:meta-model:1.0.0#> .
+@prefix bamm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:1.0.0#> .
 @prefix xsd:    <http://www.w3.org/2001/XMLSchema#> .
-@prefix unit: <urn:bamm:io.openmanufacturing:unit:1.0.0#> .
+@prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:1.0.0#> .
 
-:Dependency a bamm:Aspect ;
-    bamm:name "Dependency" ;
-    bamm:preferredName "Dependency"@en ;
-    bamm:description "Dependency Aspect"@en ;
-    bamm:properties ( :testProperty ) ;
-    bamm:operations ( ) .
+:Dependency a samm:Aspect ;
+    samm:name "Dependency" ;
+    samm:preferredName "Dependency"@en ;
+    samm:description "Dependency Aspect"@en ;
+    samm:properties ( :testProperty ) ;
+    samm:operations ( ) .
 
-:testProperty a bamm:Property ;
-    bamm:name "testProperty" ;
-    bamm:preferredName "testProperty"@en ;
-    bamm:description "Test Property"@en ;
-    bamm:characteristic :TestCharacteristic .
+:testProperty a samm:Property ;
+    samm:name "testProperty" ;
+    samm:preferredName "testProperty"@en ;
+    samm:description "Test Property"@en ;
+    samm:characteristic :TestCharacteristic .
 
-:TestCharacteristic a bamm:Characteristic ;
-    bamm:name "TestCharacteristic" ;
-    bamm:preferredName "TestCharacteristic"@en ;
-    bamm:description "Test Characteristic"@en ;
-    bamm:dataType :DependencyEntity .
+:TestCharacteristic a samm:Characteristic ;
+    samm:name "TestCharacteristic" ;
+    samm:preferredName "TestCharacteristic"@en ;
+    samm:description "Test Characteristic"@en ;
+    samm:dataType :DependencyEntity .
 
-:DependencyEntity a bamm:Entity ;
-    bamm:name "DependencyEntity" ;
-    bamm:preferredName "DependencyEntity"@en ;
-    bamm:description "Dependency Entity"@en ;
-    bamm:properties ( :placeholder ) .
+:DependencyEntity a samm:Entity ;
+    samm:name "DependencyEntity" ;
+    samm:preferredName "DependencyEntity"@en ;
+    samm:description "Dependency Entity"@en ;
+    samm:properties ( :placeholder ) .
 
-:placeholder a bamm:Property ;
-    bamm:name "placeholder" ;
-    bamm:preferredName "placeholder"@en ;
-    bamm:description "Placeholder"@en ;
-    bamm:characteristic bamm-c:Boolean .
+:placeholder a samm:Property ;
+    samm:name "placeholder" ;
+    samm:preferredName "placeholder"@en ;
+    samm:description "Placeholder"@en ;
+    samm:characteristic bamm-c:Boolean .
