@@ -64,7 +64,7 @@ import jakarta.json.JsonArray;
 public class ModelsApiTest extends AbstractModelsApiTest{
 
     @BeforeAll
-    public void init() throws Exception {
+    public void init() {
         deleteAllData();
    }
 
@@ -323,6 +323,11 @@ public class ModelsApiTest extends AbstractModelsApiTest{
                  .andDo( MockMvcResultHandlers.print() )
                  .andExpect(status().isOk());
 
+         // Transition from draft to standardized is not allowed
+         mvc.perform(post( TestUtils.createValidModelRequest(urnPrefix),"STANDARDIZED") )
+               .andDo( MockMvcResultHandlers.print() )
+               .andExpect(status().isBadRequest());
+
          // transition from draft to release is allowed, delete is not allowed
          mvc.perform(post( TestUtils.createValidModelRequest(urnPrefix),"RELEASED") )
                  .andDo( MockMvcResultHandlers.print() )
@@ -337,10 +342,21 @@ public class ModelsApiTest extends AbstractModelsApiTest{
          // transition from released to draft is not allowed
          mvc.perform(post( TestUtils.createValidModelRequest(urnPrefix),"DRAFT") )
                  .andExpect( jsonPath( "$.error.message", is(
-                         "The package urn:samm:org.eclipse.tractusx.model.status.transition.post:2.0.0# is already in status RELEASED and cannot be modified. Only a transition to DEPRECATED is possible." ) ) )
+                         "The package urn:samm:org.eclipse.tractusx.model.status.transition.post:2.0.0# is already in status RELEASED and cannot be modified. Only a transition to STANDARDIZED or DEPRECATED is possible." ) ) )
                  .andExpect( status().isBadRequest() );
 
-         // transition from released to deprecated is allowed
+         // transition from released to standardized is allowed
+         mvc.perform(post( TestUtils.createValidModelRequest(urnPrefix),"STANDARDIZED") )
+               .andDo( MockMvcResultHandlers.print() )
+               .andExpect(status().isOk());
+
+         // transition from standardized to draft is not allowed
+         mvc.perform(post( TestUtils.createValidModelRequest(urnPrefix),"DRAFT") )
+               .andExpect( jsonPath( "$.error.message", is(
+                     "The package urn:samm:org.eclipse.tractusx.model.status.transition.post:2.0.0# is already in status STANDARDIZED and cannot be modified. Only a transition to DEPRECATED is possible." ) ) )
+               .andExpect( status().isBadRequest() );
+
+         // transition from standardized to deprecated is allowed
          mvc.perform(
                          post( TestUtils.createValidModelRequest(urnPrefix),"DEPRECATED")
                  )
@@ -385,10 +401,15 @@ public class ModelsApiTest extends AbstractModelsApiTest{
          // transition from released to draft is not allowed
          mvc.perform(put( TestUtils.createValidModelRequest(urnPrefix), "DRAFT") )
                  .andExpect( jsonPath( "$.error.message", is(
-                         "The package urn:samm:org.eclipse.tractusx.model.status.transition.put:2.0.0# is already in status RELEASED and cannot be modified. Only a transition to DEPRECATED is possible." ) ) )
+                         "The package urn:samm:org.eclipse.tractusx.model.status.transition.put:2.0.0# is already in status RELEASED and cannot be modified. Only a transition to STANDARDIZED or DEPRECATED is possible." ) ) )
                  .andExpect( status().isBadRequest() );
 
-         // transition from released to deprecated is allowed
+         // transition from released to standardized is allowed
+         mvc.perform(put( TestUtils.createValidModelRequest(urnPrefix),"STANDARDIZED") )
+               .andDo( MockMvcResultHandlers.print() )
+               .andExpect(status().isOk());
+
+         // transition from standardized to deprecated is allowed
          mvc.perform(put( TestUtils.createValidModelRequest(urnPrefix),"DEPRECATED") )
                  .andDo( MockMvcResultHandlers.print() )
                  .andExpect(status().isOk());
