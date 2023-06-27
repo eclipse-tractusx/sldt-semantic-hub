@@ -406,6 +406,7 @@ components:
       enum:
         - DRAFT
         - RELEASED
+        - STANDARDIZED
         - DEPRECATED
     SemanticModelType:
       type: string
