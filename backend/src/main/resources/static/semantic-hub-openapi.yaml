@@ -476,6 +476,7 @@ components:
       enum:
         - FILE
         - XML
+        - JSON
   responses:
     SemanticModelJsonSchema:
       description: OK

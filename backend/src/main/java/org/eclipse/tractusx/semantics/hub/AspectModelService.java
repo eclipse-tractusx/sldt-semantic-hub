@@ -8,6 +8,11 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+import org.eclipse.esmf.aspectmodel.resolver.services.VersionedModel;
+import org.eclipse.esmf.aspectmodel.urn.AspectModelUrn;
+import org.eclipse.esmf.metamodel.Aspect;
+import org.eclipse.tractusx.semantics.hub.api.ModelsApiDelegate;
+import org.eclipse.tractusx.semantics.hub.bamm.BammHelper;
 import org.eclipse.tractusx.semantics.hub.domain.ModelPackageStatus;
 import org.eclipse.tractusx.semantics.hub.domain.ModelPackageUrn;
 import org.eclipse.tractusx.semantics.hub.model.AasFormat;
@@ -15,6 +20,7 @@ import org.eclipse.tractusx.semantics.hub.model.SemanticModel;
 import org.eclipse.tractusx.semantics.hub.model.SemanticModelList;
 import org.eclipse.tractusx.semantics.hub.model.SemanticModelStatus;
 import org.eclipse.tractusx.semantics.hub.model.SemanticModelType;
+import org.eclipse.tractusx.semantics.hub.persistence.PersistenceLayer;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -23,13 +29,7 @@ import org.springframework.http.ResponseEntity;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.Lists;
 
-import org.eclipse.esmf.aspectmodel.resolver.services.VersionedModel;
-import org.eclipse.esmf.aspectmodel.urn.AspectModelUrn;
-import org.eclipse.esmf.metamodel.Aspect;
-import org.eclipse.tractusx.semantics.hub.bamm.BammHelper;
-import org.eclipse.tractusx.semantics.hub.persistence.PersistenceLayer;
 import io.vavr.control.Try;
-import org.eclipse.tractusx.semantics.hub.api.ModelsApiDelegate;
 
 public class AspectModelService implements ModelsApiDelegate {
 
@@ -153,14 +153,23 @@ public class AspectModelService implements ModelsApiDelegate {
          throw new RuntimeException( String.format( "Failed to generate AASX submodel template for model with urn %s", urn ) );
       }
       HttpHeaders responseHeaders = new HttpHeaders();
-
-      if(aasFormat.equals(AasFormat.FILE)) {
-         responseHeaders.set("Content-Type", "application/octet-stream");
-      } else {
-         responseHeaders.set("Content-Type", "application/xml");
-      }
+      responseHeaders.setContentType(getMediaType( aasFormat ));
 
       return new ResponseEntity( result.get(), responseHeaders, HttpStatus.OK );
+   }
+
+   /**
+    * Determines the MediaType based on the AasFormat
+    * @param aasFormat
+    * @return MediaType
+    */
+   private MediaType getMediaType( AasFormat aasFormat ) {
+      MediaType mediaType = switch ( aasFormat ) {
+         case FILE -> MediaType.APPLICATION_OCTET_STREAM;
+         case XML -> MediaType.APPLICATION_XML;
+         case JSON -> MediaType.APPLICATION_JSON;
+      };
+      return mediaType;
    }
 
    @Override
