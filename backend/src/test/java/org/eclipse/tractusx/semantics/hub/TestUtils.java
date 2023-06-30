@@ -41,6 +41,10 @@ public class TestUtils {
    private static final String MODEL_DEPENDENCY = MODELS_ROOT_PATH + "ModelDependency.ttl";
    private static final String DEPENDENT_MODEL = MODELS_ROOT_PATH + "DependentModel.ttl";
 
+   public static final String AAS_ROOT_PATH = "aas/";
+
+   public static final String AAS_JSON_FILE = "aasJSONFormat.json";
+
 
    public static String loadModelFromResources( String resourceName ) throws IOException {
       return IOUtils.resourceToString( resourceName, StandardCharsets.UTF_8, TestUtils.class.getClassLoader() );
