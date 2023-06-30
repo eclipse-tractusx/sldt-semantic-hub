@@ -19,7 +19,7 @@
  ********************************************************************************/
 package org.eclipse.tractusx.semantics.hub;
 
-import static org.eclipse.tractusx.semantics.hub.TestUtils.*;
+import static org.eclipse.tractusx.semantics.hub.TestUtils.AAS_JSON_FILE;
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -191,7 +191,7 @@ public class ModelsApiTest extends AbstractModelsApiTest{
      mvc.perform( MockMvcRequestBuilders.get( "/api/v1/models/{urn}/aas?aasFormat=JSON", toMovementUrn( urnPrefix ) ).with( jwtTokenFactory.allRoles() ) )
            .andDo( MockMvcResultHandlers.print() )
            .andExpect( status().isOk() )
-           .andExpect( content().json( TestUtils.loadModelFromResources( AAS_ROOT_PATH + AAS_JSON_FILE )));
+           .andExpect( content().json( TestUtils.loadModelFromResources( AAS_JSON_FILE )));
 
   }
 
