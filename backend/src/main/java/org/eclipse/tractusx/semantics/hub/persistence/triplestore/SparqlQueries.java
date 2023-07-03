@@ -48,21 +48,21 @@ import org.apache.jena.rdf.model.impl.RDFListImpl;
 import org.apache.jena.reasoner.rulesys.FunctorDatatype;
 import org.apache.jena.update.UpdateRequest;
 
-import io.openmanufacturing.sds.aspectmodel.urn.AspectModelUrn;
+import org.eclipse.esmf.aspectmodel.urn.AspectModelUrn;
 
 public class SparqlQueries {
-   private static final String AUXILIARY_NAMESPACE = "urn:bamm:io.openmanufacturing:aspect-model:aux#";
+   private static final String AUXILIARY_NAMESPACE = "urn:samm:org.eclipse.esmf.samm:aspect-model:aux#";
 
    private static final String NAME_TYPE_NAME = "_NAME_";
    private static final String NAME_TYPE_DESCRIPTION = "_DESCRIPTION_";
 
    public static final String ASPECT = "aspect";
    public static final String STATUS_RESULT = "statusResult";
-   public static final String BAMM_ASPECT_URN_REGEX = "urn:bamm:io.openmanufacturing:meta-model:\\d\\.\\d\\.\\d#Aspect";
-   public static final String ALL_BAMM_ASPECT_URN_PREFIX = "urn:bamm:io.openmanufacturing:([a-z]|-)+:\\d\\.\\d\\.\\d#";
-   public static final String BAMM_ASPECT_URN_PREFIX = "urn:bamm:io.openmanufacturing:meta-model:\\d\\.\\d\\.\\d#";
-   public static final String BAMM_PREFERRED_NAME = "urn:bamm:io.openmanufacturing:meta-model:1.0.0#preferredName";
-   public static final String BAMM_DESCRIPTION = "urn:bamm:io.openmanufacturing:meta-model:1.0.0#description";
+   public static final String SAMM_ASPECT_URN_REGEX = "urn:samm:org.eclipse.esmf.samm:meta-model:\\d\\.\\d\\.\\d#Aspect";
+   public static final String ALL_SAMM_ASPECT_URN_PREFIX = "urn:samm:org.eclipse.esmf.samm:([a-z]|-)+:\\d\\.\\d\\.\\d#";
+   public static final String SAMM_ASPECT_URN_PREFIX = "urn:samm:org.eclipse.esmf.samm:meta-model:\\d\\.\\d\\.\\d#";
+   public static final String SAMM_PREFERRED_NAME = "urn:samm:org.eclipse.esmf.samm:meta-model:1.0.0#preferredName";
+   public static final String SAMM_DESCRIPTION = "urn:samm:org.eclipse.esmf.samm:meta-model:1.0.0#description";
    public static final Property STATUS_PROPERTY = ResourceFactory.createProperty( AUXILIARY_NAMESPACE, "status" );
 
    private static final String DELETE_BY_URN_QUERY =
@@ -188,7 +188,7 @@ public class SparqlQueries {
    public static Query buildFindByUrnQuery( final AspectModelUrn urn ) {
       final ParameterizedSparqlString pss = create( FIND_BY_URN_QUERY );
       pss.setLiteral( "$urnParam", urn.toString() );
-      pss.setLiteral( "$bammAspectUrnParam", BAMM_ASPECT_URN_REGEX );
+      pss.setLiteral( "$bammAspectUrnParam", SAMM_ASPECT_URN_REGEX );
       pss.setLiteral( "$packageUrnParam", ModelPackageUrn.fromUrn( urn ).getUrn() );
       return pss.asQuery();
    }
@@ -205,7 +205,7 @@ public class SparqlQueries {
       });
 
       pss.setValues("urnParamList", urnList);
-      pss.setLiteral( "$bammAspectUrnParam", BAMM_ASPECT_URN_REGEX );
+      pss.setLiteral( "$bammAspectUrnParam", SAMM_ASPECT_URN_REGEX );
       pss.setValues( "packageUrnParamList", modelPackageUrnList );
       pss.setLiteral("offsetParam", getOffset(page, pageSize));
       pss.setLiteral("limitParam", pageSize);
@@ -288,7 +288,7 @@ public class SparqlQueries {
 
    private static ParameterizedSparqlString buildMinimalQuery(String query, String namespaceFilter, ModelPackageStatus status){
       final ParameterizedSparqlString pss = create( query );
-      pss.setLiteral( "$bammAspectUrnRegexParam", BAMM_ASPECT_URN_REGEX );
+      pss.setLiteral( "$bammAspectUrnRegexParam", SAMM_ASPECT_URN_REGEX );
       if ( StringUtils.isNotBlank( namespaceFilter ) ) {
          pss.setLiteral( "$namespaceFilterParam", namespaceFilter );
       }
@@ -303,22 +303,22 @@ public class SparqlQueries {
          String nameFilter, String nameType,
          ModelPackageStatus status ) {
       final ParameterizedSparqlString pss = create( query );
-      pss.setLiteral( "$bammAspectUrnRegexParam", BAMM_ASPECT_URN_REGEX );
+      pss.setLiteral( "$bammAspectUrnRegexParam", SAMM_ASPECT_URN_REGEX );
       boolean nameFilterExists = StringUtils.isNotBlank( nameFilter );
 
       if ( NAME_TYPE_NAME.equals( nameType ) && nameFilterExists ) {
-         pss.setLiteral( "$bammFieldToSearchInParam", BAMM_PREFERRED_NAME );
+         pss.setLiteral( "$bammFieldToSearchInParam", SAMM_PREFERRED_NAME );
          pss.setLiteral( "$bammFieldSearchValueParam", nameFilter );
       } else if ( NAME_TYPE_DESCRIPTION.equals( nameType ) && nameFilterExists ) {
-         pss.setLiteral( "$bammFieldToSearchInParam", BAMM_DESCRIPTION );
+         pss.setLiteral( "$bammFieldToSearchInParam", SAMM_DESCRIPTION );
          pss.setLiteral( "$bammFieldSearchValueParam", nameFilter );
       } else if ( StringUtils.isNotBlank( nameType ) && nameFilterExists ) {
-         pss.setLiteral( "$bammTypeUrnRegexParam", BAMM_ASPECT_URN_PREFIX + nameType.replace( "bamm:", "" ).strip() );
-         pss.setLiteral( "$bammFieldToSearchInParam", BAMM_PREFERRED_NAME );
+         pss.setLiteral( "$bammTypeUrnRegexParam", SAMM_ASPECT_URN_PREFIX + nameType.replace( "samm:", "" ).strip() );
+         pss.setLiteral( "$bammFieldToSearchInParam", SAMM_PREFERRED_NAME );
          pss.setLiteral( "$bammFieldSearchValueParam", nameFilter );
       } else {
-         pss.setLiteral( "$bammFieldToSearchInParam", BAMM_PREFERRED_NAME );
-         pss.setLiteral( "$bammTypeUrnRegexParam", BAMM_ASPECT_URN_REGEX );
+         pss.setLiteral( "$bammFieldToSearchInParam", SAMM_PREFERRED_NAME );
+         pss.setLiteral( "$bammTypeUrnRegexParam", SAMM_ASPECT_URN_REGEX );
       }
       if ( status != null ) {
          pss.setLiteral( "$statusFilterParam", status.name() );

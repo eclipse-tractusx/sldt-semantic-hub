@@ -32,8 +32,8 @@ import org.eclipse.tractusx.semantics.hub.InvalidAspectModelException;
 import org.eclipse.tractusx.semantics.hub.TestUtils;
 import org.eclipse.tractusx.semantics.hub.persistence.triplestore.ResourceDefinitionNotFoundException;
 import org.eclipse.tractusx.semantics.hub.persistence.triplestore.SdsSdk;
-import io.openmanufacturing.sds.aspectmodel.resolver.ResolutionStrategy;
-import io.openmanufacturing.sds.aspectmodel.urn.AspectModelUrn;
+import org.eclipse.esmf.aspectmodel.resolver.ResolutionStrategy;
+import org.eclipse.esmf.aspectmodel.urn.AspectModelUrn;
 import io.vavr.control.Try;
 
 public class SdsSdkTest {
@@ -46,9 +46,9 @@ public class SdsSdkTest {
       final AspectModelUrn aspectUrn = sdsSdk.getAspectUrn( model );
       assertThat( aspectUrn.getNamespace() ).isEqualTo( "org.eclipse.tractusx.semantics.test.productusage" );
       assertThat( aspectUrn.getUrnPrefix() )
-            .isEqualTo( "urn:bamm:org.eclipse.tractusx.semantics.test.productusage:1.2.0#" );
+            .isEqualTo( "urn:samm:org.eclipse.tractusx.semantics.test.productusage:1.2.0#" );
       assertThat( aspectUrn.getUrn().toString() ).isEqualTo(
-            "urn:bamm:org.eclipse.tractusx.semantics.test.productusage:1.2.0#ProductUsage" );
+            "urn:samm:org.eclipse.tractusx.semantics.test.productusage:1.2.0#ProductUsage" );
    }
 
    @Test
@@ -60,7 +60,7 @@ public class SdsSdkTest {
    }
 
    /**
-    * This test case fails currently. It's seams to be a bug in the BAMM sdk. I issue for this is created.
+    * This test case fails currently. It's seams to be a bug in the SAMM sdk. I issue for this is created.
     *
     * @throws IOException
     */

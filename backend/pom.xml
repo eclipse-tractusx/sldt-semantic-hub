@@ -98,8 +98,8 @@
         </dependency>
         <!-- Semantics Libraries -->
         <dependency>
-            <groupId>io.openmanufacturing</groupId>
-            <artifactId>sds-aspect-model-starter</artifactId>
+            <groupId>org.eclipse.esmf</groupId>
+            <artifactId>esmf-aspect-model-starter</artifactId>
         </dependency>
         <!--
             The AASX generator uses this dependency to generate AASX XML files.
@@ -122,8 +122,8 @@
             <artifactId>woodstox-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.openmanufacturing</groupId>
-            <artifactId>sds-aspect-model-aas-generator</artifactId>
+            <groupId>org.eclipse.esmf</groupId>
+            <artifactId>esmf-aspect-model-aas-generator</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>junit</groupId>

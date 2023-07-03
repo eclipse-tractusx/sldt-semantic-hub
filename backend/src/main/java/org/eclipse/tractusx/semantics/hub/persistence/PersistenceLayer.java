@@ -31,7 +31,7 @@ import org.eclipse.tractusx.semantics.hub.model.SemanticModelList;
 import org.eclipse.tractusx.semantics.hub.model.SemanticModelStatus;
 import org.eclipse.tractusx.semantics.hub.model.SemanticModelType;
 
-import io.openmanufacturing.sds.aspectmodel.urn.AspectModelUrn;
+import org.eclipse.esmf.aspectmodel.urn.AspectModelUrn;
 
 /**
  * Interface to any model persistency implementation

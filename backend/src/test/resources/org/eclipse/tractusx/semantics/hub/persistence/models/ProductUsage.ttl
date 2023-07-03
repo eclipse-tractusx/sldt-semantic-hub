@@ -18,21 +18,21 @@
 # SPDX-License-Identifier: Apache-2.0
 ###############################################################
 
-@prefix :       <urn:bamm:org.eclipse.tractusx.semantics.test.productusage:1.2.0#> .
-@prefix productusagedetail: <urn:bamm:org.eclipse.tractusx.semantics.test.productusagedetail:1.0.0#> .
-@prefix bamm:   <urn:bamm:io.openmanufacturing:meta-model:1.0.0#> .
-@prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:1.0.0#> .
+@prefix :       <urn:samm:org.eclipse.tractusx.semantics.test.productusage:1.2.0#> .
+@prefix productusagedetail: <urn:samm:org.eclipse.tractusx.semantics.test.productusagedetail:1.0.0#> .
+@prefix samm:   <urn:samm:org.eclipse.esmf.samm:meta-model:1.0.0#> .
+@prefix bamm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:1.0.0#> .
 @prefix xsd:    <http://www.w3.org/2001/XMLSchema#> .
 
 :ProductUsage
-    a                  bamm:Aspect ;
-    bamm:name          "ProductUsage" ;
-    bamm:preferredName "ProductUsage en"@en ;
-    bamm:preferredName "ProductUsage de"@de ;
-    bamm:properties    ( :usageStateProp ) ;
-    bamm:operations    ( ) .
+    a                  samm:Aspect ;
+    samm:name          "ProductUsage" ;
+    samm:preferredName "ProductUsage en"@en ;
+    samm:preferredName "ProductUsage de"@de ;
+    samm:properties    ( :usageStateProp ) ;
+    samm:operations    ( ) .
 
-:usageStateProp a bamm:Property ;
-    bamm:name           "usage" ;
-    bamm:characteristic productusagedetail:UsageState .
+:usageStateProp a samm:Property ;
+    samm:name           "usage" ;
+    samm:characteristic productusagedetail:UsageState .
 

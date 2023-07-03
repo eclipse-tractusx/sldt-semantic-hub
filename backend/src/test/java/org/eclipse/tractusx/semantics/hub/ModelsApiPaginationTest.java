@@ -52,10 +52,10 @@ public class ModelsApiPaginationTest extends AbstractModelsApiTest {
    @Test
    public void testGetModelsWithPaginationExpectSuccess() throws Exception {
       List<String> prefixes = List.of(
-              "urn:bamm:org.eclipse.tractusx.pagination.a:1.0.0#",
-              "urn:bamm:org.eclipse.tractusx.pagination.b:1.0.0#",
-              "urn:bamm:org.eclipse.tractusx.pagination.c:1.0.0#",
-              "urn:bamm:org.eclipse.tractusx.pagination.d:1.0.0#"
+              "urn:samm:org.eclipse.tractusx.pagination.a:1.0.0#",
+              "urn:samm:org.eclipse.tractusx.pagination.b:1.0.0#",
+              "urn:samm:org.eclipse.tractusx.pagination.c:1.0.0#",
+              "urn:samm:org.eclipse.tractusx.pagination.d:1.0.0#"
       );
 
       prefixes.forEach(urnPrefix -> {
@@ -93,7 +93,7 @@ public class ModelsApiPaginationTest extends AbstractModelsApiTest {
               .andExpect( jsonPath( "$.items[*].urn", hasItems( toMovementUrn(prefixes.get(0)), toMovementUrn(prefixes.get(1)) ) ) )
               .andExpect( jsonPath( "$.items[*].version", hasItem( "1.0.0" ) ) )
               .andExpect( jsonPath( "$.items[*].name", hasItem( "Movement" ) ) )
-              .andExpect( jsonPath( "$.items[*].type", hasItem( "BAMM" ) ) )
+              .andExpect( jsonPath( "$.items[*].type", hasItem( "SAMM" ) ) )
               .andExpect( jsonPath( "$.items[*].status", hasItem( "DRAFT" ) ) )
               .andExpect( jsonPath( "$.totalItems", equalTo(4) ) )
               .andExpect( jsonPath( "$.totalPages", equalTo(2) ) )
@@ -111,7 +111,7 @@ public class ModelsApiPaginationTest extends AbstractModelsApiTest {
               .andExpect( jsonPath( "$.items[*].urn", hasItems( toMovementUrn(prefixes.get(2)), toMovementUrn(prefixes.get(3) ) ) ))
               .andExpect( jsonPath( "$.items[*].version", hasItem( "1.0.0" ) ) )
               .andExpect( jsonPath( "$.items[*].name", hasItem( "Movement" ) ) )
-              .andExpect( jsonPath( "$.items[*].type", hasItem( "BAMM" ) ) )
+              .andExpect( jsonPath( "$.items[*].type", hasItem( "SAMM" ) ) )
               .andExpect( jsonPath( "$.items[*].status", hasItem( "DRAFT" ) ) )
               .andExpect( jsonPath( "$.totalItems", equalTo(4) ) )
               .andExpect( jsonPath( "$.totalPages", equalTo(2) ) )
@@ -129,7 +129,7 @@ public class ModelsApiPaginationTest extends AbstractModelsApiTest {
               .andExpect( jsonPath( "$.items[*].urn", hasItems( toMovementUrn(prefixes.get(2) ) ) ))
               .andExpect( jsonPath( "$.items[*].version", hasItem( "1.0.0" ) ) )
               .andExpect( jsonPath( "$.items[*].name", hasItem( "Movement" ) ) )
-              .andExpect( jsonPath( "$.items[*].type", hasItem( "BAMM" ) ) )
+              .andExpect( jsonPath( "$.items[*].type", hasItem( "SAMM" ) ) )
               .andExpect( jsonPath( "$.items[*].status", hasItem( "DRAFT" ) ) )
               .andExpect( jsonPath( "$.totalItems", equalTo(4) ) )
               .andExpect( jsonPath( "$.totalPages", equalTo(4) ) )
@@ -149,7 +149,7 @@ public class ModelsApiPaginationTest extends AbstractModelsApiTest {
                       toMovementUrn(prefixes.get(2)) ) ) )
               .andExpect( jsonPath( "$.items[*].version", hasItem( "1.0.0" ) ) )
               .andExpect( jsonPath( "$.items[*].name", hasItem( "Movement" ) ) )
-              .andExpect( jsonPath( "$.items[*].type", hasItem( "BAMM" ) ) )
+              .andExpect( jsonPath( "$.items[*].type", hasItem( "SAMM" ) ) )
               .andExpect( jsonPath( "$.items[*].status", hasItem( "DRAFT" ) ) )
               .andExpect( jsonPath( "$.totalItems", equalTo(4) ) )
               .andExpect( jsonPath( "$.totalPages", equalTo(2) ) )

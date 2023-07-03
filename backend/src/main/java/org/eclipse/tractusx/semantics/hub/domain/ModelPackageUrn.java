@@ -19,7 +19,7 @@
  ********************************************************************************/
 package org.eclipse.tractusx.semantics.hub.domain;
 
-import io.openmanufacturing.sds.aspectmodel.urn.AspectModelUrn;
+import org.eclipse.esmf.aspectmodel.urn.AspectModelUrn;
 
 public class ModelPackageUrn {
    private final String urn;

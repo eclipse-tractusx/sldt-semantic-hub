@@ -56,7 +56,7 @@ public abstract class AbstractModelsApiTest extends FusekiTestContainer {
     }
 
     public MockHttpServletRequestBuilder post( String payload, String status ) {
-        String type = "BAMM";
+        String type = "SAMM";
         return MockMvcRequestBuilders.post( "/api/v1/models")
                 .queryParam("type", type)
                 .queryParam( "status", status)
@@ -67,7 +67,7 @@ public abstract class AbstractModelsApiTest extends FusekiTestContainer {
     }
 
     public MockHttpServletRequestBuilder put( String payload, String status ) {
-        String type = "BAMM";
+        String type = "SAMM";
         return MockMvcRequestBuilders.put( "/api/v1/models")
                 .queryParam("type", type)
                 .queryParam( "status", status )

@@ -19,27 +19,27 @@
 ###############################################################
 
 @prefix :       <{{URN_PREFIX}}> .
-@prefix dependency: <urn:bamm:org.eclipse.tractusx.dependency:1.0.0#> .
-@prefix bamm:   <urn:bamm:io.openmanufacturing:meta-model:1.0.0#> .
-@prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:1.0.0#> .
+@prefix dependency: <urn:samm:org.eclipse.tractusx.dependency:1.0.0#> .
+@prefix samm:   <urn:samm:org.eclipse.esmf.samm:meta-model:1.0.0#> .
+@prefix bamm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:1.0.0#> .
 @prefix xsd:    <http://www.w3.org/2001/XMLSchema#> .
-@prefix unit: <urn:bamm:io.openmanufacturing:unit:1.0.0#> .
+@prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:1.0.0#> .
 
-:TestAspect a bamm:Aspect ;
-    bamm:name "TestAspect" ;
-    bamm:preferredName "TestAspect"@en ;
-    bamm:description "Test Aspect"@en ;
-    bamm:properties ( :testProperty ) ;
-    bamm:operations ( ) .
+:TestAspect a samm:Aspect ;
+    samm:name "TestAspect" ;
+    samm:preferredName "TestAspect"@en ;
+    samm:description "Test Aspect"@en ;
+    samm:properties ( :testProperty ) ;
+    samm:operations ( ) .
 
-:testProperty a bamm:Property ;
-    bamm:name "testProperty" ;
-    bamm:preferredName "testProperty"@en ;
-    bamm:description "Test Property"@en ;
-    bamm:characteristic :TestCharacteristic .
+:testProperty a samm:Property ;
+    samm:name "testProperty" ;
+    samm:preferredName "testProperty"@en ;
+    samm:description "Test Property"@en ;
+    samm:characteristic :TestCharacteristic .
 
-:TestCharacteristic a bamm:Characteristic ;
-    bamm:name "TestCharacteristic" ;
-    bamm:preferredName "TestCharacteristic"@en ;
-    bamm:description "Test Characteristic"@en ;
-    bamm:dataType dependency:DependencyEntity .
+:TestCharacteristic a samm:Characteristic ;
+    samm:name "TestCharacteristic" ;
+    samm:preferredName "TestCharacteristic"@en ;
+    samm:description "Test Characteristic"@en ;
+    samm:dataType dependency:DependencyEntity .

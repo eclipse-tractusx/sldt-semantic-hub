@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
-import io.openmanufacturing.sds.aspectmodel.urn.UrnSyntaxException;
+import org.eclipse.esmf.aspectmodel.urn.UrnSyntaxException;
 import io.vavr.control.Try;
 
 import org.eclipse.tractusx.semantics.hub.AspectModelNotFoundException;
@@ -53,8 +53,8 @@ import org.apache.jena.rdfconnection.RDFConnection;
 import org.apache.jena.rdfconnection.RDFConnectionRemoteBuilder;
 import org.apache.jena.update.UpdateRequest;
 
-import io.openmanufacturing.sds.aspectmodel.resolver.AspectModelResolver;
-import io.openmanufacturing.sds.aspectmodel.urn.AspectModelUrn;
+import org.eclipse.esmf.aspectmodel.resolver.AspectModelResolver;
+import org.eclipse.esmf.aspectmodel.urn.AspectModelUrn;
 
 import org.eclipse.tractusx.semantics.hub.InvalidStateTransitionException;
 import org.eclipse.tractusx.semantics.hub.persistence.PersistenceLayer;
@@ -218,7 +218,7 @@ public class TripleStorePersistence implements PersistenceLayer {
    }
 
    private boolean hasReferenceToDraftPackage( AspectModelUrn modelUrn, Model model ) {
-      Pattern pattern = Pattern.compile( SparqlQueries.ALL_BAMM_ASPECT_URN_PREFIX );
+      Pattern pattern = Pattern.compile( SparqlQueries.ALL_SAMM_ASPECT_URN_PREFIX );
 
       List<String> urns = AspectModelResolver.getAllUrnsInModel( model ).stream().filter( urn -> getAspectModelUrn( urn ).isSuccess() )
             .map( urn -> getAspectModelUrn( urn ).get().getUrnPrefix() )
@@ -332,7 +332,7 @@ public class TripleStorePersistence implements PersistenceLayer {
       AspectModelUrn aspectModelUrn = AspectModelUrn.fromUrn( urn );
       SemanticModel model = new SemanticModel();
       model.setUrn( aspectModelUrn.getUrn().toString() );
-      model.setType( SemanticModelType.BAMM );
+      model.setType( SemanticModelType.SAMM );
       model.setVersion( aspectModelUrn.getVersion() );
       model.setName( aspectModelUrn.getName() );
       model.setStatus( SemanticModelStatus.fromValue( status ) );

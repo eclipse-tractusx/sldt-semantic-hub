@@ -23,9 +23,9 @@ import org.springframework.http.ResponseEntity;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.Lists;
 
-import io.openmanufacturing.sds.aspectmodel.resolver.services.VersionedModel;
-import io.openmanufacturing.sds.aspectmodel.urn.AspectModelUrn;
-import io.openmanufacturing.sds.metamodel.Aspect;
+import org.eclipse.esmf.aspectmodel.resolver.services.VersionedModel;
+import org.eclipse.esmf.aspectmodel.urn.AspectModelUrn;
+import org.eclipse.esmf.metamodel.Aspect;
 import org.eclipse.tractusx.semantics.hub.bamm.BammHelper;
 import org.eclipse.tractusx.semantics.hub.persistence.PersistenceLayer;
 import io.vavr.control.Try;
@@ -177,11 +177,11 @@ public class AspectModelService implements ModelsApiDelegate {
    }
 
    private Aspect getBamAspect( String urn ) {
-      final Try<Aspect> aspect = bammHelper.getAspectFromVersionedModel( getVersionedModel( urn ) );
-      if ( aspect.isFailure() ) {
-         throw new RuntimeException( "Failed to load aspect model", aspect.getCause() );
+      final Try<List<Aspect>> aspects = bammHelper.getAspectFromVersionedModel( getVersionedModel( urn ) );
+      if ( aspects.isFailure() ) {
+         throw new RuntimeException( "Failed to load aspect model", aspects.getCause() );
       }
-      return aspect.get();
+      return aspects.get().get(0);
    }
 
    private VersionedModel getVersionedModel( String urn ) {
