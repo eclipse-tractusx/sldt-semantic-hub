@@ -519,7 +519,9 @@ components:
           schema:
             type: string
             format: binary
-
+        application/json:
+          schema:
+            type: string
 
     SemanticModelDocumentation:
       description: OK
