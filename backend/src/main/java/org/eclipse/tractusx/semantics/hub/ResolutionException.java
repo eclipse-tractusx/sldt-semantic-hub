@@ -17,7 +17,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
-package org.eclipse.tractusx.semantics.hub.bamm;
+package org.eclipse.tractusx.semantics.hub;
 
 public class ResolutionException extends Throwable {
     public ResolutionException(String message) {

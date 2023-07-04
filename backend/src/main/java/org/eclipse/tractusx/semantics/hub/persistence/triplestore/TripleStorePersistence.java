@@ -1,6 +1,6 @@
 /********************************************************************************
- * Copyright (c) 2021-2022 Robert Bosch Manufacturing Solutions GmbH
- * Copyright (c) 2021-2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021-2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2021-2023 Contributors to the Eclipse Foundation
  *
  * See the NOTICE file(s) distributed with this work for additional
  * information regarding copyright ownership.
@@ -152,7 +152,7 @@ public class TripleStorePersistence implements PersistenceLayer {
          }
       }
 
-      sdsSdk.validate( rdfModel, new SdsSdk.TripleStoreResolutionStrategy( this::findContainingModelByUrn ) );
+      sdsSdk.validate( rdfModel, this::findContainingModelByUrn );
 
       final Resource rootResource = ResourceFactory.createResource( modelUrn.getUrnPrefix() );
       rdfModel.add( rootResource, SparqlQueries.STATUS_PROPERTY,
@@ -273,7 +273,7 @@ public class TripleStorePersistence implements PersistenceLayer {
       }
    }
 
-   private Model findContainingModelByUrn( final AspectModelUrn urn ) {
+   private Model findContainingModelByUrn( final String urn ) {
       final Query query = SparqlQueries.buildFindModelElementClosureQuery( urn );
       try ( final RDFConnection rdfConnection = rdfConnectionRemoteBuilder.build() ) {
          return rdfConnection.queryConstruct( query );
@@ -332,10 +332,18 @@ public class TripleStorePersistence implements PersistenceLayer {
       AspectModelUrn aspectModelUrn = AspectModelUrn.fromUrn( urn );
       SemanticModel model = new SemanticModel();
       model.setUrn( aspectModelUrn.getUrn().toString() );
-      model.setType( SemanticModelType.SAMM );
+      model.setType( determineModelType(urn) );
       model.setVersion( aspectModelUrn.getVersion() );
       model.setName( aspectModelUrn.getName() );
       model.setStatus( SemanticModelStatus.fromValue( status ) );
       return model;
+   }
+
+   private static SemanticModelType determineModelType(String aspectUrn){
+      if(aspectUrn.contains( "bamm" )){
+         return SemanticModelType.BAMM;
+      }else{
+         return SemanticModelType.SAMM;
+      }
    }
 }
