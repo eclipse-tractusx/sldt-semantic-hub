@@ -123,7 +123,7 @@ public class SdsSdk {
       return StreamSupport.stream( Spliterators.spliteratorUnknownSize( stmtIterator, ORDERED ), false )
             .filter( statement -> statement.getObject().isURIResource() )
             .filter( statement -> statement.getObject().asResource().toString()
-                  .matches( SparqlQueries.SAMM_ASPECT_URN_REGEX ) )
+                  .matches( SparqlQueries.SAMM_ASPECT_URN_REGEX ))
             .map( Statement::getSubject )
             .map( Resource::toString )
             .map( AspectModelUrn::fromUrn )

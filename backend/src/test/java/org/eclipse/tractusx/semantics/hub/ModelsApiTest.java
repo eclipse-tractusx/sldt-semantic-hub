@@ -92,6 +92,32 @@ public class ModelsApiTest extends AbstractModelsApiTest{
    }
 
    @Test
+   public void testGetModelsExpectSuccess1() throws Exception {
+      String urnPrefix = "urn:bamm:org.eclipse.tractusx:1.0.0#";
+      mvc.perform(
+                  postBAMM( TestUtils.createValidModelRequestBAMM(urnPrefix),"DRAFT")
+            )
+            .andDo( MockMvcResultHandlers.print() )
+            .andExpect( status().isOk() );
+
+      mvc.perform(
+                  MockMvcRequestBuilders.get( "/api/v1/models" )
+                        .accept( MediaType.APPLICATION_JSON )
+                        .with(jwtTokenFactory.allRoles())
+            )
+            .andDo( MockMvcResultHandlers.print() )
+            .andExpect( jsonPath( "$.items" ).isArray() )
+            .andExpect( jsonPath( "$.items[*].urn", hasItem( toMovementUrn(urnPrefix) ) ) )
+            .andExpect( jsonPath( "$.items[*].version", hasItem( "1.0.0" ) ) )
+            .andExpect( jsonPath( "$.items[*].name", hasItem( "Movement" ) ) )
+            .andExpect( jsonPath( "$.items[*].type", hasItem( "BAMM" ) ) )
+            .andExpect( jsonPath( "$.items[*].status", hasItem( "DRAFT" ) ) )
+            .andExpect( jsonPath( "$.totalItems", greaterThan( 0 ) ) )
+            .andExpect( jsonPath( "$.itemCount", greaterThan( 0 ) ) )
+            .andExpect( status().isOk() );
+   }
+
+   @Test
    public void testGetModelsExpectSuccess() throws Exception {
       String urnPrefix = "urn:samm:org.eclipse.tractusx:1.0.0#";
       mvc.perform(

@@ -38,6 +38,8 @@ public class TestUtils {
 
    private static final String MODEL_FOR_API_TESTS = MODELS_ROOT_PATH + "ValidModelForApiTests.ttl";
 
+   private static final String MODEL_FOR_API_TESTS_BAMM = MODELS_ROOT_PATH + "ValidModelForApiTests-bamm.ttl";
+
    private static final String MODEL_DEPENDENCY = MODELS_ROOT_PATH + "ModelDependency.ttl";
    private static final String DEPENDENT_MODEL = MODELS_ROOT_PATH + "DependentModel.ttl";
 
@@ -50,6 +52,16 @@ public class TestUtils {
       String model;
       try {
          model = loadModelFromResources(MODEL_FOR_API_TESTS).replace("{{URN_PREFIX}}", urn);
+      } catch (IOException e) {
+         throw new RuntimeException("Failed to load file");
+      }
+      return model;
+   }
+
+   public static String createValidModelRequestBAMM( String urn) {
+      String model;
+      try {
+         model = loadModelFromResources(MODEL_FOR_API_TESTS_BAMM).replace("{{URN_PREFIX}}", urn);
       } catch (IOException e) {
          throw new RuntimeException("Failed to load file");
       }

@@ -66,6 +66,17 @@ public abstract class AbstractModelsApiTest extends FusekiTestContainer {
                 .with(jwtTokenFactory.allRoles());
     }
 
+    public MockHttpServletRequestBuilder postBAMM( String payload, String status ) {
+        String type = "BAMM";
+        return MockMvcRequestBuilders.post( "/api/v1/models")
+              .queryParam("type", type)
+              .queryParam( "status", status)
+              .accept( MediaType.APPLICATION_JSON )
+              .contentType( MediaType.TEXT_PLAIN)
+              .content( payload )
+              .with(jwtTokenFactory.allRoles());
+    }
+
     public MockHttpServletRequestBuilder put( String payload, String status ) {
         String type = "SAMM";
         return MockMvcRequestBuilders.put( "/api/v1/models")
