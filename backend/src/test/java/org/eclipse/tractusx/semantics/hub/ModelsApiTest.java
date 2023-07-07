@@ -19,45 +19,22 @@
  ********************************************************************************/
 package org.eclipse.tractusx.semantics.hub;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.greaterThan;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.is;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.hamcrest.Matchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.jena.atlas.json.JSON;
-import org.apache.poi.hpsf.Array;
 import org.json.JSONArray;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
-
-import com.jayway.jsonpath.JsonPath;
-import com.jayway.jsonpath.internal.function.text.Length;
-
-import jakarta.json.JsonArray;
 
 @TestInstance( TestInstance.Lifecycle.PER_CLASS )
 @DirtiesContext( classMode = DirtiesContext.ClassMode.AFTER_CLASS )
@@ -114,7 +91,8 @@ public class ModelsApiTest extends AbstractModelsApiTest{
             .andExpect( jsonPath( "$.items[*].status", hasItem( "DRAFT" ) ) )
             .andExpect( jsonPath( "$.totalItems", greaterThan( 0 ) ) )
             .andExpect( jsonPath( "$.itemCount", greaterThan( 0 ) ) )
-            .andExpect( status().isOk() );
+            .andExpect( status().isOk() )
+            .andReturn();
    }
 
    @Test

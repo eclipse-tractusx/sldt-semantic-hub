@@ -24,8 +24,12 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 
 import java.io.IOException;
 
+import org.apache.jena.query.Query;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ResourceFactory;
+import org.apache.jena.rdfconnection.RDFConnection;
+import org.eclipse.tractusx.semantics.hub.persistence.triplestore.SAMMSdk;
+import org.eclipse.tractusx.semantics.hub.persistence.triplestore.SparqlQueries;
 import org.junit.jupiter.api.Test;
 
 import org.eclipse.tractusx.semantics.hub.InvalidAspectModelException;
@@ -55,7 +59,7 @@ public class SdsSdkTest {
    public void validateValidAspectModelWithAvailableExternalReferenceExpectSuccess() throws IOException {
       final SdsSdk sdsSdk = new SdsSdk();
       final Model model = sdsSdk.load( TestUtils.PRODUCT_USAGE_MODEL_PATH );
-      assertThatCode( () -> sdsSdk.validate( model, getLocalTripleResolutionStrategy() ) )
+      assertThatCode( () -> sdsSdk.validate( model, this::findContainingModelByUrn ) )
             .doesNotThrowAnyException();
    }
 
@@ -69,24 +73,34 @@ public class SdsSdkTest {
       final SdsSdk sdsSdk = new SdsSdk();
       final Model model = sdsSdk.load( TestUtils.VEHICLE_WITH_NOT_AVAILABLE_EXTERNAL_REFERENCE );
       try {
-         sdsSdk.validate( model, getNoOpTripleResolutionStrategy() );
+         sdsSdk.validate( model, this::noOpTripleResolution );
       } catch ( final InvalidAspectModelException e ) {
          System.out.println( e.getDetails() );
       }
    }
 
-   private SdsSdk.TripleStoreResolutionStrategy getLocalTripleResolutionStrategy() {
-      return new SdsSdk.TripleStoreResolutionStrategy( urn -> {
-         try {
-            return new SdsSdk().load( TestUtils.PRODUCT_USAGE_DETAIL_MODEL_PATH );
-         } catch ( final IOException e ) {
-            throw new RuntimeException( e );
-         }
-      } );
+
+   private Model findContainingModelByUrn( final String urn ) {
+      try {
+         return new SdsSdk().load( TestUtils.PRODUCT_USAGE_DETAIL_MODEL_PATH );
+      } catch ( final IOException e ) {
+         throw new RuntimeException( e );
+      }
    }
 
+   private Model noOpTripleResolution( final String urn ) {
+      try {
+         return new SdsSdk().load( TestUtils.PRODUCT_USAGE_DETAIL_MODEL_PATH );
+      } catch ( final IOException e ) {
+         throw new RuntimeException( e );
+      }
+   }
+
+
+
    private ResolutionStrategy getNoOpTripleResolutionStrategy() {
-      return ( urn ) -> Try.failure( new ResourceDefinitionNotFoundException( "NoOpTripleResolutionStrategy",
+      return ( urn ) -> Try.failure(
+            new ResourceDefinitionNotFoundException( "NoOpTripleResolutionStrategy",
             ResourceFactory.createResource( urn.getUrn().toASCIIString() ) ) );
    }
 }

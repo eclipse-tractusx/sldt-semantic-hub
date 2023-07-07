@@ -59,6 +59,7 @@ public class SparqlQueries {
    public static final String ASPECT = "aspect";
    public static final String STATUS_RESULT = "statusResult";
    public static final String SAMM_ASPECT_URN_REGEX = "(urn:samm:org.eclipse.esmf.samm:meta-model:\\d\\.\\d\\.\\d#Aspect)|(urn:bamm:io.openmanufacturing:meta-model:\\d\\.\\d\\.\\d#Aspect)";
+   public static final String BAMM_ASPECT_URN_REGEX = "(urn:samm:org.eclipse.esmf.samm:meta-model:\\d\\.\\d\\.\\d#Aspect)|(urn:bamm:io.openmanufacturing:meta-model:\\d\\.\\d\\.\\d#Aspect)";
    public static final String ALL_SAMM_ASPECT_URN_PREFIX = "(urn:samm:org.eclipse.esmf.samm:([a-z]|-)+:\\d\\.\\d\\.\\d#)|(urn:bamm:io.openmanufacturing:([a-z]|-)+:\\d\\.\\d\\.\\d#)";
    public static final String SAMM_ASPECT_URN_PREFIX = "(urn:samm:org.eclipse.esmf.samm:meta-model:\\d\\.\\d\\.\\d#)|(urn:bamm:io.openmanufacturing:meta-model:\\d\\.\\d\\.\\d#)";
    public static final String SAMM_PREFERRED_NAME = "urn:samm:org.eclipse.esmf.samm:meta-model:1.0.0#preferredName";
@@ -344,9 +345,9 @@ public class SparqlQueries {
       return pss.asQuery();
    }
 
-   public static Query buildFindModelElementClosureQuery( final AspectModelUrn urn ) {
+   public static Query buildFindModelElementClosureQuery( final String urn ) {
       final ParameterizedSparqlString pss = create( FIND_MODEL_ELEMENT_CLOSURE );
-      pss.setNsPrefix( "ns", urn.getUrn().toString() );
+      pss.setNsPrefix( "ns", urn );
       return pss.asQuery();
    }
 
