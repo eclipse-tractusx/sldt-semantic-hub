@@ -19,158 +19,111 @@
  ********************************************************************************/
 package org.eclipse.tractusx.semantics.hub.bamm;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.util.HashMap;
-import java.io.FileOutputStream;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Optional;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.google.common.io.CharStreams;
 
-import org.apache.jena.rdf.model.Model;
+import org.eclipse.esmf.aspectmodel.VersionNumber;
 import org.eclipse.tractusx.semantics.hub.model.AasFormat;
+import org.eclipse.tractusx.semantics.hub.persistence.PersistenceLayer;
 import org.springframework.stereotype.Component;
 
-import org.eclipse.esmf.aspectmodel.aas.AspectModelAASGenerator;
-import org.eclipse.esmf.aspectmodel.generator.diagram.AspectModelDiagramGenerator;
-import org.eclipse.esmf.aspectmodel.generator.diagram.AspectModelDiagramGenerator.Format;
-import org.eclipse.esmf.aspectmodel.generator.docu.AspectModelDocumentationGenerator;
-import org.eclipse.esmf.aspectmodel.generator.docu.AspectModelDocumentationGenerator.HtmlGenerationOption;
-import org.eclipse.esmf.aspectmodel.generator.json.AspectModelJsonPayloadGenerator;
-import org.eclipse.esmf.aspectmodel.generator.jsonschema.AspectModelJsonSchemaGenerator;
-import org.eclipse.esmf.aspectmodel.generator.openapi.AspectModelOpenApiGenerator;
-import org.eclipse.esmf.aspectmodel.resolver.AspectModelResolver;
-import org.eclipse.esmf.aspectmodel.resolver.services.TurtleLoader;
 import org.eclipse.esmf.aspectmodel.resolver.services.VersionedModel;
 import org.eclipse.esmf.aspectmodel.shacl.violation.Violation;
-import org.eclipse.esmf.aspectmodel.validation.services.AspectModelValidator;
-import org.eclipse.esmf.metamodel.Aspect;
-import org.eclipse.esmf.metamodel.AspectContext;
-import org.eclipse.esmf.metamodel.loader.AspectModelLoader;
+
 import io.vavr.control.Try;
 
 @Component
 public class SDKAccessHelper {
-   public Try<VersionedModel> loadBammModel( String ttl ) {
-      InputStream targetStream = new ByteArrayInputStream( ttl.getBytes() );
 
-      Try<Model> model = TurtleLoader.loadTurtle( targetStream );
+   SDKAccessHelperBAMM sdkAccessHelperBAMM = new SDKAccessHelperBAMM();
+   SDKAccessHelperSAMM sdkAccessHelperSAMM = new SDKAccessHelperSAMM();
 
-      StaticResolutionStrategy resolutionStrategy = new StaticResolutionStrategy( model );
 
-      AspectModelResolver resolver = new AspectModelResolver();
-
-      Try<VersionedModel> versionedModel = resolver.resolveAspectModel( resolutionStrategy, resolutionStrategy.getAspectModelUrn() );
-
-      if ( resolutionStrategy.getResolvementCounter() > 1 ) {
-         return Try.failure( new ResolutionException( "The definition must be self contained!" ) );
-      }
-
-      return versionedModel;
+   public void setPersistenceLayer( PersistenceLayer persistenceLayer ) {
+      sdkAccessHelperSAMM.setPersistenceLayer( persistenceLayer );
+      sdkAccessHelperBAMM.setPersistenceLayer( persistenceLayer );
    }
 
-   public Try<List<Aspect>> getAspectFromVersionedModel( VersionedModel versionedModel ) {
-
-      return AspectModelLoader.getAspects( versionedModel );
+   private boolean isBAMM(String urn){
+      String BAMM_IDENTIFICATION_STRING = "bamm:";
+      return urn.contains( BAMM_IDENTIFICATION_STRING );
    }
 
    public List<Violation> validateModel( Try<VersionedModel> model ) {
-      final AspectModelValidator validator = new AspectModelValidator();
-      return validator.validateModel( model );
+      // SAMM validator should also process BAMM models so no switch here
+      return sdkAccessHelperSAMM.validateModel( model );
    }
 
-   public Try<byte[]> generatePng( VersionedModel versionedModel ) {
-      final AspectModelDiagramGenerator generator = new AspectModelDiagramGenerator( versionedModel );
-
-      try {
-         ByteArrayOutputStream output = new ByteArrayOutputStream();
-         generator.generateDiagram( Format.PNG, Locale.ENGLISH, output );
-         final byte[] bytes = output.toByteArray();
-
-         return Try.success(bytes);
-      } catch ( IOException e ) {
-         return Try.failure( e );
+   public Try<byte[]> generatePng( String urn ) {
+      if( isBAMM( urn )) {
+         return sdkAccessHelperBAMM.generatePng( urn );
+      }else {
+         return sdkAccessHelperSAMM.generatePng( urn );
       }
    }
 
-   public JsonNode getJsonSchema( Aspect aspect ) {
-      AspectModelJsonSchemaGenerator jsonSchemaGenerator = new AspectModelJsonSchemaGenerator();
-      return jsonSchemaGenerator.apply( aspect, Locale.ENGLISH );
-   }
-
-   public Try<byte[]> getHtmlDocu( VersionedModel versionedModel ) {
-      ByteArrayOutputStream output = new ByteArrayOutputStream();
-
-      final Aspect aspect = AspectModelLoader.getAspects(versionedModel).get().get(0);
-      
-      AspectModelDocumentationGenerator documentationGenerator = new AspectModelDocumentationGenerator( new AspectContext(versionedModel, aspect) );
-
-      Map<AspectModelDocumentationGenerator.HtmlGenerationOption, String> options = new HashMap();
-
-      try {
-         InputStream ompCSS = getClass().getResourceAsStream( "/catena-template.css" );
-         String defaultCSS = CharStreams.toString( new InputStreamReader( ompCSS ) );
-
-         options.put( HtmlGenerationOption.STYLESHEET, defaultCSS );
-      } catch ( IOException e ) {
-         return Try.failure( e );
-      }
-
-      try {
-         documentationGenerator.generate( ( String a ) -> {
-            return output;
-         }, options );
-
-         return Try.success( output.toByteArray() );
-      } catch ( IOException e ) {
-         return Try.failure( e );
+   public JsonNode getJsonSchema( String urn ) {
+      if( isBAMM( urn )) {
+         return sdkAccessHelperBAMM.getJsonSchema( urn );
+      }else {
+         return sdkAccessHelperSAMM.getJsonSchema( urn );
       }
    }
 
-   public String getOpenApiDefinitionJson( Aspect aspect, String baseUrl ) {
-      AspectModelOpenApiGenerator openApiGenerator = new AspectModelOpenApiGenerator();
-
-      JsonNode resultJson = openApiGenerator.applyForJson( aspect, true, baseUrl, Optional.empty(), Optional.empty(), false, Optional.empty() );
-
-      return resultJson.toString();
+   public Try<byte[]> getHtmlDocu( String urn ) {
+      if( isBAMM( urn )) {
+         return sdkAccessHelperBAMM.getHtmlDocu( urn );
+      }else {
+         return sdkAccessHelperSAMM.getHtmlDocu( urn );
+      }
    }
 
-   public Try<String> getExamplePayloadJson( Aspect aspect ) {
-      AspectModelJsonPayloadGenerator payloadGenerator = new AspectModelJsonPayloadGenerator( aspect );
-
-      return Try.of( payloadGenerator::generateJson );
+   public String getOpenApiDefinitionJson( String urn, String baseUrl ) {
+      if( isBAMM( urn )) {
+         return sdkAccessHelperBAMM.getOpenApiDefinitionJson( urn, baseUrl );
+      }else {
+         return sdkAccessHelperSAMM.getOpenApiDefinitionJson( urn, baseUrl );
+      }
    }
 
-   public Try getAasSubmodelTemplate( Aspect aspect, AasFormat aasFormat ) {
-      AspectModelAASGenerator aasGenerator = new AspectModelAASGenerator();
-      ByteArrayOutputStream stream = new ByteArrayOutputStream();
+   public Try<String> getExamplePayloadJson( String urn  ) {
+      if( isBAMM( urn )) {
+         return sdkAccessHelperBAMM.getExamplePayloadJson( urn );
+      }else {
+         return sdkAccessHelperSAMM.getExamplePayloadJson( urn );
+      }
+   }
 
-      try {
-         switch ( aasFormat ) {
-         case FILE:
-            aasGenerator.generateAASXFile( aspect, ( String s ) -> {
-               return stream;
-            } );
-            return Try.of( stream::toByteArray );
-         case XML:
-            aasGenerator.generateAasXmlFile( aspect, ( String s ) -> {
-               return stream;
-            } );
-            return Try.of( stream::toString );
-         default:
-            return Try.failure( new Exception( String.format( "Wrong AAS output format %s", aasFormat.toString() ) ) );
+   public Try getAasSubmodelTemplate( String urn, AasFormat aasFormat ) {
+      if( isBAMM( urn )) {
+         return sdkAccessHelperBAMM.getAasSubmodelTemplate( urn, aasFormat );
+      }else {
+         return sdkAccessHelperSAMM.getAasSubmodelTemplate( urn, aasFormat );
+      }
+   }
 
+   public Try<VersionedModel> loadBammModel( String modelString ) {
+      if( isBAMM( modelString )) {
+         Try<io.openmanufacturing.sds.aspectmodel.resolver.services.VersionedModel> versionModel =
+               sdkAccessHelperBAMM.loadBammModel( modelString );
+         if ( versionModel.isFailure() ) {
+            throw new RuntimeException( "Failed to load aspect model", versionModel.getCause() );
          }
-      } catch ( IOException e ) {
-         return Try.failure( e );
+
+         VersionNumber versionNumber =
+               new VersionNumber(  versionModel.get().getMetaModelVersion().getMajor(),
+                     versionModel.get().getMetaModelVersion().getMinor(),
+                     versionModel.get().getMetaModelVersion().getMicro());
+
+         return Try.of( () -> new VersionedModel(
+               versionModel.get().getModel(),
+               versionNumber,
+               versionModel.get().getRawModel()
+         ));
+
+      }else {
+         return sdkAccessHelperSAMM.loadBammModel( modelString );
       }
    }
 }

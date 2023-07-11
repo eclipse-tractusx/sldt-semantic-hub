@@ -39,6 +39,7 @@ public class AspectModelService implements ModelsApiDelegate {
    public AspectModelService( final PersistenceLayer persistenceLayer, SDKAccessHelper bammHelper ) {
       this.persistenceLayer = persistenceLayer;
       this.bammHelper = bammHelper;
+      bammHelper.setPersistenceLayer( persistenceLayer );
    }
 
    @Override
@@ -84,8 +85,7 @@ public class AspectModelService implements ModelsApiDelegate {
 
    @Override
    public ResponseEntity<org.springframework.core.io.Resource> getModelDiagram( final String urn ) {
-      final VersionedModel versionedModel = getVersionedModel( urn );
-      final Try<byte[]>pngBytes = bammHelper.generatePng( versionedModel );
+      final Try<byte[]>pngBytes = bammHelper.generatePng( urn );
       if ( pngBytes.isFailure()  ) {
          throw new RuntimeException( String.format( "Failed to generate example payload for urn %s", urn ) );
       }
@@ -94,14 +94,13 @@ public class AspectModelService implements ModelsApiDelegate {
 
    @Override
    public ResponseEntity<Void> getModelJsonSchema( final String modelId ) {
-      final JsonNode json = bammHelper.getJsonSchema( getBamAspect( modelId ) );
+      final JsonNode json = bammHelper.getJsonSchema( modelId );
       return new ResponseEntity( json, HttpStatus.OK );
    }
 
    @Override
    public ResponseEntity<Void> getModelDocu( final String modelId ) {
-      VersionedModel versionedModel = getVersionedModel( modelId );
-      final Try<byte[]> docuResult = bammHelper.getHtmlDocu( versionedModel );
+      final Try<byte[]> docuResult = bammHelper.getHtmlDocu( modelId );
       if ( docuResult.isFailure() ) {
          throw new RuntimeException( String.format( "Failed to generate documentation for urn %s", modelId ) );
       }
@@ -130,15 +129,13 @@ public class AspectModelService implements ModelsApiDelegate {
 
    @Override
    public ResponseEntity<Void> getModelOpenApi( final String modelId, final String baseUrl ) {
-      final Aspect bammAspect = getBamAspect( modelId );
-      final String openApiJson = bammHelper.getOpenApiDefinitionJson( bammAspect, baseUrl );
+      final String openApiJson = bammHelper.getOpenApiDefinitionJson( modelId, baseUrl );
       return new ResponseEntity( openApiJson, HttpStatus.OK );
    }
 
    @Override
    public ResponseEntity<Void> getModelExamplePayloadJson( final String modelId ) {
-      final Aspect bammAspect = getBamAspect( modelId );
-      final Try<String> result = bammHelper.getExamplePayloadJson( bammAspect );
+      final Try<String> result = bammHelper.getExamplePayloadJson( modelId );
       if ( result.isFailure() ) {
          throw new RuntimeException( String.format( "Failed to generate example payload for urn %s", modelId ) );
       }
@@ -147,8 +144,7 @@ public class AspectModelService implements ModelsApiDelegate {
 
    @Override
    public ResponseEntity getAasSubmodelTemplate(String urn, AasFormat aasFormat) {
-      final Aspect bammAspect = getBamAspect( urn );
-      final Try result = bammHelper.getAasSubmodelTemplate(bammAspect, aasFormat);
+      final Try result = bammHelper.getAasSubmodelTemplate(urn, aasFormat);
       if ( result.isFailure() ) {
          throw new RuntimeException( String.format( "Failed to generate AASX submodel template for model with urn %s", urn ) );
       }
@@ -176,22 +172,4 @@ public class AspectModelService implements ModelsApiDelegate {
       return new ResponseEntity<SemanticModelList>( models, HttpStatus.OK );
    }
 
-   private Aspect getBamAspect( String urn ) {
-      final Try<List<Aspect>> aspects = bammHelper.getAspectFromVersionedModel( getVersionedModel( urn ) );
-      if ( aspects.isFailure() ) {
-         throw new RuntimeException( "Failed to load aspect model", aspects.getCause() );
-      }
-      return aspects.get().get(0);
-   }
-
-   private VersionedModel getVersionedModel( String urn ) {
-      final String modelDefinition = persistenceLayer.getModelDefinition( AspectModelUrn.fromUrn( urn ) );
-
-      final Try<VersionedModel> versionedModel = bammHelper.loadBammModel( modelDefinition );
-
-      if ( versionedModel.isFailure() ) {
-         throw new RuntimeException( "Failed to load versioned model", versionedModel.getCause() );
-      }
-      return versionedModel.get();
-   }
 }

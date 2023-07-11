@@ -33,6 +33,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
@@ -483,12 +484,12 @@ public class ModelsApiTest extends AbstractModelsApiTest{
    public void testGetModelsExpectSuccessForBAMM() throws Exception {
       String urnPrefix = "urn:bamm:org.eclipse.tractusx:1.0.0#";
       mvc.perform(
-                  post( TestUtils.createValidModelRequestBAMM(urnPrefix),"DRAFT")
+                  postBAMM( TestUtils.createValidModelRequestBAMM(urnPrefix),"DRAFT")
             )
             .andDo( MockMvcResultHandlers.print() )
             .andExpect( status().isOk() );
 
-      mvc.perform(
+      MvcResult res = mvc.perform(
                   MockMvcRequestBuilders.get( "/api/v1/models" )
                         .accept( MediaType.APPLICATION_JSON )
                         .with(jwtTokenFactory.allRoles())
@@ -502,7 +503,8 @@ public class ModelsApiTest extends AbstractModelsApiTest{
             .andExpect( jsonPath( "$.items[*].status", hasItem( "DRAFT" ) ) )
             .andExpect( jsonPath( "$.totalItems", greaterThan( 0 ) ) )
             .andExpect( jsonPath( "$.itemCount", greaterThan( 0 ) ) )
-            .andExpect( status().isOk() );
+            .andExpect( status().isOk() )
+            .andReturn();
    }
 
    @Test
@@ -811,11 +813,11 @@ public class ModelsApiTest extends AbstractModelsApiTest{
       public void testDependentModelTransitionForBAMM() throws Exception {
          String urnPrefix = "urn:bamm:org.eclipse.tractusx.model.status.transitionWithDependency:1.0.0#";
 
-         mvc.perform(post( TestUtils.createModelDependencyForBAMM(), "DRAFT" ))
+         mvc.perform(postBAMM( TestUtils.createModelDependencyForBAMM(), "DRAFT" ))
                .andDo( MockMvcResultHandlers.print() )
                .andExpect(status().isOk());
 
-         mvc.perform(post( TestUtils.createDependentModelForBAMM(urnPrefix), "DRAFT") )
+         mvc.perform(postBAMM( TestUtils.createDependentModelForBAMM(urnPrefix), "DRAFT") )
                .andDo( MockMvcResultHandlers.print() )
                .andExpect(status().isOk());
 
