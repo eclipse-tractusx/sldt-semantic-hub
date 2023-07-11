@@ -26,7 +26,7 @@ import com.google.common.collect.Lists;
 import org.eclipse.esmf.aspectmodel.resolver.services.VersionedModel;
 import org.eclipse.esmf.aspectmodel.urn.AspectModelUrn;
 import org.eclipse.esmf.metamodel.Aspect;
-import org.eclipse.tractusx.semantics.hub.bamm.BammHelper;
+import org.eclipse.tractusx.semantics.hub.bamm.SDKAccessHelper;
 import org.eclipse.tractusx.semantics.hub.persistence.PersistenceLayer;
 import io.vavr.control.Try;
 import org.eclipse.tractusx.semantics.hub.api.ModelsApiDelegate;
@@ -34,9 +34,9 @@ import org.eclipse.tractusx.semantics.hub.api.ModelsApiDelegate;
 public class AspectModelService implements ModelsApiDelegate {
 
    private final PersistenceLayer persistenceLayer;
-   private final BammHelper bammHelper;
+   private final SDKAccessHelper bammHelper;
 
-   public AspectModelService( final PersistenceLayer persistenceLayer, BammHelper bammHelper ) {
+   public AspectModelService( final PersistenceLayer persistenceLayer, SDKAccessHelper bammHelper ) {
       this.persistenceLayer = persistenceLayer;
       this.bammHelper = bammHelper;
    }

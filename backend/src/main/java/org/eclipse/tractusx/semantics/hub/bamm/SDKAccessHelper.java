@@ -58,7 +58,7 @@ import org.eclipse.esmf.metamodel.loader.AspectModelLoader;
 import io.vavr.control.Try;
 
 @Component
-public class BammHelper {
+public class SDKAccessHelper {
    public Try<VersionedModel> loadBammModel( String ttl ) {
       InputStream targetStream = new ByteArrayInputStream( ttl.getBytes() );
 
