@@ -97,6 +97,16 @@ public class TestUtils {
       return model;
    }
 
+   public static String getTTLFile (String filename) {
+      String model;
+      try {
+         model = loadModelFromResources(MODELS_ROOT_PATH+filename);
+      } catch (IOException e) {
+         throw new RuntimeException("Failed to load file");
+      }
+      return model;
+   }
+
    public static String createDependentModelForBAMM (String urn) {
       String model;
       try {
