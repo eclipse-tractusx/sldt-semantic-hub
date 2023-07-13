@@ -484,13 +484,11 @@
 :code a bamm:Property;
     bamm:preferredName "Code"@en;
     bamm:description "The associated product category CODE according to ECLASS."@en;
-    bamm:see <https://eclass.eu/en/eclass-standard/search-content/show?tx_eclasssearch_ecsearch[discharge]=0&tx_eclasssearch_ecsearch[id]=44000000&tx_eclasssearch_ecsearch[language]=1&tx_eclasssearch_ecsearch[version]=13.0&cHash=10abd2696c4c5c526da4e3367e78c592>;
     bamm:characteristic :CodeTrait;
     bamm:exampleValue "44-09-02-02".
 :definition a bamm:Property;
     bamm:preferredName "Definition"@en;
     bamm:description "The associated product category NAME according to ECLASS."@en;
-    bamm:see <https://eclass.eu/en/eclass-standard/search-content/show?tx_eclasssearch_ecsearch[discharge]=0&tx_eclasssearch_ecsearch[id]=44000000&tx_eclasssearch_ecsearch[language]=1&tx_eclasssearch_ecsearch[version]=13.0&cHash=10abd2696c4c5c526da4e3367e78c592>;
     bamm:characteristic bamm-c:Text;
     bamm:exampleValue "Manual transmission (motor vehicle)".
 :CodeTrait a bamm-c:Trait;

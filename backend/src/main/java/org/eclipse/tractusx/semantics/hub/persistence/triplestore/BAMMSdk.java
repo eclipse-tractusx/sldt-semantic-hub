@@ -166,7 +166,7 @@ public class BAMMSdk {
 
       @Override
       public Try<Model> apply( final AspectModelUrn aspectModelUrn ) {
-         final String namespace = aspectModelUrn.getNamespace();
+         final String namespace = aspectModelUrn.getUrn().toString();
          if ( alreadyLoadedNamespaces.contains( namespace ) ) {
             return Try.success( ModelFactory.createDefaultModel() );
          }
