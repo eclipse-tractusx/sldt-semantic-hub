@@ -47,7 +47,7 @@ public class TestUtils {
 
    private static final String MODEL_DEPENDENCY = MODELS_ROOT_PATH + "ModelDependency.ttl";
 
-   private static final String MODEL_DEPENDENCY_BAMM = MODELS_ROOT_PATH + "ModelDependency.ttl";
+   private static final String MODEL_DEPENDENCY_BAMM = MODELS_ROOT_PATH + "ModelDependency-bamm.ttl";
    private static final String DEPENDENT_MODEL = MODELS_ROOT_PATH + "DependentModel.ttl";
 
    private static final String DEPENDENT_MODEL_BAMM = MODELS_ROOT_PATH + "DependentModel-bamm.ttl";

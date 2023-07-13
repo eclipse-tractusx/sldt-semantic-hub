@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONArray;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -41,7 +41,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 @DirtiesContext( classMode = DirtiesContext.ClassMode.AFTER_CLASS )
 public class ModelsApiTest extends AbstractModelsApiTest{
 
-    @BeforeAll
+    @BeforeEach
     public void init() {
         deleteAllData();
    }
@@ -282,8 +282,9 @@ public class ModelsApiTest extends AbstractModelsApiTest{
     * and will be updated as soon as the new model status process is clarified and implemented.
     */
    @Nested
-   @DisplayName("State Transition of Models")
-   public class StateTransitionTests{
+   @DisplayName("State Transition of Models for SAMM")
+   public class StateTransitionTestsForSAMM extends AbstractModelsApiTest{
+
       @Test
       public void testModelStatusTransitionForPost() throws Exception {
          String urnPrefix = "urn:samm:org.eclipse.tractusx.model.status.transition.post:2.0.0#";
@@ -693,7 +694,7 @@ public class ModelsApiTest extends AbstractModelsApiTest{
     * and will be updated as soon as the new model status process is clarified and implemented.
     */
    @Nested
-   @DisplayName("State Transition of Models")
+   @DisplayName("State Transition of Models for BAMM")
    public class StateTransitionTestsForBAMM{
       @Test
       public void testModelStatusTransitionForPostForBAMM() throws Exception {
