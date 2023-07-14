@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2023 Bosch Software Innovations GmbH. All rights reserved.
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  */
 
 package org.eclipse.tractusx.semantics.hub;
