@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2021-2022 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2021-2023 Robert Bosch Manufacturing Solutions GmbH
  * Copyright (c) 2021-2022 Contributors to the Eclipse Foundation
  *
  * See the NOTICE file(s) distributed with this work for additional
