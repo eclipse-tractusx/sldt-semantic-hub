@@ -60,7 +60,7 @@ import io.vavr.control.Try;
  * @deprecated (This class will be deprecated when we switch all to BAMM model to SAMM models.)
  */
 @Deprecated
-@SuppressWarnings("java:S106")
+@SuppressWarnings("sonar.cpd")
 @Component
 public class SDKAccessHelperBAMM {
 
