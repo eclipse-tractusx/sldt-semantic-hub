@@ -114,6 +114,9 @@
 
 		<!-- build -->
 		<maven.compiler.version>3.8.1</maven.compiler.version>
+		<!-- These classes will be deprecated when we switch all to BAMM model to SAMM models -->
+		<sonar.coverage.exclusions>org/eclipse/tractusx/semantics/hub/bamm/SDKAccessHelperBAMM.java, org/eclipse/tractusx/semantics/hub/bamm/StaticResolutionStrategyBAMM.java</sonar.coverage.exclusions>
+		<sonar.coverage.exclusions>**/SDKAccessHelperBAMM.java, **/StaticResolutionStrategyBAMM.java</sonar.coverage.exclusions>
 	</properties>
 
 	<modules>
