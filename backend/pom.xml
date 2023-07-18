@@ -36,9 +36,9 @@
     <packaging>jar</packaging>
    <properties>
       <!-- These classes will be deprecated when we switch all to BAMM model to SAMM models -->
-      <sonar.coverage.exclusions>**/**/src/main/java/org/eclipse/tractusx/semantics/hub/bamm/SDKAccessHelperBAMM.java</sonar.coverage.exclusions>
+      <sonar.coverage.exclusions>**/SDKAccessHelperBAMM.java</sonar.coverage.exclusions>
 
-      <sonar.exclusions>**/**/src/main/java/org/eclipse/tractusx/semantics/hub/bamm/SDKAccessHelperBAMM.java</sonar.exclusions>
+      <sonar.exclusions>**/SDKAccessHelperBAMM.java</sonar.exclusions>
    </properties>
     <organization>
         <name>${organization}</name>
