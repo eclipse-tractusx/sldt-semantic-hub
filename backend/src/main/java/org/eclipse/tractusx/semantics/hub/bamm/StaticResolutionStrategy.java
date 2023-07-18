@@ -38,6 +38,7 @@ import java.util.Optional;
  * @deprecated (This class will be deprecated when we switch all to BAMM model to SAMM models.)
  */
 @Deprecated
+@SuppressWarnings("java:S106")
 public class StaticResolutionStrategy extends AbstractResolutionStrategy {
    private int counter;
    private final Try<Model> model;
