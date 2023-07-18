@@ -57,7 +57,7 @@ import io.openmanufacturing.sds.metamodel.loader.AspectModelLoader;
 import io.vavr.control.Try;
 
 /**
- * This class will be deprecated when we switch all to BAMM model to SAMM models.
+ * @deprecated (This class will be deprecated when we switch all to BAMM model to SAMM models.)
  */
 @Deprecated
 @Component

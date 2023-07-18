@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * This class will be deprecated when we switch all to BAMM model to SAMM models.
+ * @deprecated (This class will be deprecated when we switch all to BAMM model to SAMM models.)
  */
 @Deprecated
 public class StaticResolutionStrategy extends AbstractResolutionStrategy {
