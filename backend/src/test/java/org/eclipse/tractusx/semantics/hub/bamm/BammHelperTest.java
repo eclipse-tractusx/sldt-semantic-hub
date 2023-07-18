@@ -21,6 +21,7 @@ package org.eclipse.tractusx.semantics.hub.bamm;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.eclipse.tractusx.semantics.hub.SDKAccessHelper;
 import org.junit.jupiter.api.Test;
 
 import org.eclipse.esmf.aspectmodel.resolver.services.VersionedModel;

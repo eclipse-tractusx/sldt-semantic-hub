@@ -34,6 +34,10 @@ import org.apache.jena.vocabulary.RDF;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * This class will be deprecated when we switch all to BAMM model to SAMM models.
+ */
+@Deprecated
 public class StaticResolutionStrategy extends AbstractResolutionStrategy {
    private int counter;
    private final Try<Model> model;

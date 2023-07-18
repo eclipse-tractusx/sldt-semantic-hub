@@ -17,7 +17,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
-package org.eclipse.tractusx.semantics.hub.bamm;
+package org.eclipse.tractusx.semantics.hub.samm;
 
 import java.util.List;
 import java.util.Optional;

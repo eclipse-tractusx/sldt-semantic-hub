@@ -17,7 +17,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
-package org.eclipse.tractusx.semantics.hub.bamm;
+package org.eclipse.tractusx.semantics.hub.samm;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -48,6 +48,8 @@ import org.eclipse.esmf.aspectmodel.validation.services.AspectModelValidator;
 import org.eclipse.esmf.metamodel.Aspect;
 import org.eclipse.esmf.metamodel.AspectContext;
 import org.eclipse.esmf.metamodel.loader.AspectModelLoader;
+import org.eclipse.tractusx.semantics.hub.ResolutionException;
+import org.eclipse.tractusx.semantics.hub.bamm.StaticResolutionStrategy;
 import org.eclipse.tractusx.semantics.hub.model.AasFormat;
 import org.eclipse.tractusx.semantics.hub.persistence.PersistenceLayer;
 import org.springframework.stereotype.Component;

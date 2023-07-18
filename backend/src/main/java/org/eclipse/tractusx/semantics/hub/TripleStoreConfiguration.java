@@ -36,7 +36,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import org.eclipse.tractusx.semantics.hub.bamm.SDKAccessHelper;
 import org.eclipse.tractusx.semantics.hub.persistence.PersistenceLayer;
 import org.eclipse.tractusx.semantics.hub.persistence.triplestore.SdsSdk;
 import org.eclipse.tractusx.semantics.hub.persistence.triplestore.TripleStorePersistence;

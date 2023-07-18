@@ -35,7 +35,8 @@
     <description>Module of the Semantic Hub Backend Service</description>
     <packaging>jar</packaging>
    <properties>
-      <sonar.coverage.exclusions>org/eclipse/tractusx/semantics/hub/bamm/*</sonar.coverage.exclusions>
+      <!-- These classes will be deprecated when we switch all to BAMM model to SAMM models -->
+      <sonar.coverage.exclusions>**/SDKAccessHelperBAMM.java, **/StaticResolutionStrategyBAMM.java</sonar.coverage.exclusions>
    </properties>
     <organization>
         <name>${organization}</name>

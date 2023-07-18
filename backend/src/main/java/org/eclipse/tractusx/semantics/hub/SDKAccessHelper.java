@@ -17,15 +17,17 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
-package org.eclipse.tractusx.semantics.hub.bamm;
+package org.eclipse.tractusx.semantics.hub;
 
 import java.util.List;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
 import org.eclipse.esmf.aspectmodel.VersionNumber;
+import org.eclipse.tractusx.semantics.hub.bamm.SDKAccessHelperBAMM;
 import org.eclipse.tractusx.semantics.hub.model.AasFormat;
 import org.eclipse.tractusx.semantics.hub.persistence.PersistenceLayer;
+import org.eclipse.tractusx.semantics.hub.samm.SDKAccessHelperSAMM;
 import org.springframework.stereotype.Component;
 
 import org.eclipse.esmf.aspectmodel.resolver.services.VersionedModel;
