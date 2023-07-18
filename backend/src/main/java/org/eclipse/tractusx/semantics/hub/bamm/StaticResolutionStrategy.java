@@ -19,26 +19,25 @@
  ********************************************************************************/
 package org.eclipse.tractusx.semantics.hub.bamm;
 
-import org.eclipse.esmf.samm.KnownVersion;
-import org.eclipse.esmf.aspectmodel.resolver.AbstractResolutionStrategy;
-import org.eclipse.esmf.aspectmodel.urn.AspectModelUrn;
-import org.eclipse.esmf.aspectmodel.vocabulary.SAMM;
-import io.vavr.NotImplementedError;
-import io.vavr.control.Try;
+import java.util.List;
+import java.util.Optional;
 
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.StmtIterator;
 import org.apache.jena.vocabulary.RDF;
+import org.eclipse.esmf.aspectmodel.resolver.AbstractResolutionStrategy;
+import org.eclipse.esmf.aspectmodel.urn.AspectModelUrn;
+import org.eclipse.esmf.aspectmodel.vocabulary.SAMM;
+import org.eclipse.esmf.samm.KnownVersion;
 
-import java.util.List;
-import java.util.Optional;
+import io.vavr.NotImplementedError;
+import io.vavr.control.Try;
 
 /**
  * @deprecated (This class will be deprecated when we switch all to BAMM model to SAMM models.)
  */
 @Deprecated
-@SuppressWarnings("sonar.cpd")
 public class StaticResolutionStrategy extends AbstractResolutionStrategy {
    private int counter;
    private final Try<Model> model;
