@@ -58,6 +58,10 @@ import io.openmanufacturing.sds.aspectmodel.urn.AspectModelUrn;
 import io.openmanufacturing.sds.aspectmodel.validation.services.AspectModelValidator;
 import io.vavr.control.Try;
 
+/**
+ * @deprecated (This class will be deprecated when we switch all to BAMM model to SAMM models.)
+ */
+@Deprecated
 public class BAMMSdk {
 
    private static final String MESSAGE_MISSING_METAMODEL_VERSION = "Unable to parse metamodel version";
