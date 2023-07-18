@@ -34,7 +34,9 @@
     <name>Tractus-X Semantic Hub Backend</name>
     <description>Module of the Semantic Hub Backend Service</description>
     <packaging>jar</packaging>
-
+   <properties>
+      <sonar.coverage.exclusions>org/eclipse/tractusx/semantics/hub/bamm/*</sonar.coverage.exclusions>
+   </properties>
     <organization>
         <name>${organization}</name>
         <url>${url}</url>
