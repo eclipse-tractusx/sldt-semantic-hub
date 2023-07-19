@@ -49,7 +49,6 @@ import org.eclipse.esmf.metamodel.Aspect;
 import org.eclipse.esmf.metamodel.AspectContext;
 import org.eclipse.esmf.metamodel.loader.AspectModelLoader;
 import org.eclipse.tractusx.semantics.hub.ResolutionException;
-import org.eclipse.tractusx.semantics.hub.bamm.StaticResolutionStrategy;
 import org.eclipse.tractusx.semantics.hub.model.AasFormat;
 import org.eclipse.tractusx.semantics.hub.persistence.PersistenceLayer;
 import org.springframework.stereotype.Component;
@@ -59,7 +58,6 @@ import com.google.common.io.CharStreams;
 
 import io.vavr.control.Try;
 
-@Component
 public class SDKAccessHelperSAMM {
 
    PersistenceLayer persistenceLayer;

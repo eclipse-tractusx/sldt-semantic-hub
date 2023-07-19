@@ -17,7 +17,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
-package org.eclipse.tractusx.semantics.hub.samm;
+package org.eclipse.tractusx.semantics.hub.bamm;
 
 import java.util.List;
 import java.util.Optional;
@@ -34,6 +34,10 @@ import io.openmanufacturing.sds.aspectmodel.vocabulary.BAMM;
 import io.vavr.NotImplementedError;
 import io.vavr.control.Try;
 
+/**
+ * @deprecated (This class will be deprecated when we switch all to BAMM model to SAMM models.)
+ */
+@Deprecated
 public class StaticResolutionStrategyBAMM extends AbstractResolutionStrategy {
    private int counter;
    private final Try<Model> model;

@@ -34,7 +34,6 @@ import org.eclipse.esmf.aspectmodel.urn.AspectModelUrn;
 import org.eclipse.tractusx.semantics.hub.ResolutionException;
 import org.eclipse.tractusx.semantics.hub.model.AasFormat;
 import org.eclipse.tractusx.semantics.hub.persistence.PersistenceLayer;
-import org.eclipse.tractusx.semantics.hub.samm.StaticResolutionStrategyBAMM;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -60,7 +59,6 @@ import io.vavr.control.Try;
  * @deprecated (This class will be deprecated when we switch all to BAMM model to SAMM models.)
  */
 @Deprecated
-@Component
 public class SDKAccessHelperBAMM {
 
    PersistenceLayer persistenceLayer;

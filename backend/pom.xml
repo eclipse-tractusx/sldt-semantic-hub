@@ -34,12 +34,6 @@
     <name>Tractus-X Semantic Hub Backend</name>
     <description>Module of the Semantic Hub Backend Service</description>
     <packaging>jar</packaging>
-   <properties>
-      <!-- These classes will be deprecated when we switch all to BAMM model to SAMM models -->
-      <sonar.coverage.exclusions>**/SDKAccessHelperBAMM.java</sonar.coverage.exclusions>
-      <sonar.cpd.exclusions>**</sonar.cpd.exclusions>
-      <sonar.exclusions>**/SDKAccessHelperBAMM.java</sonar.exclusions>
-   </properties>
     <organization>
         <name>${organization}</name>
         <url>${url}</url>
