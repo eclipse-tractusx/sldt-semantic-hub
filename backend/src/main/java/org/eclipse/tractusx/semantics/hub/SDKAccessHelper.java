@@ -125,7 +125,7 @@ public class SDKAccessHelper {
          ));
 
       }else {
-         return sdkAccessHelperSAMM.loadBammModel( modelString );
+         return sdkAccessHelperSAMM.loadSammModel( modelString );
       }
    }
 }

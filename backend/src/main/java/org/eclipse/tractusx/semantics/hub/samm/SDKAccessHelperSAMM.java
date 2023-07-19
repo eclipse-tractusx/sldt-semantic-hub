@@ -51,7 +51,6 @@ import org.eclipse.esmf.metamodel.loader.AspectModelLoader;
 import org.eclipse.tractusx.semantics.hub.ResolutionException;
 import org.eclipse.tractusx.semantics.hub.model.AasFormat;
 import org.eclipse.tractusx.semantics.hub.persistence.PersistenceLayer;
-import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.io.CharStreams;
@@ -168,7 +167,7 @@ public class SDKAccessHelperSAMM {
    private org.eclipse.esmf.aspectmodel.resolver.services.VersionedModel getVersionedModel( String urn ) {
       final String modelDefinition = persistenceLayer.getModelDefinition( AspectModelUrn.fromUrn( urn ) );
       final Try<org.eclipse.esmf.aspectmodel.resolver.services.VersionedModel> versionedModel =
-            loadBammModel( modelDefinition );
+            loadSammModel( modelDefinition );
 
       if ( versionedModel.isFailure() ) {
          throw new RuntimeException( "Failed to load versioned model", versionedModel.getCause() );
@@ -189,7 +188,7 @@ public class SDKAccessHelperSAMM {
       return AspectModelLoader.getAspects( versionedModel );
    }
 
-   public Try<VersionedModel> loadBammModel( String ttl ) {
+   public Try<VersionedModel> loadSammModel( String ttl ) {
       InputStream targetStream = new ByteArrayInputStream( ttl.getBytes() );
 
       Try<Model> model = TurtleLoader.loadTurtle( targetStream );
