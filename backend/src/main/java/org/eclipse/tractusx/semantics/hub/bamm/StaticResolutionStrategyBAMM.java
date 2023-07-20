@@ -1,6 +1,6 @@
 /********************************************************************************
- * Copyright (c) 2021-2022 Robert Bosch Manufacturing Solutions GmbH
- * Copyright (c) 2021-2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021-2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2021-2023 Contributors to the Eclipse Foundation
  *
  * See the NOTICE file(s) distributed with this work for additional
  * information regarding copyright ownership.
@@ -19,26 +19,30 @@
  ********************************************************************************/
 package org.eclipse.tractusx.semantics.hub.bamm;
 
-import org.eclipse.esmf.samm.KnownVersion;
-import org.eclipse.esmf.aspectmodel.resolver.AbstractResolutionStrategy;
-import org.eclipse.esmf.aspectmodel.urn.AspectModelUrn;
-import org.eclipse.esmf.aspectmodel.vocabulary.SAMM;
-import io.vavr.NotImplementedError;
-import io.vavr.control.Try;
+import java.util.List;
+import java.util.Optional;
 
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.StmtIterator;
 import org.apache.jena.vocabulary.RDF;
 
-import java.util.List;
-import java.util.Optional;
+import io.openmanufacturing.sds.aspectmetamodel.KnownVersion;
+import io.openmanufacturing.sds.aspectmodel.resolver.AbstractResolutionStrategy;
+import io.openmanufacturing.sds.aspectmodel.urn.AspectModelUrn;
+import io.openmanufacturing.sds.aspectmodel.vocabulary.BAMM;
+import io.vavr.NotImplementedError;
+import io.vavr.control.Try;
 
-public class StaticResolutionStrategy extends AbstractResolutionStrategy {
+/**
+ * @deprecated (This class will be deprecated when we switch all to BAMM model to SAMM models.)
+ */
+@Deprecated
+public class StaticResolutionStrategyBAMM extends AbstractResolutionStrategy {
    private int counter;
    private final Try<Model> model;
 
-   public StaticResolutionStrategy( Try<Model> model ) {
+   public StaticResolutionStrategyBAMM( Try<Model> model ) {
       this.model = model;
    }
 
@@ -54,17 +58,15 @@ public class StaticResolutionStrategy extends AbstractResolutionStrategy {
 
    public AspectModelUrn getAspectModelUrn() {
       final Optional<StmtIterator> stmtIterator = getStmtIterator();
-
       final String aspectModelUrn = stmtIterator.orElseThrow(
                   () -> new NotImplementedError( "AspectModelUrn cannot be found." ) )
             .next().getSubject().getURI();
-
       return AspectModelUrn.fromUrn( aspectModelUrn );
    }
 
    private Optional<StmtIterator> getStmtIterator() {
       for ( final KnownVersion version : KnownVersion.getVersions() ) {
-         final SAMM bamm = new SAMM( version );
+         final BAMM bamm = new BAMM( version );
          final List<Resource> resources = List.of( bamm.Aspect(), bamm.Property(), bamm.Entity(), bamm.Characteristic() );
          final Optional<StmtIterator> stmtIterator = resources.stream().filter(
                      resource -> model.get().listStatements( null, RDF.type, resource ).hasNext() ).findFirst()

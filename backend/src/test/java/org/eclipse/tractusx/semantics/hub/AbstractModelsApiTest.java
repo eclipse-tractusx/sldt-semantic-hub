@@ -1,6 +1,6 @@
 /********************************************************************************
- * Copyright (c) 2021-2022 Robert Bosch Manufacturing Solutions GmbH
- * Copyright (c) 2021-2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021-2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2021-2023 Contributors to the Eclipse Foundation
  *
  * See the NOTICE file(s) distributed with this work for additional
  * information regarding copyright ownership.
@@ -19,8 +19,6 @@
  ********************************************************************************/
 package org.eclipse.tractusx.semantics.hub;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.apache.jena.rdfconnection.RDFConnection;
 import org.apache.jena.rdfconnection.RDFConnectionRemoteBuilder;
 import org.eclipse.tractusx.semantics.FusekiTestContainer;
@@ -33,6 +31,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -88,6 +88,17 @@ public abstract class AbstractModelsApiTest extends FusekiTestContainer {
         try ( final RDFConnection rdfConnection = rdfConnectionRemoteBuilder.build() ) {
             rdfConnection.update( "CLEAR DEFAULT" );
         }
+    }
+
+    public MockHttpServletRequestBuilder postBAMM( String payload, String status ) {
+        String type = "BAMM";
+        return MockMvcRequestBuilders.post( "/api/v1/models")
+              .queryParam("type", type)
+              .queryParam( "status", status)
+              .accept( MediaType.APPLICATION_JSON )
+              .contentType( MediaType.TEXT_PLAIN)
+              .content( payload )
+              .with(jwtTokenFactory.allRoles());
     }
 
 }

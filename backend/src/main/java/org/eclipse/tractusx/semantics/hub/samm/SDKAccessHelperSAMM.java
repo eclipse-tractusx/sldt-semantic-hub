@@ -1,6 +1,6 @@
 /********************************************************************************
- * Copyright (c) 2021-2022 Robert Bosch Manufacturing Solutions GmbH
- * Copyright (c) 2021-2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021-2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2021-2023 Contributors to the Eclipse Foundation
  *
  * See the NOTICE file(s) distributed with this work for additional
  * information regarding copyright ownership.
@@ -17,28 +17,20 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
-package org.eclipse.tractusx.semantics.hub.bamm;
+package org.eclipse.tractusx.semantics.hub.samm;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.util.HashMap;
-import java.io.FileOutputStream;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.google.common.io.CharStreams;
-
 import org.apache.jena.rdf.model.Model;
-import org.eclipse.tractusx.semantics.hub.model.AasFormat;
-import org.springframework.stereotype.Component;
-
 import org.eclipse.esmf.aspectmodel.aas.AspectModelAASGenerator;
 import org.eclipse.esmf.aspectmodel.generator.diagram.AspectModelDiagramGenerator;
 import org.eclipse.esmf.aspectmodel.generator.diagram.AspectModelDiagramGenerator.Format;
@@ -51,35 +43,26 @@ import org.eclipse.esmf.aspectmodel.resolver.AspectModelResolver;
 import org.eclipse.esmf.aspectmodel.resolver.services.TurtleLoader;
 import org.eclipse.esmf.aspectmodel.resolver.services.VersionedModel;
 import org.eclipse.esmf.aspectmodel.shacl.violation.Violation;
+import org.eclipse.esmf.aspectmodel.urn.AspectModelUrn;
 import org.eclipse.esmf.aspectmodel.validation.services.AspectModelValidator;
 import org.eclipse.esmf.metamodel.Aspect;
 import org.eclipse.esmf.metamodel.AspectContext;
 import org.eclipse.esmf.metamodel.loader.AspectModelLoader;
+import org.eclipse.tractusx.semantics.hub.ResolutionException;
+import org.eclipse.tractusx.semantics.hub.model.AasFormat;
+import org.eclipse.tractusx.semantics.hub.persistence.PersistenceLayer;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.google.common.io.CharStreams;
+
 import io.vavr.control.Try;
 
-@Component
-public class BammHelper {
-   public Try<VersionedModel> loadBammModel( String ttl ) {
-      InputStream targetStream = new ByteArrayInputStream( ttl.getBytes() );
+public class SDKAccessHelperSAMM {
 
-      Try<Model> model = TurtleLoader.loadTurtle( targetStream );
+   PersistenceLayer persistenceLayer;
 
-      StaticResolutionStrategy resolutionStrategy = new StaticResolutionStrategy( model );
-
-      AspectModelResolver resolver = new AspectModelResolver();
-
-      Try<VersionedModel> versionedModel = resolver.resolveAspectModel( resolutionStrategy, resolutionStrategy.getAspectModelUrn() );
-
-      if ( resolutionStrategy.getResolvementCounter() > 1 ) {
-         return Try.failure( new ResolutionException( "The definition must be self contained!" ) );
-      }
-
-      return versionedModel;
-   }
-
-   public Try<List<Aspect>> getAspectFromVersionedModel( VersionedModel versionedModel ) {
-
-      return AspectModelLoader.getAspects( versionedModel );
+   public void setPersistenceLayer( PersistenceLayer persistenceLayer ) {
+      this.persistenceLayer = persistenceLayer;
    }
 
    public List<Violation> validateModel( Try<VersionedModel> model ) {
@@ -87,7 +70,8 @@ public class BammHelper {
       return validator.validateModel( model );
    }
 
-   public Try<byte[]> generatePng( VersionedModel versionedModel ) {
+   public Try<byte[]> generatePng( String urn ) {
+      VersionedModel versionedModel = getVersionedModel( urn );
       final AspectModelDiagramGenerator generator = new AspectModelDiagramGenerator( versionedModel );
 
       try {
@@ -101,19 +85,21 @@ public class BammHelper {
       }
    }
 
-   public JsonNode getJsonSchema( Aspect aspect ) {
+   public JsonNode getJsonSchema( String urn ) {
+      Aspect aspect = getBamAspect( urn );
       AspectModelJsonSchemaGenerator jsonSchemaGenerator = new AspectModelJsonSchemaGenerator();
       return jsonSchemaGenerator.apply( aspect, Locale.ENGLISH );
    }
 
-   public Try<byte[]> getHtmlDocu( VersionedModel versionedModel ) {
+   public Try<byte[]> getHtmlDocu( String urn ) {
+      VersionedModel versionedModel = getVersionedModel( urn );
       ByteArrayOutputStream output = new ByteArrayOutputStream();
 
       final Aspect aspect = AspectModelLoader.getAspects(versionedModel).get().get(0);
       
       AspectModelDocumentationGenerator documentationGenerator = new AspectModelDocumentationGenerator( new AspectContext(versionedModel, aspect) );
 
-      Map<AspectModelDocumentationGenerator.HtmlGenerationOption, String> options = new HashMap();
+      Map<HtmlGenerationOption, String> options = new HashMap();
 
       try {
          InputStream ompCSS = getClass().getResourceAsStream( "/catena-template.css" );
@@ -135,7 +121,8 @@ public class BammHelper {
       }
    }
 
-   public String getOpenApiDefinitionJson( Aspect aspect, String baseUrl ) {
+   public String getOpenApiDefinitionJson( String urn, String baseUrl ) {
+      Aspect aspect = getBamAspect( urn );
       AspectModelOpenApiGenerator openApiGenerator = new AspectModelOpenApiGenerator();
 
       JsonNode resultJson = openApiGenerator.applyForJson( aspect, true, baseUrl, Optional.empty(), Optional.empty(), false, Optional.empty() );
@@ -143,13 +130,15 @@ public class BammHelper {
       return resultJson.toString();
    }
 
-   public Try<String> getExamplePayloadJson( Aspect aspect ) {
+   public Try<String> getExamplePayloadJson( String urn ) {
+      Aspect aspect = getBamAspect( urn );
       AspectModelJsonPayloadGenerator payloadGenerator = new AspectModelJsonPayloadGenerator( aspect );
 
       return Try.of( payloadGenerator::generateJson );
    }
 
-   public Try getAasSubmodelTemplate( Aspect aspect, AasFormat aasFormat ) {
+   public Try getAasSubmodelTemplate( String urn, AasFormat aasFormat ) {
+      Aspect aspect = getBamAspect( urn );
       AspectModelAASGenerator aasGenerator = new AspectModelAASGenerator();
       ByteArrayOutputStream stream = new ByteArrayOutputStream();
 
@@ -172,5 +161,42 @@ public class BammHelper {
       } catch ( IOException e ) {
          return Try.failure( e );
       }
+   }
+
+   private org.eclipse.esmf.aspectmodel.resolver.services.VersionedModel getVersionedModel( String urn ) {
+      final String modelDefinition = persistenceLayer.getModelDefinition( AspectModelUrn.fromUrn( urn ) );
+      final Try<org.eclipse.esmf.aspectmodel.resolver.services.VersionedModel> versionedModel =
+            loadSammModel( modelDefinition );
+
+      if ( versionedModel.isFailure() ) {
+         throw new RuntimeException( "Failed to load versioned model", versionedModel.getCause() );
+      }
+      return versionedModel.get();
+   }
+
+   private org.eclipse.esmf.metamodel.Aspect getBamAspect( String urn ) {
+      final Try<List<org.eclipse.esmf.metamodel.Aspect>> aspect = getAspectFromVersionedModel( getVersionedModel( urn ) );
+      if ( aspect.isFailure() ) {
+         throw new RuntimeException( "Failed to load aspect model", aspect.getCause() );
+      }
+      return aspect.get().get( 0 );
+   }
+
+   private Try<List<Aspect>> getAspectFromVersionedModel( VersionedModel versionedModel ) {
+      return AspectModelLoader.getAspects( versionedModel );
+   }
+
+   public Try<VersionedModel> loadSammModel( String ttl ) {
+      InputStream targetStream = new ByteArrayInputStream( ttl.getBytes() );
+      Try<Model> model = TurtleLoader.loadTurtle( targetStream );
+
+      StaticResolutionStrategy resolutionStrategy = new StaticResolutionStrategy( model );
+      AspectModelResolver resolver = new AspectModelResolver();
+      Try<VersionedModel> versionedModel = resolver.resolveAspectModel( resolutionStrategy, resolutionStrategy.getAspectModelUrn() );
+
+      if ( resolutionStrategy.getResolvementCounter() > 1 ) {
+         return Try.failure( new ResolutionException( "The definition must be self contained!" ) );
+      }
+      return versionedModel;
    }
 }

@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2022 Bosch Software Innovations GmbH. All rights reserved.
+ * Copyright (c) 2023 Bosch Software Innovations GmbH. All rights reserved.
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  */
 
 package org.eclipse.tractusx.semantics.hub;
@@ -23,10 +24,7 @@ import org.springframework.http.ResponseEntity;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.Lists;
 
-import org.eclipse.esmf.aspectmodel.resolver.services.VersionedModel;
 import org.eclipse.esmf.aspectmodel.urn.AspectModelUrn;
-import org.eclipse.esmf.metamodel.Aspect;
-import org.eclipse.tractusx.semantics.hub.bamm.BammHelper;
 import org.eclipse.tractusx.semantics.hub.persistence.PersistenceLayer;
 import io.vavr.control.Try;
 import org.eclipse.tractusx.semantics.hub.api.ModelsApiDelegate;
@@ -34,11 +32,12 @@ import org.eclipse.tractusx.semantics.hub.api.ModelsApiDelegate;
 public class AspectModelService implements ModelsApiDelegate {
 
    private final PersistenceLayer persistenceLayer;
-   private final BammHelper bammHelper;
+   private final SDKAccessHelper sdkHelper;
 
-   public AspectModelService( final PersistenceLayer persistenceLayer, BammHelper bammHelper ) {
+   public AspectModelService( final PersistenceLayer persistenceLayer, SDKAccessHelper sdkHelper ) {
       this.persistenceLayer = persistenceLayer;
-      this.bammHelper = bammHelper;
+      this.sdkHelper = sdkHelper;
+      sdkHelper.setPersistenceLayer( persistenceLayer );
    }
 
    @Override
@@ -84,8 +83,7 @@ public class AspectModelService implements ModelsApiDelegate {
 
    @Override
    public ResponseEntity<org.springframework.core.io.Resource> getModelDiagram( final String urn ) {
-      final VersionedModel versionedModel = getVersionedModel( urn );
-      final Try<byte[]>pngBytes = bammHelper.generatePng( versionedModel );
+      final Try<byte[]>pngBytes = sdkHelper.generatePng( urn );
       if ( pngBytes.isFailure()  ) {
          throw new RuntimeException( String.format( "Failed to generate example payload for urn %s", urn ) );
       }
@@ -94,14 +92,13 @@ public class AspectModelService implements ModelsApiDelegate {
 
    @Override
    public ResponseEntity<Void> getModelJsonSchema( final String modelId ) {
-      final JsonNode json = bammHelper.getJsonSchema( getBamAspect( modelId ) );
+      final JsonNode json = sdkHelper.getJsonSchema( modelId );
       return new ResponseEntity( json, HttpStatus.OK );
    }
 
    @Override
    public ResponseEntity<Void> getModelDocu( final String modelId ) {
-      VersionedModel versionedModel = getVersionedModel( modelId );
-      final Try<byte[]> docuResult = bammHelper.getHtmlDocu( versionedModel );
+      final Try<byte[]> docuResult = sdkHelper.getHtmlDocu( modelId );
       if ( docuResult.isFailure() ) {
          throw new RuntimeException( String.format( "Failed to generate documentation for urn %s", modelId ) );
       }
@@ -130,15 +127,13 @@ public class AspectModelService implements ModelsApiDelegate {
 
    @Override
    public ResponseEntity<Void> getModelOpenApi( final String modelId, final String baseUrl ) {
-      final Aspect bammAspect = getBamAspect( modelId );
-      final String openApiJson = bammHelper.getOpenApiDefinitionJson( bammAspect, baseUrl );
+      final String openApiJson = sdkHelper.getOpenApiDefinitionJson( modelId, baseUrl );
       return new ResponseEntity( openApiJson, HttpStatus.OK );
    }
 
    @Override
    public ResponseEntity<Void> getModelExamplePayloadJson( final String modelId ) {
-      final Aspect bammAspect = getBamAspect( modelId );
-      final Try<String> result = bammHelper.getExamplePayloadJson( bammAspect );
+      final Try<String> result = sdkHelper.getExamplePayloadJson( modelId );
       if ( result.isFailure() ) {
          throw new RuntimeException( String.format( "Failed to generate example payload for urn %s", modelId ) );
       }
@@ -147,8 +142,7 @@ public class AspectModelService implements ModelsApiDelegate {
 
    @Override
    public ResponseEntity getAasSubmodelTemplate(String urn, AasFormat aasFormat) {
-      final Aspect bammAspect = getBamAspect( urn );
-      final Try result = bammHelper.getAasSubmodelTemplate(bammAspect, aasFormat);
+      final Try result = sdkHelper.getAasSubmodelTemplate(urn, aasFormat);
       if ( result.isFailure() ) {
          throw new RuntimeException( String.format( "Failed to generate AASX submodel template for model with urn %s", urn ) );
       }
@@ -176,22 +170,4 @@ public class AspectModelService implements ModelsApiDelegate {
       return new ResponseEntity<SemanticModelList>( models, HttpStatus.OK );
    }
 
-   private Aspect getBamAspect( String urn ) {
-      final Try<List<Aspect>> aspects = bammHelper.getAspectFromVersionedModel( getVersionedModel( urn ) );
-      if ( aspects.isFailure() ) {
-         throw new RuntimeException( "Failed to load aspect model", aspects.getCause() );
-      }
-      return aspects.get().get(0);
-   }
-
-   private VersionedModel getVersionedModel( String urn ) {
-      final String modelDefinition = persistenceLayer.getModelDefinition( AspectModelUrn.fromUrn( urn ) );
-
-      final Try<VersionedModel> versionedModel = bammHelper.loadBammModel( modelDefinition );
-
-      if ( versionedModel.isFailure() ) {
-         throw new RuntimeException( "Failed to load versioned model", versionedModel.getCause() );
-      }
-      return versionedModel.get();
-   }
 }

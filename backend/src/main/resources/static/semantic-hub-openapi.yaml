@@ -412,6 +412,7 @@ components:
       type: string
       enum:
         - SAMM
+        - BAMM
     SemanticModel:
       type: object
       properties:
