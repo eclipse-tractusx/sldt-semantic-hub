@@ -888,6 +888,33 @@ public class ModelsApiTest extends AbstractModelsApiTest{
 
    }
 
+   @Test
+   public void testDependentModelBAMM() throws Exception {
+
+      String PCF_FILE = "Pcf-bamm.ttl";
+      String SERIAL_PART_FILE = "SerialPart-bamm.ttl";
+      String PHYSICAL_DIMENSIONS_FILE = "PhysicalDimensions-bamm.ttl";
+      String DIGITAL_PRODUCT_PASSPORT_FILE = "DigitalProductPassport-bamm.ttl";
+
+      //Given
+      mvc.perform( post( TestUtils.getTTLFile( PCF_FILE ), "DRAFT" ) )
+            .andDo( MockMvcResultHandlers.print() )
+            .andExpect( status().isOk() );
+
+      mvc.perform( post( TestUtils.getTTLFile( SERIAL_PART_FILE ), "DRAFT" ) )
+            .andDo( MockMvcResultHandlers.print() )
+            .andExpect( status().isOk() );
+
+      mvc.perform( post( TestUtils.getTTLFile( PHYSICAL_DIMENSIONS_FILE ), "DRAFT" ) )
+            .andDo( MockMvcResultHandlers.print() )
+            .andExpect( status().isOk() );
+
+      //When
+      mvc.perform( post( TestUtils.getTTLFile( DIGITAL_PRODUCT_PASSPORT_FILE ), "DRAFT" ) )
+            .andDo( MockMvcResultHandlers.print() )
+            .andExpect( status().isOk() );
+   }
+
    private static String toMovementUrn(String urn){
       return urn + "Movement";
    }
