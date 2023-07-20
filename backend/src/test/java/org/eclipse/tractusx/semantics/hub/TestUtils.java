@@ -40,6 +40,17 @@ public class TestUtils {
    private static final String MODEL_DEPENDENCY = MODELS_ROOT_PATH + "ModelDependency.ttl";
    private static final String DEPENDENT_MODEL = MODELS_ROOT_PATH + "DependentModel.ttl";
 
+   private static final String MODEL_FOR_API_TESTS_BAMM = MODELS_ROOT_PATH + "ValidModelForApiTests-bamm.ttl";
+
+   public static final String MODEL_WITH_REFERENCE_TO_TRACEABILITY_MODEL_PATH_FOR_BAMM =
+         MODELS_ROOT_PATH + "ModelWithReferenceToTraceability-bamm.ttl";
+
+   public static final String TRACEABILITY_MODEL_PATH_FOR_BAMM = MODELS_ROOT_PATH + "Traceability-bamm.ttl";
+
+   private static final String MODEL_DEPENDENCY_BAMM = MODELS_ROOT_PATH + "ModelDependency-bamm.ttl";
+
+   private static final String DEPENDENT_MODEL_BAMM = MODELS_ROOT_PATH + "DependentModel-bamm.ttl";
+
 
    public static String loadModelFromResources( String resourceName ) throws IOException {
       return IOUtils.resourceToString( resourceName, StandardCharsets.UTF_8, TestUtils.class.getClassLoader() );
@@ -69,6 +80,36 @@ public class TestUtils {
       String model;
       try {
          model = loadModelFromResources(MODEL_DEPENDENCY);
+      } catch (IOException e) {
+         throw new RuntimeException("Failed to load file");
+      }
+      return model;
+   }
+
+   public static String createValidModelRequestBAMM( String urn) {
+      String model;
+      try {
+         model = loadModelFromResources(MODEL_FOR_API_TESTS_BAMM).replace("{{URN_PREFIX}}", urn);
+      } catch (IOException e) {
+         throw new RuntimeException("Failed to load file");
+      }
+      return model;
+   }
+
+   public static String createModelDependencyForBAMM () {
+      String model;
+      try {
+         model = loadModelFromResources(MODEL_DEPENDENCY_BAMM);
+      } catch (IOException e) {
+         throw new RuntimeException("Failed to load file");
+      }
+      return model;
+   }
+
+   public static String createDependentModelForBAMM (String urn) {
+      String model;
+      try {
+         model = loadModelFromResources(DEPENDENT_MODEL_BAMM).replace("{{URN_PREFIX}}", urn);
       } catch (IOException e) {
          throw new RuntimeException("Failed to load file");
       }
