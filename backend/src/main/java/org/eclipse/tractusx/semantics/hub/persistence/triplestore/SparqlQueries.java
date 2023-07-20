@@ -1,6 +1,6 @@
 /********************************************************************************
- * Copyright (c) 2021-2022 Robert Bosch Manufacturing Solutions GmbH
- * Copyright (c) 2021-2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021-2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2021-2023 Contributors to the Eclipse Foundation
  *
  * See the NOTICE file(s) distributed with this work for additional
  * information regarding copyright ownership.
@@ -58,11 +58,13 @@ public class SparqlQueries {
 
    public static final String ASPECT = "aspect";
    public static final String STATUS_RESULT = "statusResult";
-   public static final String SAMM_ASPECT_URN_REGEX = "urn:samm:org.eclipse.esmf.samm:meta-model:\\d\\.\\d\\.\\d#Aspect";
-   public static final String ALL_SAMM_ASPECT_URN_PREFIX = "urn:samm:org.eclipse.esmf.samm:([a-z]|-)+:\\d\\.\\d\\.\\d#";
-   public static final String SAMM_ASPECT_URN_PREFIX = "urn:samm:org.eclipse.esmf.samm:meta-model:\\d\\.\\d\\.\\d#";
+   public static final String SAMM_ASPECT_URN_REGEX = "(urn:samm:org.eclipse.esmf.samm:meta-model:\\d\\.\\d\\.\\d#Aspect)|(urn:bamm:io.openmanufacturing:meta-model:\\d\\.\\d\\.\\d#Aspect)";
+   public static final String BAMM_ASPECT_URN_REGEX = "(urn:samm:org.eclipse.esmf.samm:meta-model:\\d\\.\\d\\.\\d#Aspect)|(urn:bamm:io.openmanufacturing:meta-model:\\d\\.\\d\\.\\d#Aspect)";
+   public static final String ALL_SAMM_ASPECT_URN_PREFIX = "(urn:samm:org.eclipse.esmf.samm:([a-z]|-)+:\\d\\.\\d\\.\\d#)|(urn:bamm:io.openmanufacturing:([a-z]|-)+:\\d\\.\\d\\.\\d#)";
+   public static final String SAMM_ASPECT_URN_PREFIX = "(urn:samm:org.eclipse.esmf.samm:meta-model:\\d\\.\\d\\.\\d#)|(urn:bamm:io.openmanufacturing:meta-model:\\d\\.\\d\\.\\d#)";
    public static final String SAMM_PREFERRED_NAME = "urn:samm:org.eclipse.esmf.samm:meta-model:1.0.0#preferredName";
    public static final String SAMM_DESCRIPTION = "urn:samm:org.eclipse.esmf.samm:meta-model:1.0.0#description";
+
    public static final Property STATUS_PROPERTY = ResourceFactory.createProperty( AUXILIARY_NAMESPACE, "status" );
 
    private static final String DELETE_BY_URN_QUERY =
@@ -270,8 +272,6 @@ public class SparqlQueries {
     * The simple query needs 50 milliseconds for the same dataset.
     *
     * @param namespaceFilter searches for any namespace matching this parameter
-    * @param nameFilter matches the content of preferredName
-    * @param nameType matches the name (e.g. Property, Characteristic)
     * @param status matches the package status
     * @param page the page to retrieve
     * @param pageSize the page size
@@ -345,9 +345,9 @@ public class SparqlQueries {
       return pss.asQuery();
    }
 
-   public static Query buildFindModelElementClosureQuery( final AspectModelUrn urn ) {
+   public static Query buildFindModelElementClosureQuery( final String urn ) {
       final ParameterizedSparqlString pss = create( FIND_MODEL_ELEMENT_CLOSURE );
-      pss.setNsPrefix( "ns", urn.getUrn().toString() );
+      pss.setNsPrefix( "ns", urn );
       return pss.asQuery();
    }
 

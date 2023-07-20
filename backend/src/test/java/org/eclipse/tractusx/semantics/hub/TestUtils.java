@@ -1,6 +1,6 @@
 /********************************************************************************
- * Copyright (c) 2021-2022 Robert Bosch Manufacturing Solutions GmbH
- * Copyright (c) 2021-2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021-2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2021-2023 Contributors to the Eclipse Foundation
  *
  * See the NOTICE file(s) distributed with this work for additional
  * information regarding copyright ownership.
@@ -25,7 +25,6 @@ import java.nio.charset.StandardCharsets;
 import org.apache.commons.io.IOUtils;
 
 public class TestUtils {
-
    private static final String MODELS_ROOT_PATH = "org/eclipse/tractusx/semantics/hub/persistence/models/";
    public static final String TRACEABILITY_MODEL_PATH = MODELS_ROOT_PATH + "Traceability.ttl";
    public static final String MODEL_WITH_REFERENCE_TO_TRACEABILITY_MODEL_PATH =
@@ -75,5 +74,4 @@ public class TestUtils {
       }
       return model;
    }
-
 }

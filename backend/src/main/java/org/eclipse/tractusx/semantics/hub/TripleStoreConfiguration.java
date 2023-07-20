@@ -1,6 +1,6 @@
 /********************************************************************************
- * Copyright (c) 2021-2022 Robert Bosch Manufacturing Solutions GmbH
- * Copyright (c) 2021-2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021-2023 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2021-2023 Contributors to the Eclipse Foundation
  *
  * See the NOTICE file(s) distributed with this work for additional
  * information regarding copyright ownership.
@@ -26,7 +26,6 @@ import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.impl.client.BasicCredentialsProvider;
-import org.apache.http.impl.client.HttpClients;
 import org.apache.jena.fuseki.main.FusekiServer;
 import org.apache.jena.query.DatasetFactory;
 import org.apache.jena.rdfconnection.LibSec;
@@ -37,7 +36,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import org.eclipse.tractusx.semantics.hub.bamm.BammHelper;
 import org.eclipse.tractusx.semantics.hub.persistence.PersistenceLayer;
 import org.eclipse.tractusx.semantics.hub.persistence.triplestore.SdsSdk;
 import org.eclipse.tractusx.semantics.hub.persistence.triplestore.TripleStorePersistence;
@@ -48,7 +46,7 @@ public class TripleStoreConfiguration {
 
    @Bean
    public AspectModelService aspectModelService( final PersistenceLayer persistenceLayer ) {
-      return new AspectModelService( persistenceLayer, new BammHelper() );
+      return new AspectModelService( persistenceLayer, new SDKAccessHelper() );
    }
 
    @Bean
