@@ -51,7 +51,7 @@ import org.apache.jena.update.UpdateRequest;
 import org.eclipse.esmf.aspectmodel.urn.AspectModelUrn;
 
 public class SparqlQueries {
-   private static final String AUXILIARY_NAMESPACE = "urn:samm:org.eclipse.esmf.samm:aspect-model:aux#";
+   private static final String AUXILIARY_NAMESPACE = "urn:bamm:io.openmanufacturing:aspect-model:aux#";
 
    private static final String NAME_TYPE_NAME = "_NAME_";
    private static final String NAME_TYPE_DESCRIPTION = "_DESCRIPTION_";
