@@ -99,6 +99,16 @@
         <dependency>
             <groupId>org.eclipse.esmf</groupId>
             <artifactId>esmf-aspect-model-starter</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>guru.nidi</groupId>
+                    <artifactId>graphviz-java-min-deps</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.webjars.npm</groupId>
+                    <artifactId>viz.js-graphviz-java</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!--
             The AASX generator uses this dependency to generate AASX XML files.
