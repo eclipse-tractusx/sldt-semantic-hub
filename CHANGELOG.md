@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Fix CVE-2023-34035 (update springboot to version 3.1.2)
 - Fix CVE-2023-2976 (update google guava to version 32.1.1-jre)
-- Get model diagram API returns HTTP status code 501 - Not Implemented since the API call is crashing the server for bigger models.
+- Fix handle bamm and samm models.
 
 ## 0.2.9-M1
 ### Added
