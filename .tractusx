@@ -1,0 +1,6 @@
+product: "Semantic Hub"
+leadingRepository: "https://github.com/eclipse-tractusx/sldt-semantic-hub"
+repositories:
+  - name: "sldt-semantic-hub"
+    usage: "reference implementation of SLDT Semantic Hub"
+    url: "https://github.com/eclipse-tractusx/sldt-semantic-hub"
