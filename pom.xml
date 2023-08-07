@@ -25,7 +25,7 @@
 	<parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.1.0</version> <!-- need to be repeated in properties section for technical purposes -->
+        <version>3.1.2</version> <!-- need to be repeated in properties section for technical purposes -->
         <relativePath/> <!-- lookup parent from repository and not the filesystem -->
     </parent>
 
@@ -65,7 +65,7 @@
 
 		<!-- version properties -->
 		<!-- framework and base stuff -->
-		<spring.boot.version>3.1.0</spring.boot.version>
+		<spring.boot.version>3.1.2</spring.boot.version>
 		<spring.feign.version>3.1.3</spring.feign.version>
 		<springdoc.version>1.6.14</springdoc.version>
 		<springfox.version>2.9.2</springfox.version>
@@ -75,7 +75,7 @@
 		<swagger-annotations.version>1.5.20</swagger-annotations.version>
 		<swagger-core-version>2.0.0</swagger-core-version>
 		<openapi-starter-webmvc-ui.version>2.0.2</openapi-starter-webmvc-ui.version>
-		<guava.version>31.0.1-jre</guava.version>
+		<guava.version>32.1.1-jre</guava.version>
 		<vavr.version>0.10.3</vavr.version>
 		<commons-io.version>2.11.0</commons-io.version>
 		<google.findbugs.version>3.0.2</google.findbugs.version>
@@ -99,7 +99,7 @@
 
 		<!-- semantics -->
 		<bamm.sdk.version>2.1.3</bamm.sdk.version>
-      <samm.sdk.version>2.2.2</samm.sdk.version>
+      <samm.sdk.version>2.2.3</samm.sdk.version>
 		<jena.version>4.7.0</jena.version>
 		<shacl.version>1.3.1</shacl.version>
 
@@ -333,16 +333,24 @@
 			</dependency>
 
 			<!-- Semantics Libraries -->
-			<dependency>   
-				<groupId>org.eclipse.esmf</groupId>   
-				<artifactId>esmf-aspect-model-starter</artifactId>   
+			<dependency>
+				<groupId>org.eclipse.esmf</groupId>
+				<artifactId>esmf-aspect-model-starter</artifactId>
 				<version>${samm.sdk.version}</version>
-				<!-- Exclusion of commons-text is required because of CVE https://avd.aquasec.com/nvd/2022/cve-2022-42889 -->   
-				<exclusions>      
-					<exclusion>         
-						<groupId>org.apache.commons</groupId>         
-						<artifactId>commons-text</artifactId>      
-					</exclusion>   
+				<!-- Exclusion of commons-text is required because of CVE https://avd.aquasec.com/nvd/2022/cve-2022-42889 -->
+				<exclusions>
+					<exclusion>
+						<groupId>org.apache.commons</groupId>
+						<artifactId>commons-text</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>guru.nidi</groupId>
+						<artifactId>graphviz-java-min-deps</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>org.webjars.npm</groupId>
+						<artifactId>viz.js-graphviz-java</artifactId>
+					</exclusion>
 				</exclusions>
 			</dependency>
 			<dependency>   
