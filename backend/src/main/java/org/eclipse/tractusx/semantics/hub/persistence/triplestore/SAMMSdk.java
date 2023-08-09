@@ -21,10 +21,7 @@ package org.eclipse.tractusx.semantics.hub.persistence.triplestore;
 
 import static java.util.Spliterator.ORDERED;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Spliterators;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -49,6 +46,7 @@ import org.eclipse.esmf.aspectmodel.resolver.services.SammAspectMetaModelResourc
 import org.eclipse.esmf.aspectmodel.resolver.services.VersionedModel;
 import org.eclipse.esmf.aspectmodel.shacl.violation.Violation;
 import org.eclipse.esmf.aspectmodel.urn.AspectModelUrn;
+import org.eclipse.esmf.aspectmodel.urn.ElementType;
 import org.eclipse.esmf.aspectmodel.validation.services.AspectModelValidator;
 import org.eclipse.tractusx.semantics.hub.InvalidAspectModelException;
 
@@ -74,7 +72,14 @@ public class SAMMSdk {
       final ResolutionStrategy resolutionStrategy =
             new SAMMSdk.TripleStoreResolutionStrategy( tripleStoreRequester );
 
-      final VersionNumber knownVersion = getKnownVersion( model );
+      VersionNumber knownVersion = null;
+      try {
+          knownVersion = getKnownVersion( model );
+      }catch (Exception e){
+         knownVersion = getUsedMetaModelVersions(model).stream().findFirst().orElse(null);
+      }
+
+//      final VersionNumber knownVersion = new VersionNumber(1,0,0);
       final Try<VersionedModel> versionedModel = aspectMetaModelResourceResolver.mergeMetaModelIntoRawModel( model, knownVersion );
       final ResolutionStrategy firstPayloadThenTripleStore = new EitherStrategy(
             new SelfResolutionStrategy( versionedModel.get().getRawModel() ),
@@ -92,6 +97,17 @@ public class SAMMSdk {
          final Map<String, String> detailsMap=violations.stream().collect( Collectors.toMap( Violation::errorCode,Violation::message ) );
          throw new InvalidAspectModelException( detailsMap );
       }
+   }
+
+   public Set<VersionNumber> getUsedMetaModelVersions(Model model) {
+      String bammUrnStart = String.format("%s:%s", "urn", "bamm");
+      return (Set)model.listObjects().toList().stream().filter(RDFNode::isURIResource).map(RDFNode::asResource).map(Resource::getURI).filter((uri) -> {
+         return uri.startsWith(bammUrnStart);
+      }).flatMap((uri) -> {
+         return AspectModelUrn.from(uri).toJavaStream();
+      }).filter((urn) -> {
+         return urn.getElementType().equals(ElementType.META_MODEL) || urn.getElementType().equals(ElementType.CHARACTERISTIC);
+      }).map(AspectModelUrn::getVersion).map(VersionNumber::parse).collect(Collectors.toSet());
    }
 
    public AspectModelUrn getAspectUrn( final Model model ) {
