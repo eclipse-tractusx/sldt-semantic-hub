@@ -187,6 +187,11 @@ public class ModelsApiTest extends AbstractModelsApiTest{
         .andDo( MockMvcResultHandlers.print())
         .andExpect( header().string("Content-Type", "application/octet-stream") )
         .andExpect( status().isOk() );
+
+     mvc.perform( MockMvcRequestBuilders.get( "/api/v1/models/{urn}/aas?aasFormat=JSON", toMovementUrn( urnPrefix ) ).with( jwtTokenFactory.allRoles() ) )
+           .andDo( MockMvcResultHandlers.print() )
+           .andExpect( status().isOk() )
+           .andExpect( content().json( TestUtils.loadModelFromResources( TestUtils.AAS_JSON_FILE )));
   }
 
     @Test
