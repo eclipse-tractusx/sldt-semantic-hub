@@ -150,13 +150,23 @@ public class AspectModelService implements ModelsApiDelegate {
       }
       HttpHeaders responseHeaders = new HttpHeaders();
 
-      if(aasFormat.equals(AasFormat.FILE)) {
-         responseHeaders.set("Content-Type", "application/octet-stream");
-      } else {
-         responseHeaders.set("Content-Type", "application/xml");
-      }
+      responseHeaders.setContentType(getMediaType( aasFormat ));
 
       return new ResponseEntity( result.get(), responseHeaders, HttpStatus.OK );
+   }
+
+   /**
+    * Determines the MediaType based on the AasFormat
+    * @param aasFormat
+    * @return MediaType
+    */
+   private MediaType getMediaType( AasFormat aasFormat ) {
+      MediaType mediaType = switch ( aasFormat ) {
+         case FILE -> MediaType.APPLICATION_OCTET_STREAM;
+         case XML -> MediaType.APPLICATION_XML;
+         case JSON -> MediaType.APPLICATION_JSON;
+      };
+      return mediaType;
    }
 
    @Override
