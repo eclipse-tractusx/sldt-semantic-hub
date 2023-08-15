@@ -83,11 +83,13 @@ public class AspectModelService implements ModelsApiDelegate {
 
    @Override
    public ResponseEntity<org.springframework.core.io.Resource> getModelDiagram( final String urn ) {
-      final Try<byte[]>pngBytes = sdkHelper.generatePng( urn );
-      if ( pngBytes.isFailure()  ) {
-         throw new RuntimeException( String.format( "Failed to generate example payload for urn %s", urn ) );
-      }
-      return new ResponseEntity( pngBytes.get(), HttpStatus.OK );
+// TODO: Fix Model Diagram server crash issue for bugger Models
+//      final Try<byte[]>pngBytes = sdkHelper.generatePng( urn );
+//      if ( pngBytes.isFailure()  ) {
+//         throw new RuntimeException( String.format( "Failed to generate example payload for urn %s", urn ) );
+//      }
+//      return new ResponseEntity( pngBytes.get(), HttpStatus.OK );
+      return new ResponseEntity( HttpStatus.NOT_IMPLEMENTED );
    }
 
    @Override
@@ -148,13 +150,23 @@ public class AspectModelService implements ModelsApiDelegate {
       }
       HttpHeaders responseHeaders = new HttpHeaders();
 
-      if(aasFormat.equals(AasFormat.FILE)) {
-         responseHeaders.set("Content-Type", "application/octet-stream");
-      } else {
-         responseHeaders.set("Content-Type", "application/xml");
-      }
+      responseHeaders.setContentType(getMediaType( aasFormat ));
 
       return new ResponseEntity( result.get(), responseHeaders, HttpStatus.OK );
+   }
+
+   /**
+    * Determines the MediaType based on the AasFormat
+    * @param aasFormat
+    * @return MediaType
+    */
+   private MediaType getMediaType( AasFormat aasFormat ) {
+      MediaType mediaType = switch ( aasFormat ) {
+         case FILE -> MediaType.APPLICATION_OCTET_STREAM;
+         case XML -> MediaType.APPLICATION_XML;
+         case JSON -> MediaType.APPLICATION_JSON;
+      };
+      return mediaType;
    }
 
    @Override

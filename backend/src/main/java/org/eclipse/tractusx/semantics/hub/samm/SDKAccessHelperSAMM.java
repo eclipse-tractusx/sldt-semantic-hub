@@ -154,6 +154,11 @@ public class SDKAccessHelperSAMM {
                return stream;
             } );
             return Try.of( stream::toString );
+         case JSON:
+            aasGenerator.generateAasJsonFile( aspect, ( String s ) -> {
+               return stream;
+            } );
+            return Try.of( stream::toString );
          default:
             return Try.failure( new Exception( String.format( "Wrong AAS output format %s", aasFormat.toString() ) ) );
 

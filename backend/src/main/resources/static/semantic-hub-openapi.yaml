@@ -477,6 +477,7 @@ components:
       enum:
         - FILE
         - XML
+        - JSON
   responses:
     SemanticModelJsonSchema:
       description: OK
@@ -519,7 +520,9 @@ components:
           schema:
             type: string
             format: binary
-
+        application/json:
+          schema:
+            type: string
 
     SemanticModelDocumentation:
       description: OK
