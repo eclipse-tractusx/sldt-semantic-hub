@@ -42,8 +42,7 @@ For detailed instructions please refer to our [INSTALL.md](INSTALL.md)
 This application provides container images for demonstration purposes.
 
 DockerHub: [Docker.io:tractusx-semantic-hub](https://hub.docker.com/r/tractusx/sldt-semantic-hub). <br>
-Docker image from 0.2.7-M1 until the latest can be found on DockerHub. The older images can be found on GitHub Container Registry (GHCR): 
-[catena-ng:semantic-hub](https://github.com/catenax-ng/product-semantics/pkgs/container/sldt-semantic-hub). <br>
+
 The Helm chart can be found at the GitHub repository at: [Releases](https://github.com/eclipse-tractusx/sldt-semantic-hub/releases)
 
 Eclipse Tractus-X product(s) installed within the image:
