@@ -22,7 +22,12 @@ If you have a running Kubernetes cluster available, you can deploy the Semantic 
 In case you don't have a running cluster, you can set up one by yourself locally, using [minikube](https://minikube.sigs.k8s.io/docs/start/).
 In the following, we will use a minikube cluster for reference.
 
-Before deploying the Semantic Hub, enable a few add-ons in your minikube cluster by running the following commands:
+Before deploying the Semantic Hub, build fuseki docker image by following the below steps :
+- Download [jena-fuseki-docker-4.7.0.zip](https://repo1.maven.org/maven2/org/apache/jena/jena-fuseki-docker/4.7.0/jena-fuseki-docker-4.7.0.zip)
+- Unzip the jena-fuseki-docker-4.7.0.zip.
+- Build the dockere image by running the command - `docker build --build-arg JENA_VERSION=4.7.0 -t jena-fuseki-docker .`
+
+Please enable a few add-ons in your minikube cluster by running the following commands:
 
 `minikube addons enable storage-provisioner`
 
