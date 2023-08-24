@@ -29,10 +29,16 @@ Run `mvn install` to run unit tests, build and install the package.
 ## Run Package Locally
 To check whether the build was successful, you can start the resulting JAR file from the build process by running `java -jar target/semantic-hub-backend-{current-version}.jar`.
 
+## Precondition
+Build fuseki docker image by following the below steps :
+- Download [jena-fuseki-docker-4.7.0.zip](https://repo1.maven.org/maven2/org/apache/jena/jena-fuseki-docker/4.7.0/jena-fuseki-docker-4.7.0.zip)
+- Unzip the jena-fuseki-docker-4.7.0.zip.
+- Build the docker image by running the command - `docker build --build-arg JENA_VERSION=4.7.0 -t jena-fuseki-docker:4.7.0 .`
+
+This docker image `jena-fuseki-docker:4.7.0` will be used in the Helm deployment - [values.yaml](charts/semantic-hub/values.yaml) (graphdb.image).
+
 ## Build Docker
 Run `docker build -t semantic-hub .`
-
-In case you want to publish your image into a remote container registry, apply the tag accordingly and `docker push` the image.
 
 ## Install Instructions
 For detailed instructions please refer to our [INSTALL.md](INSTALL.md)
