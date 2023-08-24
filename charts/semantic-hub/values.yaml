@@ -70,7 +70,7 @@ hub:
 graphdb:
   ## Include Fuski deployment or deploy separately
   enabled: false
-  image: ghcr.io/catenax-ng/jena-fuseki:4.7.0
+  image: jena-fuseki:4.7.0
   imagePullPolicy: IfNotPresent
   replicaCount: 1
   containerPort: 3030

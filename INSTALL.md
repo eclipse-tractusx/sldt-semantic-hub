@@ -25,7 +25,9 @@ In the following, we will use a minikube cluster for reference.
 Before deploying the Semantic Hub, build fuseki docker image by following the below steps :
 - Download [jena-fuseki-docker-4.7.0.zip](https://repo1.maven.org/maven2/org/apache/jena/jena-fuseki-docker/4.7.0/jena-fuseki-docker-4.7.0.zip)
 - Unzip the jena-fuseki-docker-4.7.0.zip.
-- Build the dockere image by running the command - `docker build --build-arg JENA_VERSION=4.7.0 -t jena-fuseki-docker .`
+- Build the dockere image by running the command - `docker build --build-arg JENA_VERSION=4.7.0 -t jena-fuseki:4.7.0 .`
+
+This docker image `jena-fuseki:4.7.0` will be used in the Helm deployment - [values.yaml](charts/semantic-hub/values.yaml) (graphdb.image)
 
 Please enable a few add-ons in your minikube cluster by running the following commands:
 
