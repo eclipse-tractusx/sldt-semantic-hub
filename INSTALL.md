@@ -26,7 +26,7 @@ Build fuseki docker image by following the below steps :
 - Unzip the jena-fuseki-docker-4.7.0.zip.
 - Build the docker image by running the command - `docker build --build-arg JENA_VERSION=4.7.0 -t jena-fuseki-docker:4.7.0 .`
 
-This docker image `jena-fuseki-docker:4.7.0` will be used in the Helm deployment - [values.yaml](charts/semantic-hub/values.yaml) (graphdb.image).
+This docker image `jena-fuseki-docker:4.7.0` will be used in the Helm deployment and test - [values.yaml](charts/semantic-hub/values.yaml) (graphdb.image).
 
 ## Install Instructions
 
