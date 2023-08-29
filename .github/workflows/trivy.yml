@@ -69,13 +69,10 @@ jobs:
       - name: Build JAR
         run: mvn clean package -DskipTests
         
-      - name: Build Image
-        run: docker build -t semantic-hub -f ./backend/Dockerfile .
-        
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: semantic-hub
+          image-ref: "tractusx/sldt-semantic-hub:latest"
           # ignore-unfixed: true
           exit-code: "1"
           hide-progress: false
