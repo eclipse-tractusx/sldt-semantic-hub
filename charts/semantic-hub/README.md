@@ -1,14 +1,26 @@
 # semantic-hub
 
-![Version: 0.1.18](https://img.shields.io/badge/Version-0.1.18-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.2.6-M1](https://img.shields.io/badge/AppVersion-0.2.6--M1-informational?style=flat-square)
+![Version: 0.1.24](https://img.shields.io/badge/Version-0.1.24-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.2.10-M1](https://img.shields.io/badge/AppVersion-0.2.10--M1-informational?style=flat-square)
 
-Helm Chart for the Catena-X Semantic Hub Application
+**Helm Chart for the Catena-X Semantic Hub Application** <br/>
+This Helm charts installs the Semantic Hub application and its dependencies. 
 
 ## Requirements
 
 | Repository | Name | Version |
 |------------|------|---------|
 | https://charts.bitnami.com/bitnami | keycloak | 13.3.0 |
+
+## Prerequisites
+- Kubernetes 1.19+
+- Helm 3.2.0+
+- PV provisioner support in the underlying infrastructure
+
+## Install
+```
+kubectl create namespace semantics
+helm install hub -n semantics ./charts/semantic-hub`
+```
 
 ## Values
 
@@ -43,8 +55,8 @@ Helm Chart for the Catena-X Semantic Hub Application
 | hub.host | string | `"minikube"` |  |
 | hub.idpClientId | string | `"default-client"` |  |
 | hub.idpIssuerUri | string | `""` |  |
-| hub.image.registry | string | `"ghcr.io/catenax-ng"` |  |
-| hub.image.repository | string | `"sldt-semantic-hub"` |  |
+| hub.image.registry | string | `"docker.io"` |  |
+| hub.image.repository | string | `"tractusx/sldt-semantic-hub"` |  |
 | hub.image.version | string | `""` |  |
 | hub.imagePullPolicy | string | `"IfNotPresent"` |  |
 | hub.ingress.annotations | list | `[]` |  |

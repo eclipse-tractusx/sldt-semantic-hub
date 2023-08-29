@@ -1,7 +1,21 @@
-/*
- * Copyright (c) 2023 Bosch Software Innovations GmbH. All rights reserved.
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
- */
+/********************************************************************************
+ * Copyright (c) 2021,2023 Contributors to the Eclipse Foundation
+ *
+ * See the NOTICE file(s) distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Apache License, Version 2.0 which is available at
+ * https://www.apache.org/licenses/LICENSE-2.0.
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations
+ * under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ ********************************************************************************/
 
 package org.eclipse.tractusx.semantics.hub;
 
@@ -150,13 +164,23 @@ public class AspectModelService implements ModelsApiDelegate {
       }
       HttpHeaders responseHeaders = new HttpHeaders();
 
-      if(aasFormat.equals(AasFormat.FILE)) {
-         responseHeaders.set("Content-Type", "application/octet-stream");
-      } else {
-         responseHeaders.set("Content-Type", "application/xml");
-      }
+      responseHeaders.setContentType(getMediaType( aasFormat ));
 
       return new ResponseEntity( result.get(), responseHeaders, HttpStatus.OK );
+   }
+
+   /**
+    * Determines the MediaType based on the AasFormat
+    * @param aasFormat
+    * @return MediaType
+    */
+   private MediaType getMediaType( AasFormat aasFormat ) {
+      MediaType mediaType = switch ( aasFormat ) {
+         case FILE -> MediaType.APPLICATION_OCTET_STREAM;
+         case XML -> MediaType.APPLICATION_XML;
+         case JSON -> MediaType.APPLICATION_JSON;
+      };
+      return mediaType;
    }
 
    @Override
