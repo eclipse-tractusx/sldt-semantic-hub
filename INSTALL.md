@@ -19,6 +19,17 @@
 -->
 ## Deploy using Helm and K8s
 If you have a running Kubernetes cluster available, you can deploy the Semantic Hub using our Helm Chart, which is located under `./charts/semantic-hub`.
+
+## Precondition
+Build fuseki docker image by following the below steps :
+- Download [jena-fuseki-docker-4.7.0.zip](https://repo1.maven.org/maven2/org/apache/jena/jena-fuseki-docker/4.7.0/jena-fuseki-docker-4.7.0.zip)
+- Unzip the jena-fuseki-docker-4.7.0.zip.
+- Build the docker image by running the command - `docker build --build-arg JENA_VERSION=4.7.0 -t jena-fuseki-docker:4.7.0 .`
+
+This docker image `jena-fuseki-docker:4.7.0` will be used in the Helm deployment and test - [values.yaml](charts/semantic-hub/values.yaml) (graphdb.image).
+
+## Install Instructions
+
 In case you don't have a running cluster, you can set up one by yourself locally, using [minikube](https://minikube.sigs.k8s.io/docs/start/).
 In the following, we will use a minikube cluster for reference.
 
@@ -66,13 +77,14 @@ The Helm Chart can be configured using the following parameters (incomplete list
 | `hub.ingress.annotations`     | Annotations to further configure the `Ingress` resource, e.g. for using with `cert-manager`.  |  |
 
 ### GraphDB
-| Parameter       | Description | Default value       |
-| ---             | ---         | ---                 |
-| `graphdb.enabled`     | Configures, whether a separate Fuseki Triplestore should be deployed in the cluster.   | `true` |
-| `graphdb.storageClassName`     | Defines the storage class name of the `PersistentVolumeClaim` that is used to persist the GraphDB data.  | `standard` |
-| `graphdb.storageSize`     | Size of the `PersistentVolumeClaim`  | `50Gi` |
+| Parameter       | Description                                                                                             | Default value       |
+| ---             |---------------------------------------------------------------------------------------------------------| ---                 |
+| `graphdb.enabled`     | Configures, whether a separate Fuseki Triplestore should be deployed in the cluster.                    | `true` |
+| `graphdb.storageClassName`     | Defines the storage class name of the `PersistentVolumeClaim` that is used to persist the GraphDB data. | `standard` |
+| `graphdb.image`     | Defines the fuseki docker image and version details.                                                    | `jena-fuseki-docker:4.7.0` |
+| `graphdb.storageSize`     | Size of the `PersistentVolumeClaim`                                                                     | `50Gi` |
 
 ### Prerequisites
 - Kubernetes 1.19+
-- Helm 3.10.2+
+- Helm 3.2.0+
 - PV provisioner support in the underlying infrastructure

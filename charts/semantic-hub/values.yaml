@@ -61,14 +61,16 @@ hub:
     annotations: []
   resources:
     limits:
-      memory: "1024Mi"
+      cpu: 750m
+      memory: 1024Mi
     requests:
-      memory: "512Mi"
+      cpu: 250m
+      memory: 1024Mi
 
 graphdb:
   ## Include Fuski deployment or deploy separately
   enabled: false
-  image: ghcr.io/catenax-ng/jena-fuseki:4.7.0
+  image: jena-fuseki-docker:4.7.0
   imagePullPolicy: IfNotPresent
   replicaCount: 1
   containerPort: 3030
