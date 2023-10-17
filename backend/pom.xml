@@ -107,6 +107,18 @@
                     <groupId>org.webjars.npm</groupId>
                     <artifactId>viz.js-graphviz-java</artifactId>
                 </exclusion>
+               <exclusion>
+                  <groupId>org.apache.xmlgraphics</groupId>
+                  <artifactId>batik-bridge</artifactId>
+               </exclusion>
+               <exclusion>
+                  <groupId>org.apache.xmlgraphics</groupId>
+                  <artifactId>batik-transcoder</artifactId>
+               </exclusion>
+               <exclusion>
+                  <groupId>org.apache.xmlgraphics</groupId>
+                  <artifactId>batik-svgrasterizer</artifactId>
+               </exclusion>
             </exclusions>
         </dependency>
         <!--
