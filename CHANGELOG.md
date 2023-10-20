@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 0.2.12
 ### Added
+- Added summary for the open api paths
 
 ### Fixed
 - Fixed CVE-2022-44729| CWE-918 Third-Party Components vulnerability.
