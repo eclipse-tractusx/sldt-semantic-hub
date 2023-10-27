@@ -36,6 +36,7 @@ paths:
     get:
       tags:
         - SemanticHub
+      summary: Returns all the Semantic Models based on the Namespace and SemanticModelStatus
       operationId: getModelList
       parameters:
         - in: query
@@ -78,6 +79,7 @@ paths:
     post:
       tags:
         - SemanticHub
+      summary: Creates a new Semantic Model with the respective SemanticModelStatus for the respective SemanticModelType
       operationId: createModelWithUrn
       parameters:
       - in: query
@@ -110,6 +112,7 @@ paths:
     put:
       tags:
         - SemanticHub
+      summary: Updates an existing Semantic Model with the respective SemanticModelStatus for the respective SemanticModelType
       operationId: modifyModel
       parameters:
         - in: query
@@ -144,6 +147,7 @@ paths:
     post:
       tags:
         - SemanticHub
+      summary: Returns all the Semantic Models based on the URN list
       operationId: getModelListByUrns
       description: This endpoint allows to filter for a specific set of URNs. The endpoint returns the metadata, such as the model status. For URNs that are not in the database there is no entry in the result set. Therefore, a search array with 10 URNs can result in a response containing 9 or less result entries.
       parameters:
@@ -189,6 +193,7 @@ paths:
     get:
       tags:
         - SemanticHub
+      summary: Returns a Semantic Model based on the URN
       operationId: getModelByUrn
       parameters:
         - in: path
@@ -232,6 +237,7 @@ paths:
     get:
       tags:
         - SemanticHub
+      summary: Returns a Semantic Model file based on the URN
       operationId: getModelFile
       parameters:
         - in: path
@@ -254,6 +260,7 @@ paths:
     get:
       tags:
         - SemanticHub
+      summary: Returns a Semantic Model diagram based on the URN
       operationId: getModelDiagram
       parameters:
         - in: path
@@ -276,6 +283,7 @@ paths:
     get:
       tags:
         - SemanticHub
+      summary: Returns a Semantic Model HTML documentation based on the URN
       operationId: getModelDocu
       parameters:
         - in: path
@@ -298,6 +306,7 @@ paths:
     get:
       tags:
         - SemanticHub
+      summary: Returns a Semantic Model JSON schema based on the URN
       operationId: getModelJsonSchema
       parameters:
         - in: path
@@ -320,6 +329,7 @@ paths:
     get:
       tags:
         - SemanticHub
+      summary: Returns a Semantic Model Open API definition JSON based on the URN
       operationId: getModelOpenApi
       parameters:
         - in: path
@@ -347,6 +357,7 @@ paths:
     get:
       tags:
         - SemanticHub
+      summary: Returns a Semantic Model example payload JSON based on the URN
       operationId: getModelExamplePayloadJson
       parameters:
         - in: path
@@ -369,6 +380,7 @@ paths:
     get:
       tags:
         - SemanticHub
+      summary: Returns a Semantic Model AAS sub-model template based on the URN and AasFormat
       operationId: getAasSubmodelTemplate
       parameters:
         - in: path
