@@ -71,18 +71,23 @@ public class SDKAccessHelperSAMM {
    }
 
    public Try<byte[]> generatePng( String urn ) {
-      VersionedModel versionedModel = getVersionedModel( urn );
-      final AspectModelDiagramGenerator generator = new AspectModelDiagramGenerator( versionedModel );
-
-      try {
-         ByteArrayOutputStream output = new ByteArrayOutputStream();
-         generator.generateDiagram( Format.PNG, Locale.ENGLISH, output );
-         final byte[] bytes = output.toByteArray();
-
-         return Try.success(bytes);
-      } catch ( IOException e ) {
-         return Try.failure( e );
-      }
+      //TODO:Fix the breaking changes in ESMF SDK 2.4.1
+      //Refer: https://eclipse-esmf.github.io/esmf-developer-guide/2.4.1/tooling-guide/java-aspect-tooling.html#generating-diagrams
+      //Need to call the AspectModelDiagramGenerator() constructor with an instance of AspectContext,
+      // in the same way of the call of the AspectModelDocumentationGenerator constructor (we might already have this)
+//      VersionedModel versionedModel = getVersionedModel( urn );
+//      final AspectModelDiagramGenerator generator = new AspectModelDiagramGenerator( versionedModel );
+//
+//      try {
+//         ByteArrayOutputStream output = new ByteArrayOutputStream();
+//         generator.generateDiagram( Format.PNG, Locale.ENGLISH, output );
+//         final byte[] bytes = output.toByteArray();
+//
+//         return Try.success(bytes);
+//      } catch ( IOException e ) {
+//         return Try.failure( e );
+//      }
+      return null;
    }
 
    public JsonNode getJsonSchema( String urn ) {

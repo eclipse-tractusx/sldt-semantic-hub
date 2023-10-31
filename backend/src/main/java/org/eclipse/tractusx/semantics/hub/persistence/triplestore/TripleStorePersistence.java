@@ -30,18 +30,6 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
-import org.eclipse.esmf.aspectmodel.urn.UrnSyntaxException;
-import io.vavr.control.Try;
-
-import org.eclipse.tractusx.semantics.hub.AspectModelNotFoundException;
-import org.eclipse.tractusx.semantics.hub.ModelPackageNotFoundException;
-import org.eclipse.tractusx.semantics.hub.domain.ModelPackage;
-import org.eclipse.tractusx.semantics.hub.domain.ModelPackageStatus;
-import org.eclipse.tractusx.semantics.hub.domain.ModelPackageUrn;
-import org.eclipse.tractusx.semantics.hub.model.SemanticModel;
-import org.eclipse.tractusx.semantics.hub.model.SemanticModelList;
-import org.eclipse.tractusx.semantics.hub.model.SemanticModelStatus;
-import org.eclipse.tractusx.semantics.hub.model.SemanticModelType;
 import org.apache.jena.arq.querybuilder.UpdateBuilder;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QuerySolution;
@@ -52,12 +40,22 @@ import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.rdfconnection.RDFConnection;
 import org.apache.jena.rdfconnection.RDFConnectionRemoteBuilder;
 import org.apache.jena.update.UpdateRequest;
-
 import org.eclipse.esmf.aspectmodel.resolver.AspectModelResolver;
 import org.eclipse.esmf.aspectmodel.urn.AspectModelUrn;
-
+import org.eclipse.esmf.aspectmodel.urn.UrnSyntaxException;
+import org.eclipse.tractusx.semantics.hub.AspectModelNotFoundException;
 import org.eclipse.tractusx.semantics.hub.InvalidStateTransitionException;
+import org.eclipse.tractusx.semantics.hub.ModelPackageNotFoundException;
+import org.eclipse.tractusx.semantics.hub.domain.ModelPackage;
+import org.eclipse.tractusx.semantics.hub.domain.ModelPackageStatus;
+import org.eclipse.tractusx.semantics.hub.domain.ModelPackageUrn;
+import org.eclipse.tractusx.semantics.hub.model.SemanticModel;
+import org.eclipse.tractusx.semantics.hub.model.SemanticModelList;
+import org.eclipse.tractusx.semantics.hub.model.SemanticModelStatus;
+import org.eclipse.tractusx.semantics.hub.model.SemanticModelType;
 import org.eclipse.tractusx.semantics.hub.persistence.PersistenceLayer;
+
+import io.vavr.control.Try;
 
 public class TripleStorePersistence implements PersistenceLayer {
 

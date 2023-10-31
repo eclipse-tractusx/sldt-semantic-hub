@@ -21,7 +21,11 @@ package org.eclipse.tractusx.semantics.hub.persistence.triplestore;
 
 import static java.util.Spliterator.ORDERED;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Spliterators;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -40,7 +44,6 @@ import org.eclipse.esmf.aspectmodel.UnsupportedVersionException;
 import org.eclipse.esmf.aspectmodel.VersionNumber;
 import org.eclipse.esmf.aspectmodel.resolver.AspectMetaModelResourceResolver;
 import org.eclipse.esmf.aspectmodel.resolver.AspectModelResolver;
-import org.eclipse.esmf.aspectmodel.resolver.EitherStrategy;
 import org.eclipse.esmf.aspectmodel.resolver.ResolutionStrategy;
 import org.eclipse.esmf.aspectmodel.resolver.services.SammAspectMetaModelResourceResolver;
 import org.eclipse.esmf.aspectmodel.resolver.services.VersionedModel;
@@ -72,42 +75,13 @@ public class SAMMSdk {
       final ResolutionStrategy resolutionStrategy =
             new SAMMSdk.TripleStoreResolutionStrategy( tripleStoreRequester );
 
-      VersionNumber knownVersion = null;
-      try {
-          knownVersion = getKnownVersion( model );
-      }catch (Exception e){
-         knownVersion = getUsedMetaModelVersions(model).stream().findFirst().orElse(null);
-      }
+      final Try<VersionedModel> resolvedModel = new AspectModelResolver().resolveAspectModel( resolutionStrategy, model );
 
-//      final VersionNumber knownVersion = new VersionNumber(1,0,0);
-      final Try<VersionedModel> versionedModel = aspectMetaModelResourceResolver.mergeMetaModelIntoRawModel( model, knownVersion );
-      final ResolutionStrategy firstPayloadThenTripleStore = new EitherStrategy(
-            new SelfResolutionStrategy( versionedModel.get().getRawModel() ),
-            resolutionStrategy );
-
-      final AspectModelUrn modelUrn = getAspectUrn( model );
-      final Try<VersionedModel> resolvedModel = versionedModel.flatMap( loadedModel ->
-            aspectModelResolver.resolveAspectModel( firstPayloadThenTripleStore, modelUrn ) );
-
-      if ( resolvedModel.isFailure() ) {
-         throw new InvalidAspectModelException( resolvedModel.getCause().getMessage() );
-      }
       final List<Violation> violations = aspectModelValidator.validateModel( resolvedModel );
       if ( !violations.isEmpty() ) {
-         final Map<String, String> detailsMap=violations.stream().collect( Collectors.toMap( Violation::errorCode,Violation::message ) );
+         final Map<String, String> detailsMap = violations.stream().collect( Collectors.toMap( Violation::errorCode, Violation::message ) );
          throw new InvalidAspectModelException( detailsMap );
       }
-   }
-
-   public Set<VersionNumber> getUsedMetaModelVersions(Model model) {
-      String bammUrnStart = String.format("%s:%s", "urn", "bamm");
-      return (Set)model.listObjects().toList().stream().filter(RDFNode::isURIResource).map(RDFNode::asResource).map(Resource::getURI).filter((uri) -> {
-         return uri.startsWith(bammUrnStart);
-      }).flatMap((uri) -> {
-         return AspectModelUrn.from(uri).toJavaStream();
-      }).filter((urn) -> {
-         return urn.getElementType().equals(ElementType.META_MODEL) || urn.getElementType().equals(ElementType.CHARACTERISTIC);
-      }).map(AspectModelUrn::getVersion).map(VersionNumber::parse).collect(Collectors.toSet());
    }
 
    public AspectModelUrn getAspectUrn( final Model model ) {
