@@ -91,13 +91,16 @@ flowchart LR
     K(Keycloak)
 
     subgraph Semantic Hub
-    SH(Sematic Hub)
+    SHB(Semantic Hub Backend)
+    SH(Sematic Hub postgres)
     end
     
-    SH <-->|Find submodels / metadata| DC
-    SH <-->|Submodel creation \n provide metadata| DP
+    SHB <-->|Find submodels / metadata| DC
+    SHB <-->|Submodel creation \n provide metadata| DP
 
-    K -->|Public key for token validation| SH
+    SHB <--> SH
+
+    K -->|Public key for token validation| SHB
 
     DC <-->|Token request| K
     DP <-->|Token request| K
