@@ -92,7 +92,7 @@ flowchart LR
 
     subgraph Semantic Hub
     SHB(Semantic Hub Backend)
-    SH(Sematic Hub postgres)
+    SH[(Sematic Hub postgres)]
     end
     
     SHB <-->|Find submodels / metadata| DC
