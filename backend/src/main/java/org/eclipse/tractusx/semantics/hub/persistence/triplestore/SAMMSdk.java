@@ -52,6 +52,7 @@ import org.eclipse.esmf.aspectmodel.urn.AspectModelUrn;
 import org.eclipse.esmf.aspectmodel.urn.ElementType;
 import org.eclipse.esmf.aspectmodel.validation.services.AspectModelValidator;
 import org.eclipse.tractusx.semantics.hub.InvalidAspectModelException;
+import org.eclipse.tractusx.semantics.hub.model.SemanticModelType;
 
 import io.vavr.control.Try;
 
@@ -71,9 +72,9 @@ public class SAMMSdk {
       aspectModelValidator = new AspectModelValidator();
    }
 
-   public void validate( final Model model, final Function<String, Model> tripleStoreRequester ) {
+   public void validate( final Model model, final Function<String, Model> tripleStoreRequester, SemanticModelType type ) {
       final ResolutionStrategy resolutionStrategy =
-            new SAMMSdk.TripleStoreResolutionStrategy( tripleStoreRequester );
+            new SAMMSdk.TripleStoreResolutionStrategy( tripleStoreRequester, type );
 
       final Try<VersionedModel> resolvedModel = new AspectModelResolver().resolveAspectModel( resolutionStrategy, model );
 
@@ -124,27 +125,41 @@ public class SAMMSdk {
 
       private final Function<String, Model> tripleStoreRequester;
       private final List<String> alreadyLoadedNamespaces = new ArrayList<>();
+      private final SemanticModelType type;
 
-      public TripleStoreResolutionStrategy( final Function<String, Model> tripleStoreRequester ) {
+      public TripleStoreResolutionStrategy( final Function<String, Model> tripleStoreRequester, SemanticModelType type ) {
          this.tripleStoreRequester = tripleStoreRequester;
+         this.type = type;
       }
 
       @Override
       public Try<Model> apply( final AspectModelUrn aspectModelUrn ) {
-         final String namespace = aspectModelUrn.getNamespace();
-         if ( alreadyLoadedNamespaces.contains( namespace ) ) {
-            return Try.success( ModelFactory.createDefaultModel() );
-         }
-         alreadyLoadedNamespaces.add( namespace );
+         final String namespace = checkAndReplaceToBammPrefix(aspectModelUrn.getNamespace());
+         final Resource resource = ResourceFactory.createResource( checkAndReplaceToBammPrefix(aspectModelUrn.getUrn().toASCIIString()));
+         final Model model = tripleStoreRequester.apply( checkAndReplaceToBammPrefix(aspectModelUrn.getUrn().toString()));
 
-         final Resource resource = ResourceFactory.createResource( aspectModelUrn.getUrn().toASCIIString() );
-         final Model model = tripleStoreRequester.apply( aspectModelUrn.getUrn().toString() );
+         if(!isBamm()){
+            if ( alreadyLoadedNamespaces.contains( namespace ) ) {
+               return Try.success( ModelFactory.createDefaultModel() );
+            }
+            alreadyLoadedNamespaces.add( namespace );
+         }
+
          if ( model == null ) {
             return Try.failure( new ResourceDefinitionNotFoundException( getClass().getSimpleName(), resource ) );
          }
          return model.contains( resource, RDF.type, (RDFNode) null ) ?
                Try.success( model ) :
                Try.failure( new ResourceDefinitionNotFoundException( getClass().getSimpleName(), resource ) );
+      }
+
+      private String checkAndReplaceToBammPrefix(String value){
+         return !isBamm() ? value : value.replaceAll( "samm", "bamm" )
+               .replaceAll(  "org.eclipse.esmf.samm","io.openmanufacturing" );
+      }
+
+      private boolean isBamm(){
+         return type.equals( SemanticModelType.BAMM );
       }
    }
 

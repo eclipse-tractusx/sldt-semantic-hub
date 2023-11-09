@@ -150,7 +150,7 @@ public class TripleStorePersistence implements PersistenceLayer {
          }
       }
 
-      sdsSdk.validate( rdfModel, this::findContainingModelByUrn );
+      sdsSdk.validate( rdfModel, this::findContainingModelByUrn, type );
 
       Model rdfModelOriginal =  sdsSdk.load( newModel.getBytes( StandardCharsets.UTF_8 ) );
 

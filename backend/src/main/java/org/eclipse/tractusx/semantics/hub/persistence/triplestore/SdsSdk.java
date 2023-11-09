@@ -28,6 +28,7 @@ import org.apache.jena.rdf.model.Model;
 import org.eclipse.esmf.aspectmodel.resolver.services.TurtleLoader;
 import org.eclipse.esmf.aspectmodel.urn.AspectModelUrn;
 import org.eclipse.tractusx.semantics.hub.InvalidAspectModelException;
+import org.eclipse.tractusx.semantics.hub.model.SemanticModelType;
 
 public class SdsSdk {
 
@@ -58,13 +59,13 @@ public class SdsSdk {
     *
     * @param model - the model to validate
     */
-   public void validate( final Model model, final Function<String, Model> tripleStoreRequester ) {
+   public void validate( final Model model, final Function<String, Model> tripleStoreRequester, SemanticModelType type ) {
 //      if(isBAMM( model )) {
 //         bammSdk.validate( model, tripleStoreRequester );
 //      } else {
 //         sammSdk.validate( model, tripleStoreRequester );
 //      }
-      sammSdk.validate( model, tripleStoreRequester );
+      sammSdk.validate( model, tripleStoreRequester, type );
    }
 
    public AspectModelUrn getAspectUrn( final Model model ) {

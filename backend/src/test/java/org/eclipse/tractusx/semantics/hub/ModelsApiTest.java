@@ -27,7 +27,6 @@ import java.util.List;
 
 import org.json.JSONArray;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -639,29 +638,27 @@ public class ModelsApiTest extends AbstractModelsApiTest{
    /**
     * This test verifies that existing triples e.g. characteristic can be referenced.
     */
-   @Disabled("Until we resolve the BAMM dependency handling with ESMF SDK")
    @Test
    public void testSaveModelWithExternalReferencesExpectSuccessForBAMM() throws Exception {
       // save the model with external reference to a traceability characteristic
       // this will fail because traceability does not exist yet
       String modelWithReferenceToTraceability = TestUtils.loadModelFromResources(
             TestUtils.MODEL_WITH_REFERENCE_TO_TRACEABILITY_MODEL_PATH_FOR_BAMM );
-      mvc.perform( post( modelWithReferenceToTraceability,"DRAFT" ) )
+      mvc.perform( postBAMM( modelWithReferenceToTraceability,"DRAFT" ) )
             .andDo( MockMvcResultHandlers.print() )
             .andExpect( status().isBadRequest() )
             .andExpect( jsonPath( "$.error.message", is( "Validation failed." ) ) )
             .andExpect( jsonPath( "$.error.details.ERR_PROCESSING",
-                  containsString( "urn:samm:org.eclipse.tractusx.traceability:0.1.1#PartDataCharacteristic not found" ) ) );
-
+                  containsString( "urn:bamm:org.eclipse.tractusx.traceability:0.1.1#PartDataCharacteristic not found" ) ) );
       // save the traceability aspect model
       String traceabilityModel = TestUtils.loadModelFromResources(
             TestUtils.TRACEABILITY_MODEL_PATH_FOR_BAMM );
-      mvc.perform( post( traceabilityModel, "DRAFT" ) )
+      mvc.perform( postBAMM( traceabilityModel, "DRAFT" ) )
             .andDo( MockMvcResultHandlers.print() )
             .andExpect( status().isOk() );
 
       // save again the model with external reference and validate the result
-      mvc.perform( post(modelWithReferenceToTraceability, "DRAFT" ) )
+      mvc.perform( postBAMM(modelWithReferenceToTraceability, "DRAFT" ) )
             .andDo( MockMvcResultHandlers.print() )
             .andExpect( status().isOk() );
 
@@ -808,7 +805,6 @@ public class ModelsApiTest extends AbstractModelsApiTest{
                .andExpect(status().isNoContent());
       }
 
-      @Disabled("Until we resolve the BAMM dependency handling with ESMF SDK")
       @Test
       public void testDependentModelTransitionForBAMM() throws Exception {
          String urnPrefix = "urn:bamm:org.eclipse.tractusx.model.status.transitionWithDependency:1.0.0#";
@@ -891,7 +887,6 @@ public class ModelsApiTest extends AbstractModelsApiTest{
 
    }
 
-   @Disabled("Until we resolve the BAMM dependency handling with ESMF SDK")
    @Test
    public void testDependentModelBAMM() throws Exception {
 
@@ -901,20 +896,20 @@ public class ModelsApiTest extends AbstractModelsApiTest{
       String DIGITAL_PRODUCT_PASSPORT_FILE = "DigitalProductPassport-bamm.ttl";
 
       //Given
-      mvc.perform( post( TestUtils.getTTLFile( PCF_FILE ), "DRAFT" ) )
+      mvc.perform( postBAMM( TestUtils.getTTLFile( PCF_FILE ), "DRAFT" ) )
             .andDo( MockMvcResultHandlers.print() )
             .andExpect( status().isOk() );
 
-      mvc.perform( post( TestUtils.getTTLFile( SERIAL_PART_FILE ), "DRAFT" ) )
+      mvc.perform( postBAMM( TestUtils.getTTLFile( SERIAL_PART_FILE ), "DRAFT" ) )
             .andDo( MockMvcResultHandlers.print() )
             .andExpect( status().isOk() );
 
-      mvc.perform( post( TestUtils.getTTLFile( PHYSICAL_DIMENSIONS_FILE ), "DRAFT" ) )
+      mvc.perform( postBAMM( TestUtils.getTTLFile( PHYSICAL_DIMENSIONS_FILE ), "DRAFT" ) )
             .andDo( MockMvcResultHandlers.print() )
             .andExpect( status().isOk() );
 
       //When
-      mvc.perform( post( TestUtils.getTTLFile( DIGITAL_PRODUCT_PASSPORT_FILE ), "DRAFT" ) )
+      mvc.perform( postBAMM( TestUtils.getTTLFile( DIGITAL_PRODUCT_PASSPORT_FILE ), "DRAFT" ) )
             .andDo( MockMvcResultHandlers.print() )
             .andExpect( status().isOk() );
    }
