@@ -922,4 +922,40 @@ public class ModelsApiTest extends AbstractModelsApiTest{
    private static String toMovementUrn(String urn){
       return urn + "Movement";
    }
+
+   @Test
+   public void testGeneratePngForBAMMModel() throws Exception {
+      String urnPrefix = "urn:bamm:org.eclipse.tractusx.model.status.transition:2.0.0#";
+      mvc.perform(
+                  post( TestUtils.createValidModelRequestBAMM(urnPrefix),"RELEASED")
+            )
+            .andDo( MockMvcResultHandlers.print() )
+            .andExpect( status().isOk() );
+
+      mvc.perform(
+                  MockMvcRequestBuilders.get(
+                              "/api/v1/models/{urn}/diagram", toMovementUrn(urnPrefix))
+                        .with(jwtTokenFactory.allRoles())
+            )
+            .andDo( MockMvcResultHandlers.print() )
+            .andExpect( status().isOk() );
+   }
+
+   @Test
+   public void testGeneratePngForSAMMModel() throws Exception {
+      String urnPrefix = "urn:samm:org.eclipse.tractusx:1.0.0#";
+      mvc.perform(
+                  post( TestUtils.createValidModelRequest(urnPrefix),"DRAFT")
+            )
+            .andDo( MockMvcResultHandlers.print() )
+            .andExpect( status().isOk() );
+
+      mvc.perform(
+                  MockMvcRequestBuilders.get(
+                              "/api/v1/models/{urn}/diagram", toMovementUrn(urnPrefix))
+                        .with(jwtTokenFactory.allRoles())
+            )
+            .andDo( MockMvcResultHandlers.print() )
+            .andExpect( status().isOk() );
+   }
 }
