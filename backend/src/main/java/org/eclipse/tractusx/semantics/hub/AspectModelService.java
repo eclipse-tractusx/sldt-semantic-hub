@@ -97,13 +97,11 @@ public class AspectModelService implements ModelsApiDelegate {
 
    @Override
    public ResponseEntity<org.springframework.core.io.Resource> getModelDiagram( final String urn ) {
-// TODO: Fix Model Diagram server crash issue for bugger Models
-//      final Try<byte[]>pngBytes = sdkHelper.generatePng( urn );
-//      if ( pngBytes.isFailure()  ) {
-//         throw new RuntimeException( String.format( "Failed to generate example payload for urn %s", urn ) );
-//      }
-//      return new ResponseEntity( pngBytes.get(), HttpStatus.OK );
-      return new ResponseEntity( HttpStatus.NOT_IMPLEMENTED );
+      final Try<byte[]>pngBytes = sdkHelper.generatePng( urn );
+      if ( pngBytes.isFailure()  ) {
+         throw new RuntimeException( String.format( "Failed to generate example payload for urn %s", urn ) );
+      }
+      return new ResponseEntity( pngBytes.get(), HttpStatus.OK );
    }
 
    @Override

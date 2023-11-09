@@ -84,8 +84,7 @@ public class BammHelperTest {
 
         SDKAccessHelper bammHelper = new SDKAccessHelper();
 
-        assertEquals(
-              "AspectModelUrn cannot be found.",
-              assertThrows( NotImplementedError.class, () -> bammHelper.loadBammModel( modelString )).getMessage() );
+        assertTrue(bammHelper.loadBammModel(modelString).isFailure());
+
     }
 }

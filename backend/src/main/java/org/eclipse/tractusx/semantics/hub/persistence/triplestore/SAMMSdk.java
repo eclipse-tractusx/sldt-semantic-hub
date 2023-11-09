@@ -79,7 +79,14 @@ public class SAMMSdk {
 
       final List<Violation> violations = aspectModelValidator.validateModel( resolvedModel );
       if ( !violations.isEmpty() ) {
-         final Map<String, String> detailsMap = violations.stream().collect( Collectors.toMap( Violation::errorCode, Violation::message ) );
+         Map<String, String> detailsMap = violations.stream()
+               .collect(
+                     Collectors.groupingBy(
+                           Violation::errorCode,
+                           Collectors.mapping( Violation::message, Collectors.joining( "," ) )
+                     )
+               );
+
          throw new InvalidAspectModelException( detailsMap );
       }
    }

@@ -48,6 +48,7 @@ import org.eclipse.esmf.aspectmodel.validation.services.AspectModelValidator;
 import org.eclipse.esmf.metamodel.Aspect;
 import org.eclipse.esmf.metamodel.AspectContext;
 import org.eclipse.esmf.metamodel.loader.AspectModelLoader;
+import org.eclipse.tractusx.semantics.hub.InvalidAspectModelException;
 import org.eclipse.tractusx.semantics.hub.ResolutionException;
 import org.eclipse.tractusx.semantics.hub.model.AasFormat;
 import org.eclipse.tractusx.semantics.hub.persistence.PersistenceLayer;
@@ -71,23 +72,23 @@ public class SDKAccessHelperSAMM {
    }
 
    public Try<byte[]> generatePng( String urn ) {
-      //TODO:Fix the breaking changes in ESMF SDK 2.4.1
-      //Refer: https://eclipse-esmf.github.io/esmf-developer-guide/2.4.1/tooling-guide/java-aspect-tooling.html#generating-diagrams
-      //Need to call the AspectModelDiagramGenerator() constructor with an instance of AspectContext,
-      // in the same way of the call of the AspectModelDocumentationGenerator constructor (we might already have this)
-//      VersionedModel versionedModel = getVersionedModel( urn );
-//      final AspectModelDiagramGenerator generator = new AspectModelDiagramGenerator( versionedModel );
-//
-//      try {
-//         ByteArrayOutputStream output = new ByteArrayOutputStream();
-//         generator.generateDiagram( Format.PNG, Locale.ENGLISH, output );
-//         final byte[] bytes = output.toByteArray();
-//
-//         return Try.success(bytes);
-//      } catch ( IOException e ) {
-//         return Try.failure( e );
-//      }
-      return null;
+
+      VersionedModel versionedModel = getVersionedModel( urn );
+
+      final Aspect aspect = AspectModelLoader.getAspects( versionedModel ).get().get( 0 );
+
+      AspectModelDocumentationGenerator documentationGenerator = new AspectModelDocumentationGenerator( new AspectContext( versionedModel, aspect ) );
+
+      final AspectModelDiagramGenerator generator = new AspectModelDiagramGenerator( new AspectContext( versionedModel, aspect ) );
+
+      try ( ByteArrayOutputStream output = new ByteArrayOutputStream() ) {
+         generator.generateDiagram( Format.PNG, Locale.ENGLISH, output );
+         final byte[] bytes = output.toByteArray();
+
+         return Try.success( bytes );
+      } catch ( IOException e ) {
+         return Try.failure( e );
+      }
    }
 
    public JsonNode getJsonSchema( String urn ) {
@@ -202,7 +203,8 @@ public class SDKAccessHelperSAMM {
 
       StaticResolutionStrategy resolutionStrategy = new StaticResolutionStrategy( model );
       AspectModelResolver resolver = new AspectModelResolver();
-      Try<VersionedModel> versionedModel = resolver.resolveAspectModel( resolutionStrategy, resolutionStrategy.getAspectModelUrn() );
+      Try<VersionedModel> versionedModel = resolver.resolveAspectModel( resolutionStrategy,
+            model.getOrElseThrow( cause -> new InvalidAspectModelException( cause.getMessage() ) ) );
 
       if ( resolutionStrategy.getResolvementCounter() > 1 ) {
          return Try.failure( new ResolutionException( "The definition must be self contained!" ) );
