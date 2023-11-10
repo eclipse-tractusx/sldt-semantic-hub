@@ -77,8 +77,6 @@ public class SDKAccessHelperSAMM {
 
       final Aspect aspect = AspectModelLoader.getAspects( versionedModel ).get().get( 0 );
 
-      AspectModelDocumentationGenerator documentationGenerator = new AspectModelDocumentationGenerator( new AspectContext( versionedModel, aspect ) );
-
       final AspectModelDiagramGenerator generator = new AspectModelDiagramGenerator( new AspectContext( versionedModel, aspect ) );
 
       try ( ByteArrayOutputStream output = new ByteArrayOutputStream() ) {
