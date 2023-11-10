@@ -154,8 +154,8 @@ public class SAMMSdk {
       }
 
       private String checkAndReplaceToBammPrefix(String value){
-         return !isBamm() ? value : value.replaceAll( "samm", "bamm" )
-               .replaceAll(  "org.eclipse.esmf.samm","io.openmanufacturing" );
+         return !isBamm() ? value : value.replace( "samm", "bamm" )
+               .replace(  "org.eclipse.esmf.samm","io.openmanufacturing" );
       }
 
       private boolean isBamm(){
