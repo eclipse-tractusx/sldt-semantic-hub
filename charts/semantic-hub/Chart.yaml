@@ -27,7 +27,7 @@ sources:
 
 type: application
 version: 0.1.32
-appVersion: 0.2.15
+appVersion: 0.2.14
 dependencies:
   - repository: https://charts.bitnami.com/bitnami
     name: keycloak
