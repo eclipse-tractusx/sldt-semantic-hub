@@ -919,7 +919,7 @@ public class ModelsApiTest extends AbstractModelsApiTest{
    }
 
    @Test
-   public void testGeneratePngForBAMMModel() throws Exception {
+   void testGeneratePngForBAMMModel() throws Exception {
       String urnPrefix = "urn:bamm:org.eclipse.tractusx.model.status.transition:2.0.0#";
       mvc.perform(
                   post( TestUtils.createValidModelRequestBAMM(urnPrefix),"RELEASED")
@@ -937,7 +937,7 @@ public class ModelsApiTest extends AbstractModelsApiTest{
    }
 
    @Test
-   public void testGeneratePngForSAMMModel() throws Exception {
+   void testGeneratePngForSAMMModel() throws Exception {
       String urnPrefix = "urn:samm:org.eclipse.tractusx:1.0.0#";
       mvc.perform(
                   post( TestUtils.createValidModelRequest(urnPrefix),"DRAFT")
