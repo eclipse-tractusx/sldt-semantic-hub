@@ -23,6 +23,8 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+import org.eclipse.esmf.aspectmodel.urn.AspectModelUrn;
+import org.eclipse.tractusx.semantics.hub.api.ModelsApiDelegate;
 import org.eclipse.tractusx.semantics.hub.domain.ModelPackageStatus;
 import org.eclipse.tractusx.semantics.hub.domain.ModelPackageUrn;
 import org.eclipse.tractusx.semantics.hub.model.AasFormat;
@@ -30,6 +32,7 @@ import org.eclipse.tractusx.semantics.hub.model.SemanticModel;
 import org.eclipse.tractusx.semantics.hub.model.SemanticModelList;
 import org.eclipse.tractusx.semantics.hub.model.SemanticModelStatus;
 import org.eclipse.tractusx.semantics.hub.model.SemanticModelType;
+import org.eclipse.tractusx.semantics.hub.persistence.PersistenceLayer;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -38,10 +41,7 @@ import org.springframework.http.ResponseEntity;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.Lists;
 
-import org.eclipse.esmf.aspectmodel.urn.AspectModelUrn;
-import org.eclipse.tractusx.semantics.hub.persistence.PersistenceLayer;
 import io.vavr.control.Try;
-import org.eclipse.tractusx.semantics.hub.api.ModelsApiDelegate;
 
 public class AspectModelService implements ModelsApiDelegate {
 
