@@ -1,0 +1,73 @@
+###############################################################
+# Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+# Copyright (c) 2023 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Apache License, Version 2.0 which is available at
+# https://www.apache.org/licenses/LICENSE-2.0.
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations
+# under the License.
+#
+# SPDX-License-Identifier: Apache-2.0
+###############################################################
+name: Common variable definitions
+description:
+  Contains common variable definitions.
+
+variables:
+  semantic_hub_api_url: "{tavern.env_vars.SEMANTIC_HUB_API_URL}"
+  bearer_token: "{tavern.env_vars.BEARER_TOKEN}"
+  model_bamm_urn: urn:bamm:org.eclipse.tractusx.semantics.test:1.0.0#EndToEndTest
+  model_bamm_urn_encoded: urn%3Abamm%3Aorg.eclipse.tractusx.semantics.test%3A1.0.0%23EndToEndTest
+  model_bamm_package_urn_encoded: urn%3Abamm%3Aorg.eclipse.tractusx.semantics.test%3A1.0.0%23
+  model_bamm_name: EndToEndTest
+  model_bamm_version: 1.0.0
+  model_bamm_ttl: |
+    @prefix :       <urn:bamm:org.eclipse.tractusx.semantics.test:1.0.0#> .
+    @prefix bamm:   <urn:bamm:io.openmanufacturing:meta-model:1.0.0#> .
+    @prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:1.0.0#> .
+    @prefix xsd:    <http://www.w3.org/2001/XMLSchema#> .
+
+    :EndToEndTest
+        a                  bamm:Aspect ;
+        bamm:name          "EndToEndTest" ;
+        bamm:preferredName "EndToEndTest en"@en ;
+        bamm:preferredName "EndToEndTest de"@de ;
+        bamm:properties    ( :detail ) ;
+        bamm:operations    ( ) .
+
+    :detail a bamm:Property ;
+      bamm:name "testString" ;
+      bamm:exampleValue "Example Value Test" ;
+      bamm:characteristic bamm-c:Text .
+
+  model_samm_urn: urn:samm:org.eclipse.tractusx.semantics.test:1.0.0#EndToEndTest
+  model_samm_urn_encoded: urn%3Asamm%3Aorg.eclipse.tractusx.semantics.test%3A1.0.0%23EndToEndTest
+  model_samm_package_urn_encoded: urn%3Asamm%3Aorg.eclipse.tractusx.semantics.test%3A1.0.0%23
+  model_samm_name: EndToEndTest
+  model_samm_version: 1.0.0
+  model_samm_ttl: |
+    @prefix :       <urn:samm:org.eclipse.tractusx.semantics.test:1.0.0#> .
+    @prefix samm:   <urn:samm:org.eclipse.esmf.samm:meta-model:1.0.0#> .
+    @prefix bamm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:1.0.0#> .
+    @prefix xsd:    <http://www.w3.org/2001/XMLSchema#> .
+
+    :EndToEndTest
+        a                  samm:Aspect ;
+        samm:name          "EndToEndTest" ;
+        samm:preferredName "EndToEndTest en"@en ;
+        samm:preferredName "EndToEndTest de"@de ;
+        samm:properties    ( :detail ) ;
+        samm:operations    ( ) .
+
+    :detail a samm:Property ;
+      samm:name "testString" ;
+      samm:exampleValue "Example Value Test" ;
+      samm:characteristic bamm-c:Text .
