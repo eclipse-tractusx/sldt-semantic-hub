@@ -65,7 +65,7 @@ hub:
       memory: 1024Mi
     requests:
       cpu: 250m
-      memory: 1023Mi
+      memory: 1024Mi
 
 graphdb:
   ## Include Fuski deployment or deploy separately
