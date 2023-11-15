@@ -923,4 +923,15 @@ public class ModelsApiTest extends AbstractModelsApiTest{
    private static String toMovementUrn(String urn){
       return urn + "Movement";
    }
+
+   @Test
+   public void testGetModelByURNWithInvalidURN() throws Exception {
+      String urnPrefix = "urn:invalid";
+      mvc.perform( MockMvcRequestBuilders.get( "/api/v1/models/{urn}", urnPrefix ).with( jwtTokenFactory.allRoles() ) )
+            .andDo( MockMvcResultHandlers.print() )
+            .andExpect( status().is4xxClientError() )
+            .andExpect( jsonPath( "$.error.message", is(
+                  "The URN must consist of at least 5 sections adhering to the following schema: "
+                        + "urn:samm:<organisation>:<optional>:<version>:<model-name>." ) ) );
+   }
 }
