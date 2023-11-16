@@ -929,7 +929,7 @@ public class ModelsApiTest extends AbstractModelsApiTest{
       String urnPrefix = "urn:invalid";
       mvc.perform( MockMvcRequestBuilders.get( "/api/v1/models/{urn}", urnPrefix ).with( jwtTokenFactory.allRoles() ) )
             .andDo( MockMvcResultHandlers.print() )
-            .andExpect( status().is4xxClientError() )
+            .andExpect( status().isBadRequest() )
             .andExpect( jsonPath( "$.error.message", is(
                   "The URN must consist of at least 5 sections adhering to the following schema: "
                         + "urn:samm:<organisation>:<optional>:<version>:<model-name>." ) ) );
