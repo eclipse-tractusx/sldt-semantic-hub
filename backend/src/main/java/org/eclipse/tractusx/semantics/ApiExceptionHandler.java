@@ -24,6 +24,14 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.eclipse.esmf.aspectmodel.urn.UrnSyntaxException;
+import org.eclipse.tractusx.semantics.hub.AspectModelNotFoundException;
+import org.eclipse.tractusx.semantics.hub.EntityNotFoundException;
+import org.eclipse.tractusx.semantics.hub.InvalidAspectModelException;
+import org.eclipse.tractusx.semantics.hub.InvalidStateTransitionException;
+import org.eclipse.tractusx.semantics.hub.ModelPackageNotFoundException;
+import org.eclipse.tractusx.semantics.hub.model.Error;
+import org.eclipse.tractusx.semantics.hub.model.ErrorResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,14 +43,6 @@ import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentConversionNotSupportedException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import org.eclipse.tractusx.semantics.hub.AspectModelNotFoundException;
-import org.eclipse.tractusx.semantics.hub.EntityNotFoundException;
-import org.eclipse.tractusx.semantics.hub.InvalidAspectModelException;
-import org.eclipse.tractusx.semantics.hub.InvalidStateTransitionException;
-
-import org.eclipse.tractusx.semantics.hub.ModelPackageNotFoundException;
-import org.eclipse.tractusx.semantics.hub.model.Error;
-import org.eclipse.tractusx.semantics.hub.model.ErrorResponse;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -123,5 +123,13 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                         .message(exception.getMessage())
                         .path( request.getRequestURI() ) ), HttpStatus.BAD_REQUEST );
     }
+
+   @ExceptionHandler( { UrnSyntaxException.class } )
+   public ResponseEntity<ErrorResponse> handleInvalidStateTransitionException( final HttpServletRequest request, final UrnSyntaxException exception ) {
+      return new ResponseEntity<>( new ErrorResponse()
+            .error( new Error()
+                  .message( exception.getMessage() )
+                  .path( request.getRequestURI() ) ), HttpStatus.BAD_REQUEST );
+   }
 
 }
