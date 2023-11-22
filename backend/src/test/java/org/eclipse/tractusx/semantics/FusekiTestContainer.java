@@ -26,7 +26,7 @@ import org.testcontainers.containers.wait.strategy.Wait;
 
 public class FusekiTestContainer {
    private static final int PORT = 3030;
-   private static final String IMAGE = "jena-fuseki-docker";
+   private static final String IMAGE = "jena-fuseki-docker:4.7.0";
    private static final String CONTAINER_NAME = "fuseki-container";
 
    public static final GenericContainer<?> FUSEKI_CONTAINER =
