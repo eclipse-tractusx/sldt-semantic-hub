@@ -7,8 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 0.2.15
 ### Added
 - Added helm upgrade feature into helm test
+- Removed the docker apk upgrade and update commands.
 
 ### Fixed
+=======
 - Handled UrnSyntaxException.
 
 ## 0.2.14
