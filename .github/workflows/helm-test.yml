@@ -72,7 +72,7 @@ jobs:
 
       - name: Run chart-testing (install)
         run: ct install --charts charts/semantic-hub --config charts/chart-testing-config.yaml
-        if: steps.list-changed.outputs.changed == 'true'
+        if: github.event_name != 'pull_request' || steps.list-changed.outputs.changed == 'true'
 
       - name: Run helm upgrade
         run: |
