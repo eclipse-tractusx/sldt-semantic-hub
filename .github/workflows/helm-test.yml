@@ -84,4 +84,4 @@ jobs:
           helm install semantic-hub tractusx-dev/semantic-hub --version ${{ github.event.inputs.upgrade_from || '0.1.32' }}
           helm dependency update charts/semantic-hub
           helm upgrade semantic-hub charts/semantic-hub
-        if: steps.list-changed.outputs.changed == 'true'
+        if: github.event_name != 'pull_request' || steps.list-changed.outputs.changed == 'true'
