@@ -26,11 +26,6 @@ RUN mvn package -DskipTests
 
 FROM eclipse-temurin:17-jre-alpine
 
-RUN apk --no-cache upgrade \
-    && apk --no-cache update \
-    && apk  --no-cache add graphviz \
-    && rm -rf /var/cache/apk/*
-
 RUN addgroup -g 101 -S spring \
     && adduser -u 100 -S spring -G spring \
     && mkdir -p /service \
