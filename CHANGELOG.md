@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 =======
 - Handled UrnSyntaxException.
+- Fixed the jena-fuseki-docker version to 4.7.0 for the test case.
 
 ## 0.2.14
 ### Added
