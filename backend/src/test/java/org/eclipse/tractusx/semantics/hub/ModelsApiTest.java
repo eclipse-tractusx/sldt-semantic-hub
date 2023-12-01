@@ -919,6 +919,17 @@ public class ModelsApiTest extends AbstractModelsApiTest{
    }
 
    @Test
+   public void testGetModelByURNWithInvalidURN() throws Exception {
+      String urnPrefix = "urn:invalid";
+      mvc.perform( MockMvcRequestBuilders.get( "/api/v1/models/{urn}", urnPrefix ).with( jwtTokenFactory.allRoles() ) )
+            .andDo( MockMvcResultHandlers.print() )
+            .andExpect( status().isBadRequest() )
+            .andExpect( jsonPath( "$.error.message", is(
+                  "The URN must consist of at least 5 sections adhering to the following schema: "
+                        + "urn:samm:<organisation>:<optional>:<version>:<model-name>." ) ) );
+   }
+
+   @Test
    void testGeneratePngForBAMMModel() throws Exception {
       String urnPrefix = "urn:bamm:org.eclipse.tractusx.model.status.transition:2.0.0#";
       mvc.perform(

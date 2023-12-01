@@ -79,6 +79,32 @@ FILTER ( $param == ?o )  // Custom filter can be added here.
 ?s ?p ?o .
 }
 ```
+## Security Assessment
+
+### Data Flow Diagram
+
+```mermaid
+%%{init: {"flowchart": {"curve": "linear"} }}%%
+flowchart LR
+    DC(Data Consumer)
+    DP(Data Provider)
+    K(Keycloak)
+
+    subgraph Semantic Hub
+    SHB(Semantic Hub Backend)
+    SH[(Sematic Hub postgres)]
+    end
+    
+    SHB <-->|Find submodels / metadata| DC
+    SHB <-->|Submodel creation \n provide metadata| DP
+
+    SHB <--> SH
+
+    K -->|Public key for token validation| SHB
+
+    DC <-->|Token request| K
+    DP <-->|Token request| K
+```
 
 ### NOTICE
 
