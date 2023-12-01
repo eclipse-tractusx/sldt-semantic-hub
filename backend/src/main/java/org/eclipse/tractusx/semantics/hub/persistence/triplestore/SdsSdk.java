@@ -28,19 +28,14 @@ import org.apache.jena.rdf.model.Model;
 import org.eclipse.esmf.aspectmodel.resolver.services.TurtleLoader;
 import org.eclipse.esmf.aspectmodel.urn.AspectModelUrn;
 import org.eclipse.tractusx.semantics.hub.InvalidAspectModelException;
+import org.eclipse.tractusx.semantics.hub.model.SemanticModelType;
 
 public class SdsSdk {
 
    private final SAMMSdk sammSdk;
-   private final BAMMSdk bammSdk;
 
    public SdsSdk() {
-      bammSdk = new BAMMSdk();
       sammSdk = new SAMMSdk();
-   }
-
-   private boolean isBAMM (Model model) {
-      return bammSdk.isApplicable( model );
    }
 
    public Model load( final String resourceName ) throws IOException {
@@ -58,21 +53,11 @@ public class SdsSdk {
     *
     * @param model - the model to validate
     */
-   public void validate( final Model model, final Function<String, Model> tripleStoreRequester ) {
-      if(isBAMM( model )) {
-         bammSdk.validate( model, tripleStoreRequester );
-      } else {
-         sammSdk.validate( model, tripleStoreRequester );
-      }
+   public void validate( final Model model, final Function<String, Model> tripleStoreRequester, SemanticModelType type ) {
+      sammSdk.validate( model, tripleStoreRequester, type );
    }
 
    public AspectModelUrn getAspectUrn( final Model model ) {
-      if(isBAMM( model )) {
-         io.openmanufacturing.sds.aspectmodel.urn.AspectModelUrn aspectModelUrn = bammSdk.getAspectUrn( model );
-         org.eclipse.esmf.aspectmodel.urn.AspectModelUrn sammAspectModelUrn = org.eclipse.esmf.aspectmodel.urn.AspectModelUrn.fromUrn( aspectModelUrn.getUrn() );
-         return sammAspectModelUrn;
-      } else {
-         return sammSdk.getAspectUrn( model );
-      }
+      return sammSdk.getAspectUrn( model );
    }
 }

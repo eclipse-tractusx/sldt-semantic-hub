@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Added helm upgrade feature into helm test
 - Removed the docker apk upgrade and update commands.
+- Upgrade dependency to ESMF SDK 2.4.2
 
 ### Fixed
 =======
