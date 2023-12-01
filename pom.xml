@@ -98,8 +98,7 @@
 		<jaxb-api.version>2.3.1</jaxb-api.version>
 
 		<!-- semantics -->
-		<bamm.sdk.version>2.1.3</bamm.sdk.version>
-      <samm.sdk.version>2.2.3</samm.sdk.version>
+      <samm.sdk.version>2.4.2</samm.sdk.version>
 		<jena.version>4.7.0</jena.version>
 		<shacl.version>1.3.1</shacl.version>
 
@@ -338,33 +337,6 @@
 				<groupId>org.eclipse.esmf</groupId>
 				<artifactId>esmf-aspect-model-starter</artifactId>
 				<version>${samm.sdk.version}</version>
-				<!-- Exclusion of commons-text is required because of CVE https://avd.aquasec.com/nvd/2022/cve-2022-42889 -->
-				<exclusions>
-					<exclusion>
-						<groupId>org.apache.commons</groupId>
-						<artifactId>commons-text</artifactId>
-					</exclusion>
-					<exclusion>
-						<groupId>guru.nidi</groupId>
-						<artifactId>graphviz-java-min-deps</artifactId>
-					</exclusion>
-					<exclusion>
-						<groupId>org.webjars.npm</groupId>
-						<artifactId>viz.js-graphviz-java</artifactId>
-					</exclusion>
-					<exclusion>
-						<groupId>org.apache.xmlgraphics</groupId>
-						<artifactId>batik-bridge</artifactId>
-					</exclusion>
-					<exclusion>
-						<groupId>org.apache.xmlgraphics</groupId>
-						<artifactId>batik-transcoder</artifactId>
-					</exclusion>
-					<exclusion>
-						<groupId>org.apache.xmlgraphics</groupId>
-						<artifactId>batik-svgrasterizer</artifactId>
-					</exclusion>
-				</exclusions>
 			</dependency>
 			<dependency>   
 				<groupId>org.apache.commons</groupId>   
@@ -376,28 +348,10 @@
 				<artifactId>esmf-aspect-model-aas-generator</artifactId>
 				<version>${samm.sdk.version}</version>
 			</dependency>
-         <!-- Semantics Libraries -->
-         <dependency>
-            <groupId>io.openmanufacturing</groupId>
-            <artifactId>sds-aspect-model-starter</artifactId>
-            <version>${bamm.sdk.version}</version>
-            <!-- Exclusion of commons-text is required because of CVE https://avd.aquasec.com/nvd/2022/cve-2022-42889 -->
-            <exclusions>
-               <exclusion>
-                  <groupId>org.apache.commons</groupId>
-                  <artifactId>commons-text</artifactId>
-               </exclusion>
-            </exclusions>
-         </dependency>
          <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-text</artifactId>
             <version>1.10.0</version>
-         </dependency>
-         <dependency>
-            <groupId>io.openmanufacturing</groupId>
-            <artifactId>sds-aspect-model-aas-generator</artifactId>
-            <version>${bamm.sdk.version}</version>
          </dependency>
 			<dependency>
 				<groupId>org.apache.jena</groupId>

@@ -1,5 +1,4 @@
-{{- if and (.Values.graphdb.enabled) (not .Values.hub.embeddedTripleStore) }}
-  ###############################################################
+###############################################################
   # Copyright (c) 2021, 2023 Robert Bosch Manufacturing Solutions GmbH
   # Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation
   #
@@ -19,6 +18,7 @@
   # SPDX-License-Identifier: Apache-2.0
   ###############################################################
 
+{{- if and (.Values.graphdb.enabled) (not .Values.hub.embeddedTripleStore) }}
 {{- $deployment_name := printf "cx-%s-graphdb" .Release.Name }}
 {{- $pvc_name := printf "%s-pvc" $deployment_name }}
 apiVersion: v1

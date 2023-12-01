@@ -24,6 +24,7 @@ import static java.util.Spliterator.ORDERED;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Spliterators;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -43,14 +44,15 @@ import org.eclipse.esmf.aspectmodel.UnsupportedVersionException;
 import org.eclipse.esmf.aspectmodel.VersionNumber;
 import org.eclipse.esmf.aspectmodel.resolver.AspectMetaModelResourceResolver;
 import org.eclipse.esmf.aspectmodel.resolver.AspectModelResolver;
-import org.eclipse.esmf.aspectmodel.resolver.EitherStrategy;
 import org.eclipse.esmf.aspectmodel.resolver.ResolutionStrategy;
 import org.eclipse.esmf.aspectmodel.resolver.services.SammAspectMetaModelResourceResolver;
 import org.eclipse.esmf.aspectmodel.resolver.services.VersionedModel;
 import org.eclipse.esmf.aspectmodel.shacl.violation.Violation;
 import org.eclipse.esmf.aspectmodel.urn.AspectModelUrn;
+import org.eclipse.esmf.aspectmodel.urn.ElementType;
 import org.eclipse.esmf.aspectmodel.validation.services.AspectModelValidator;
 import org.eclipse.tractusx.semantics.hub.InvalidAspectModelException;
+import org.eclipse.tractusx.semantics.hub.model.SemanticModelType;
 
 import io.vavr.control.Try;
 
@@ -70,26 +72,22 @@ public class SAMMSdk {
       aspectModelValidator = new AspectModelValidator();
    }
 
-   public void validate( final Model model, final Function<String, Model> tripleStoreRequester ) {
+   public void validate( final Model model, final Function<String, Model> tripleStoreRequester, SemanticModelType type ) {
       final ResolutionStrategy resolutionStrategy =
-            new SAMMSdk.TripleStoreResolutionStrategy( tripleStoreRequester );
+            new SAMMSdk.TripleStoreResolutionStrategy( tripleStoreRequester, type );
 
-      final VersionNumber knownVersion = getKnownVersion( model );
-      final Try<VersionedModel> versionedModel = aspectMetaModelResourceResolver.mergeMetaModelIntoRawModel( model, knownVersion );
-      final ResolutionStrategy firstPayloadThenTripleStore = new EitherStrategy(
-            new SelfResolutionStrategy( versionedModel.get().getRawModel() ),
-            resolutionStrategy );
+      final Try<VersionedModel> resolvedModel = new AspectModelResolver().resolveAspectModel( resolutionStrategy, model );
 
-      final AspectModelUrn modelUrn = getAspectUrn( model );
-      final Try<VersionedModel> resolvedModel = versionedModel.flatMap( loadedModel ->
-            aspectModelResolver.resolveAspectModel( firstPayloadThenTripleStore, modelUrn ) );
-
-      if ( resolvedModel.isFailure() ) {
-         throw new InvalidAspectModelException( resolvedModel.getCause().getMessage() );
-      }
       final List<Violation> violations = aspectModelValidator.validateModel( resolvedModel );
       if ( !violations.isEmpty() ) {
-         final Map<String, String> detailsMap=violations.stream().collect( Collectors.toMap( Violation::errorCode,Violation::message ) );
+         Map<String, String> detailsMap = violations.stream()
+               .collect(
+                     Collectors.groupingBy(
+                           Violation::errorCode,
+                           Collectors.mapping( Violation::message, Collectors.joining( "," ) )
+                     )
+               );
+
          throw new InvalidAspectModelException( detailsMap );
       }
    }
@@ -127,27 +125,41 @@ public class SAMMSdk {
 
       private final Function<String, Model> tripleStoreRequester;
       private final List<String> alreadyLoadedNamespaces = new ArrayList<>();
+      private final SemanticModelType type;
 
-      public TripleStoreResolutionStrategy( final Function<String, Model> tripleStoreRequester ) {
+      public TripleStoreResolutionStrategy( final Function<String, Model> tripleStoreRequester, SemanticModelType type ) {
          this.tripleStoreRequester = tripleStoreRequester;
+         this.type = type;
       }
 
       @Override
       public Try<Model> apply( final AspectModelUrn aspectModelUrn ) {
-         final String namespace = aspectModelUrn.getNamespace();
-         if ( alreadyLoadedNamespaces.contains( namespace ) ) {
-            return Try.success( ModelFactory.createDefaultModel() );
-         }
-         alreadyLoadedNamespaces.add( namespace );
+         final String namespace = checkAndReplaceToBammPrefix(aspectModelUrn.getNamespace());
+         final Resource resource = ResourceFactory.createResource( checkAndReplaceToBammPrefix(aspectModelUrn.getUrn().toASCIIString()));
+         final Model model = tripleStoreRequester.apply( checkAndReplaceToBammPrefix(aspectModelUrn.getUrn().toString()));
 
-         final Resource resource = ResourceFactory.createResource( aspectModelUrn.getUrn().toASCIIString() );
-         final Model model = tripleStoreRequester.apply( aspectModelUrn.getUrn().toString() );
+         if(!isBamm()){
+            if ( alreadyLoadedNamespaces.contains( namespace ) ) {
+               return Try.success( ModelFactory.createDefaultModel() );
+            }
+            alreadyLoadedNamespaces.add( namespace );
+         }
+
          if ( model == null ) {
             return Try.failure( new ResourceDefinitionNotFoundException( getClass().getSimpleName(), resource ) );
          }
          return model.contains( resource, RDF.type, (RDFNode) null ) ?
                Try.success( model ) :
                Try.failure( new ResourceDefinitionNotFoundException( getClass().getSimpleName(), resource ) );
+      }
+
+      private String checkAndReplaceToBammPrefix(String value){
+         return !isBamm() ? value : value.replace( "samm", "bamm" )
+               .replace(  "org.eclipse.esmf.samm","io.openmanufacturing" );
+      }
+
+      private boolean isBamm(){
+         return type.equals( SemanticModelType.BAMM );
       }
    }
 

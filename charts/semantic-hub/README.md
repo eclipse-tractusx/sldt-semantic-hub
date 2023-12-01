@@ -19,7 +19,7 @@ This Helm charts installs the Semantic Hub application and its dependencies.
 ## Install
 ```
 kubectl create namespace semantics
-helm install hub -n semantics ./charts/semantic-hub`
+helm install hub -n semantics ./charts/semantic-hub
 ```
 
 ## Values

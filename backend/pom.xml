@@ -98,28 +98,6 @@
         <dependency>
             <groupId>org.eclipse.esmf</groupId>
             <artifactId>esmf-aspect-model-starter</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>guru.nidi</groupId>
-                    <artifactId>graphviz-java-min-deps</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.webjars.npm</groupId>
-                    <artifactId>viz.js-graphviz-java</artifactId>
-                </exclusion>
-               <exclusion>
-                  <groupId>org.apache.xmlgraphics</groupId>
-                  <artifactId>batik-bridge</artifactId>
-               </exclusion>
-               <exclusion>
-                  <groupId>org.apache.xmlgraphics</groupId>
-                  <artifactId>batik-transcoder</artifactId>
-               </exclusion>
-               <exclusion>
-                  <groupId>org.apache.xmlgraphics</groupId>
-                  <artifactId>batik-svgrasterizer</artifactId>
-               </exclusion>
-            </exclusions>
         </dependency>
         <!--
             The AASX generator uses this dependency to generate AASX XML files.
@@ -155,24 +133,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-       <dependency>
-          <groupId>io.openmanufacturing</groupId>
-          <artifactId>sds-aspect-model-starter</artifactId>
-       </dependency>
-       <dependency>
-          <groupId>io.openmanufacturing</groupId>
-          <artifactId>sds-aspect-model-aas-generator</artifactId>
-          <exclusions>
-             <exclusion>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-             </exclusion>
-             <exclusion>
-                <artifactId>maven-core</artifactId>
-                <groupId>org.apache.maven</groupId>
-             </exclusion>
-          </exclusions>
-       </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>

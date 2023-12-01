@@ -28,6 +28,7 @@ import org.apache.jena.query.Query;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.rdfconnection.RDFConnection;
+import org.eclipse.tractusx.semantics.hub.model.SemanticModelType;
 import org.eclipse.tractusx.semantics.hub.persistence.triplestore.SAMMSdk;
 import org.eclipse.tractusx.semantics.hub.persistence.triplestore.SparqlQueries;
 import org.junit.jupiter.api.Test;
@@ -59,7 +60,7 @@ public class SdsSdkTest {
    public void validateValidAspectModelWithAvailableExternalReferenceExpectSuccess() throws IOException {
       final SdsSdk sdsSdk = new SdsSdk();
       final Model model = sdsSdk.load( TestUtils.PRODUCT_USAGE_MODEL_PATH );
-      assertThatCode( () -> sdsSdk.validate( model, this::findContainingModelByUrn ) )
+      assertThatCode( () -> sdsSdk.validate( model, this::findContainingModelByUrn, SemanticModelType.SAMM ) )
             .doesNotThrowAnyException();
    }
 
@@ -73,7 +74,7 @@ public class SdsSdkTest {
       final SdsSdk sdsSdk = new SdsSdk();
       final Model model = sdsSdk.load( TestUtils.VEHICLE_WITH_NOT_AVAILABLE_EXTERNAL_REFERENCE );
       try {
-         sdsSdk.validate( model, this::noOpTripleResolution );
+         sdsSdk.validate( model, this::noOpTripleResolution, SemanticModelType.SAMM );
       } catch ( final InvalidAspectModelException e ) {
          System.out.println( e.getDetails() );
       }
