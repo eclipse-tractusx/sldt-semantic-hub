@@ -60,7 +60,7 @@ jobs:
         run: |
           unzip jena-fuseki.zip
           cd jena-fuseki-docker-$FUSEKI_VERSION
-          docker build --build-arg JENA_VERSION=$FUSEKI_VERSION -t jena-fuseki-docker .
+          docker build --build-arg JENA_VERSION=$FUSEKI_VERSION -t jena-fuseki-docker:$FUSEKI_VERSION .
       - name: Run tests and adjust version
         run: |
           mvn clean package
