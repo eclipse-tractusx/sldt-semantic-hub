@@ -914,6 +914,48 @@ public class ModelsApiTest extends AbstractModelsApiTest{
             .andExpect( status().isOk() );
    }
 
+   @Test
+   public void testInvalidDependentModelBAMMModel() throws Exception {
+
+      //Given
+      mvc.perform( postBAMM( TestUtils.getTTLFile( "ContactInformation-2.0.0.ttl" ), "DRAFT" ) )
+            .andDo( MockMvcResultHandlers.print() )
+            .andExpect( status().isOk() );
+      mvc.perform( postBAMM( TestUtils.getTTLFile( "Pcf-3.0.0.ttl" ), "DRAFT" ) )
+            .andDo( MockMvcResultHandlers.print() )
+            .andExpect( status().isOk() );
+
+      mvc.perform( postBAMM( TestUtils.getTTLFile( "PhysicalDimensions-2.0.0.ttl" ), "DRAFT" ) )
+            .andDo( MockMvcResultHandlers.print() )
+            .andExpect( status().isOk() );
+
+      mvc.perform( postBAMM( TestUtils.getTTLFile( "SerialPartTypization-2.0.0.ttl" ), "DRAFT" ) )
+            .andDo( MockMvcResultHandlers.print() )
+            .andExpect( status().isOk() );
+
+      //When & Then
+      mvc.perform( postBAMM( TestUtils.getTTLFile( "TransmissionPass.ttl" ), "DRAFT" ) )
+            .andDo( MockMvcResultHandlers.print() )
+            .andExpect( status().isBadRequest() )
+            .andExpect( jsonPath( "$.error.message", containsString("Bad IRI" ) ) );
+   }
+
+
+   @Test
+   public void testInvalidSAMMModel() throws Exception {
+      //Given
+      mvc.perform( MockMvcRequestBuilders.post( "/api/v1/models" )
+                  .queryParam( "type", "SAMM" )
+                  .queryParam( "status", "DRAFT" )
+                  .accept( MediaType.APPLICATION_JSON )
+                  .contentType( MediaType.TEXT_PLAIN )
+                  .content( TestUtils.getTTLFile( "DigitalProductPassport-samm.ttl" ) )
+                  .with( jwtTokenFactory.allRoles() ) )
+            .andDo( MockMvcResultHandlers.print() )
+            .andExpect( status().isBadRequest() )
+            .andExpect( jsonPath( "$.error.message", containsString( "Bad IRI" ) ) );
+   }
+
    private static String toMovementUrn(String urn){
       return urn + "Movement";
    }

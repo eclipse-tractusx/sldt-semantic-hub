@@ -132,4 +132,12 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                   .path( request.getRequestURI() ) ), HttpStatus.BAD_REQUEST );
    }
 
+   @ExceptionHandler( org.apache.jena.atlas.web.HttpException.class )
+   public ResponseEntity<ErrorResponse> handleHttpException( final HttpServletRequest request, final org.apache.jena.atlas.web.HttpException httpException ) {
+      return new ResponseEntity<>( new ErrorResponse()
+            .error( new Error()
+                  .message( httpException.getResponse() )
+                  .path( request.getRequestURI() ) ), HttpStatus.BAD_REQUEST );
+   }
+
 }
