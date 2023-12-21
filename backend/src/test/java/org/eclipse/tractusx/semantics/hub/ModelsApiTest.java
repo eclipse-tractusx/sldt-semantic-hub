@@ -1062,11 +1062,12 @@ public class ModelsApiTest extends AbstractModelsApiTest{
 
    @Test
    public void testUpdateModelStatusByInvalidURN() throws Exception {
-      String urnPrefix = "urn:Invalid";
+      String urnPrefix = "urn:bamm:io.catenax.shared.invalid:2.0.0#InvalidInformation";
 
       mvc.perform( update( urnPrefix, "DRAFT" ) )
             .andDo( MockMvcResultHandlers.print() )
-            .andExpect( status().isBadRequest() );
+            .andExpect( status().isBadRequest() )
+            .andExpect( jsonPath( "$.error.message", containsString( "Invalid URN urn" ) ) );
    }
 
 }
