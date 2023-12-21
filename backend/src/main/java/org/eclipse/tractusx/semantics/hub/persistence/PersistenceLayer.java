@@ -62,4 +62,6 @@ public interface PersistenceLayer {
    boolean echo();
 
    public SemanticModelList findModelListByUrns(List<AspectModelUrn> urns, int page, int pageSize);
+
+   SemanticModel updateModel(String urn, SemanticModelStatus status);
 }
