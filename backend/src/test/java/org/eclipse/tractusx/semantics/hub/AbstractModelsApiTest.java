@@ -67,9 +67,7 @@ public abstract class AbstractModelsApiTest extends FusekiTestContainer {
     }
 
     public MockHttpServletRequestBuilder update( String urn, String status ) {
-        String type = "SAMM";
         return MockMvcRequestBuilders.put( "/api/v1/models/{urn}",urn)
-              .queryParam("type", type)
               .queryParam( "status", status)
               .accept( MediaType.APPLICATION_JSON )
               .with(jwtTokenFactory.allRoles());

@@ -915,8 +915,8 @@ public class ModelsApiTest extends AbstractModelsApiTest{
    }
 
    @Test
-   @DisplayName( "test model transition by URN" )
-   public void testModelStatusTransitionByURN() throws Exception {
+   @DisplayName( "test model status update by URN" )
+   public void testModelStatusUpdateByURN() throws Exception {
       String urnPrefix = "urn:bamm:io.catenax.shared.contact_information:2.0.0#ContactInformation";
 
       //Given
