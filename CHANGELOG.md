@@ -9,7 +9,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Enabled state transitions without modification of models.
 
 ### Fixed
-=======
 
 ## 0.2.15
 ### Added
