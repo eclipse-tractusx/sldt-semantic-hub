@@ -6,9 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 0.2.16
 ### Added
-- Enabled state transitions without modification of models.
 
 ### Fixed
+- Spring Boot version updated to 3.1.6 to fix CVE-2023-34053
+- update Logback version to fix CVE-2023-6378
+- Enabled state transitions without modification of models.
 
 ## 0.2.15
 ### Added
