@@ -212,6 +212,32 @@ paths:
           $ref: '#/components/responses/NotFound'
         '500':
           $ref: '#/components/responses/InternalServerError'
+    put:
+      tags:
+        - SemanticHub
+      summary: Updates an existing Semantic Model status by the URN
+      operationId: updateModel
+      parameters:
+        - in: path
+          name: urn
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: status
+          schema:
+            $ref: '#/components/schemas/SemanticModelStatus'
+      responses:
+        '200':
+          $ref: '#/components/responses/SemanticModel'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
     delete:
       tags:
         - SemanticHub

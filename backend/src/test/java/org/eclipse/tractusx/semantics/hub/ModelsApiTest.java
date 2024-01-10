@@ -915,6 +915,59 @@ public class ModelsApiTest extends AbstractModelsApiTest{
    }
 
    @Test
+   @DisplayName( "test model status update by URN" )
+   public void testModelStatusUpdateByURN() throws Exception {
+      String urnPrefix = "urn:bamm:io.catenax.shared.contact_information:2.0.0#ContactInformation";
+
+      //Given
+      mvc.perform( postBAMM( TestUtils.getTTLFile( "ContactInformation-2.0.0.ttl" ), "DRAFT" ) )
+            .andDo( MockMvcResultHandlers.print() )
+            .andExpect( status().isOk() );
+
+      //When & Then
+      mvc.perform( update( urnPrefix, "DRAFT" ) )
+            .andDo( MockMvcResultHandlers.print() )
+            .andExpect( status().isOk() )
+            .andExpect( jsonPath( "$.status", is( "DRAFT" ) ) );
+
+      mvc.perform( update( urnPrefix, "STANDARDIZED" ) )
+            .andDo( MockMvcResultHandlers.print() )
+            .andExpect( status().isBadRequest() );
+
+      mvc.perform( update( urnPrefix, "RELEASED" ) )
+            .andDo( MockMvcResultHandlers.print() )
+            .andExpect( status().isOk() )
+            .andExpect( jsonPath( "$.status", is( "RELEASED" ) ) );
+
+      // transition from released to draft is not allowed
+      mvc.perform( update( urnPrefix, "DRAFT" ) )
+            .andDo( MockMvcResultHandlers.print() )
+            .andExpect( status().isBadRequest() )
+            .andExpect( jsonPath( "$.error.message", containsString(
+                  "already in status RELEASED and cannot be modified. Only a transition to STANDARDIZED or DEPRECATED is possible." ) ) );
+
+      // transition from released to standardized is allowed
+      mvc.perform( update( urnPrefix, "STANDARDIZED" ) )
+            .andDo( MockMvcResultHandlers.print() )
+            .andExpect( status().isOk() )
+            .andExpect( jsonPath( "$.status", is( "STANDARDIZED" ) ) );
+
+      // transition from standardized to draft is not allowed
+      mvc.perform( update( urnPrefix, "DRAFT" ) )
+            .andDo( MockMvcResultHandlers.print() )
+            .andExpect( jsonPath( "$.error.message", is(
+                  "The package urn:bamm:io.catenax.shared.contact_information:2.0.0# is already in status STANDARDIZED and cannot be modified. Only a transition to DEPRECATED is possible." ) ) )
+            .andExpect( status().isBadRequest() );
+
+      // transition from standardized to deprecated is allowed
+      mvc.perform( update( urnPrefix, "DEPRECATED" ) )
+            .andDo( MockMvcResultHandlers.print() )
+            .andExpect( status().isOk() )
+            .andExpect( jsonPath( "$.status", is( "DEPRECATED" ) ) );
+
+   }
+
+   @Test
    public void testInvalidDependentModelBAMMModel() throws Exception {
 
       //Given
@@ -1006,4 +1059,15 @@ public class ModelsApiTest extends AbstractModelsApiTest{
             .andDo( MockMvcResultHandlers.print() )
             .andExpect( status().isOk() );
    }
+
+   @Test
+   public void testUpdateModelStatusByInvalidURN() throws Exception {
+      String urnPrefix = "urn:bamm:io.catenax.shared.invalid:2.0.0#InvalidInformation";
+
+      mvc.perform( update( urnPrefix, "DRAFT" ) )
+            .andDo( MockMvcResultHandlers.print() )
+            .andExpect( status().isBadRequest() )
+            .andExpect( jsonPath( "$.error.message", containsString( "Invalid URN urn" ) ) );
+   }
+
 }

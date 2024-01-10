@@ -140,6 +140,14 @@ public class AspectModelService implements ModelsApiDelegate {
    }
 
    @Override
+   public ResponseEntity<SemanticModel> updateModel( String urn,
+         SemanticModelStatus status ) {
+      SemanticModel semanticModel = persistenceLayer.updateModel(  urn , status );
+      return new ResponseEntity<>( semanticModel, HttpStatus.OK );
+
+   }
+
+   @Override
    public ResponseEntity<Void> getModelOpenApi( final String modelId, final String baseUrl ) {
       final String openApiJson = sdkHelper.getOpenApiDefinitionJson( modelId, baseUrl );
       return new ResponseEntity( openApiJson, HttpStatus.OK );
