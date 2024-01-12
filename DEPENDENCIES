@@ -100,7 +100,7 @@ maven/mavencentral/org.apache.poi/poi/4.1.2, Apache-2.0 AND MIT AND BSD-3-Clause
 maven/mavencentral/org.apache.thrift/libthrift/0.17.0, Apache-2.0, approved, #6543
 maven/mavencentral/org.apache.tomcat.embed/tomcat-embed-el/10.1.16, Apache-2.0, approved, #6997
 maven/mavencentral/org.apache.velocity/velocity-engine-core/2.3, Apache-2.0, approved, #2478
-maven/mavencentral/org.apache.xmlbeans/xmlbeans/3.1.0, Apache-2.0, restricted, clearlydefined
+maven/mavencentral/org.apache.xmlbeans/xmlbeans/3.1.0, Apache-2.0 AND Apache-1.1, approved, #12095
 maven/mavencentral/org.apache.xmlgraphics/batik-anim/1.17, Apache-2.0, approved, #10144
 maven/mavencentral/org.apache.xmlgraphics/batik-awt-util/1.17, Apache-2.0, approved, #10149
 maven/mavencentral/org.apache.xmlgraphics/batik-bridge/1.17, Apache-2.0, approved, #10152
@@ -173,7 +173,7 @@ maven/mavencentral/org.eclipse.jetty/jetty-webapp/11.0.18, EPL-2.0 OR Apache-2.0
 maven/mavencentral/org.eclipse.jetty/jetty-xml/11.0.18, EPL-2.0 OR Apache-2.0, approved, rt.jetty
 maven/mavencentral/org.glassfish/jakarta.json/2.0.1, EPL-2.0 OR GPL-2.0-only with Classpath-exception-2.0, approved, ee4j.jsonp
 maven/mavencentral/org.graalvm.js/js-scriptengine/23.0.1, UPL-1.0, approved, #11524
-maven/mavencentral/org.graalvm.js/js/23.0.1, UPL-1.0 AND (LicenseRef-scancode-sunpro AND UPL-1.0) AND (GPL-2.0-only WITH Classpath-exception-2.0 AND UPL-1.0) AND (BSD-3-Clause AND UPL-1.0) AND (LicenseRef-scancode-x11-lucent AND MPL-2.0), restricted, #11528
+maven/mavencentral/org.graalvm.js/js/23.0.1, UPL-1.0 AND (LicenseRef-Permission-Notice AND UPL-1.0) AND ((GPL-2.0-only WITH Classpath-exception-2.0) AND UPL-1.0) AND (BSD-3-Clause AND UPL-1.0) AND (LicenseRef-Permission-Notice AND MPL-2.0), approved, #11528
 maven/mavencentral/org.graalvm.regex/regex/23.0.1, UPL-1.0, approved, #11529
 maven/mavencentral/org.graalvm.sdk/graal-sdk/23.0.1, UPL-1.0, approved, #9850
 maven/mavencentral/org.graalvm.truffle/truffle-api/23.0.1, UPL-1.0 AND (MIT AND UPL-1.0), approved, #11527
@@ -190,7 +190,7 @@ maven/mavencentral/org.ow2.asm/asm-commons/9.6, BSD-3-Clause, approved, #10775
 maven/mavencentral/org.ow2.asm/asm-tree/9.6, BSD-3-Clause, approved, #10773
 maven/mavencentral/org.ow2.asm/asm/9.6, BSD-3-Clause, approved, #10776
 maven/mavencentral/org.projectlombok/lombok/1.18.22, MIT AND LicenseRef-Public-Domain, approved, CQ23907
-maven/mavencentral/org.slf4j/jcl-over-slf4j/2.0.7, Apache-2.0, approved, clearlydefined
+maven/mavencentral/org.slf4j/jcl-over-slf4j/2.0.7, MIT AND Apache-2.0, approved, #11889
 maven/mavencentral/org.slf4j/jul-to-slf4j/2.0.7, MIT, approved, #7698
 maven/mavencentral/org.slf4j/slf4j-api/2.0.7, MIT, approved, #5915
 maven/mavencentral/org.slf4j/slf4j-simple/2.0.7, MIT, approved, #10372
