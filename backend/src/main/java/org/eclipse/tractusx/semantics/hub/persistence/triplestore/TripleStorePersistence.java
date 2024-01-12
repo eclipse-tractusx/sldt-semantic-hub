@@ -105,55 +105,46 @@ public class TripleStorePersistence implements PersistenceLayer {
    }
 
    @Override
+   public SemanticModel updateModel( String urn, SemanticModelStatus status ) {
+
+      SemanticModel semanticModel = Optional.ofNullable( findByUrn(
+            AspectModelUrn.fromUrn( urn ) ) ).orElseThrow( () -> new IllegalArgumentException(
+            String.format( "Invalid URN %s",
+                  ModelPackageUrn.fromUrn( urn ).getUrn() ) ) );
+      ModelPackageStatus persistedModelStatus = ModelPackageStatus.valueOf(
+            semanticModel.getStatus().name() );
+
+      final Model model = findContainingModelByUrn( urn );
+
+      final AspectModelUrn modelUrn = sdsSdk.getAspectUrn( model );
+
+      validateStatus( status, model, modelUrn, persistedModelStatus );
+
+      updateModel( status, modelUrn, model );
+
+      return findByUrn( modelUrn );
+   }
+
+   @Override
    public SemanticModel save( SemanticModelType type, String newModel, SemanticModelStatus status ) {
       final Model rdfModel = sdsSdk.load( newModel.getBytes( StandardCharsets.UTF_8 ) );
       final AspectModelUrn modelUrn = sdsSdk.getAspectUrn( rdfModel );
       Optional<ModelPackage> existsByPackage = findByPackageByUrn( ModelPackageUrn.fromUrn( modelUrn ) );
 
       if ( existsByPackage.isPresent() ) {
-         ModelPackageStatus persistedModelStatus = existsByPackage.get().getStatus();
-         final ModelPackageStatus desiredModelStatus = ModelPackageStatus.valueOf( status.name() );
-         switch ( persistedModelStatus ) {
-         case DRAFT:
-            if ( desiredModelStatus.equals( ModelPackageStatus.RELEASED ) && !hasReferenceToDraftPackage( modelUrn, rdfModel ) ) {
-               throw new InvalidStateTransitionException( "It is not allowed to release an aspect that has dependencies in DRAFT state." );
-            } else if ( desiredModelStatus.equals( ModelPackageStatus.STANDARDIZED ) ) {
-               throw new IllegalArgumentException(
-                     String.format( "The package %s is in status %s. Only a transition to RELEASED or DEPRECATED is possible.",
-                           ModelPackageUrn.fromUrn( modelUrn ).getUrn(), persistedModelStatus.name() ) );
-            }
-            deleteByUrn( ModelPackageUrn.fromUrn( modelUrn ) );
-            break;
-         case RELEASED:
-            // released models can only be updated when the new state is deprecated or standardized
-            if ( desiredModelStatus.equals( ModelPackageStatus.DEPRECATED ) || desiredModelStatus.equals( ModelPackageStatus.STANDARDIZED ) ) {
-               deleteByUrn( ModelPackageUrn.fromUrn( modelUrn ) );
-            } else {
-               throw new IllegalArgumentException(
-                     String.format( "The package %s is already in status %s and cannot be modified. Only a transition to STANDARDIZED or DEPRECATED is possible.",
-                           ModelPackageUrn.fromUrn( modelUrn ).getUrn(), persistedModelStatus.name() ) );
-            }
-            break;
-         case STANDARDIZED:
-            if ( desiredModelStatus.equals( ModelPackageStatus.DEPRECATED ) ) {
-               deleteByUrn( ModelPackageUrn.fromUrn( modelUrn ) );
-            } else {
-               throw new IllegalArgumentException(
-                     String.format( "The package %s is already in status %s and cannot be modified. Only a transition to DEPRECATED is possible.",
-                           ModelPackageUrn.fromUrn( modelUrn ).getUrn(), persistedModelStatus.name() ) );
-            }
-            break;
-         case DEPRECATED:
-            throw new IllegalArgumentException(
-                  String.format( "The package %s is already in status %s and cannot be modified.",
-                        ModelPackageUrn.fromUrn( modelUrn ).getUrn(), persistedModelStatus.name() ) );
-         }
+         validateStatus( status, rdfModel, modelUrn, existsByPackage.get().getStatus() );
       }
 
       sdsSdk.validate( rdfModel, this::findContainingModelByUrn, type );
 
       Model rdfModelOriginal =  sdsSdk.load( newModel.getBytes( StandardCharsets.UTF_8 ) );
 
+      updateModel( status, modelUrn, rdfModelOriginal );
+
+      return findByUrn( modelUrn );
+   }
+
+   private void updateModel( SemanticModelStatus status, AspectModelUrn modelUrn, Model rdfModelOriginal ) {
       final Resource rootResource = ResourceFactory.createResource( modelUrn.getUrnPrefix() );
       rdfModelOriginal.add( rootResource, SparqlQueries.STATUS_PROPERTY,
             ModelPackageStatus.valueOf( status.name() ).toString() );
@@ -161,7 +152,46 @@ public class TripleStorePersistence implements PersistenceLayer {
       try ( final RDFConnection rdfConnection = rdfConnectionRemoteBuilder.build() ) {
          rdfConnection.update( new UpdateBuilder().addInsert( rdfModelOriginal ).build() );
       }
-      return findByUrn( modelUrn );
+   }
+
+
+   private void validateStatus( SemanticModelStatus status, Model rdfModel, AspectModelUrn modelUrn, ModelPackageStatus persistedModelStatus ) {
+      final ModelPackageStatus desiredModelStatus = ModelPackageStatus.valueOf( status.name() );
+      switch ( persistedModelStatus ) {
+      case DRAFT:
+         if ( desiredModelStatus.equals( ModelPackageStatus.RELEASED ) && !hasReferenceToDraftPackage( modelUrn, rdfModel ) ) {
+            throw new InvalidStateTransitionException( "It is not allowed to release an aspect that has dependencies in DRAFT state." );
+         } else if ( desiredModelStatus.equals( ModelPackageStatus.STANDARDIZED ) ) {
+            throw new IllegalArgumentException(
+                  String.format( "The package %s is in status %s. Only a transition to RELEASED or DEPRECATED is possible.",
+                        ModelPackageUrn.fromUrn( modelUrn ).getUrn(), persistedModelStatus.name() ) );
+         }
+         deleteByUrn( ModelPackageUrn.fromUrn( modelUrn ) );
+         break;
+      case RELEASED:
+         // released models can only be updated when the new state is deprecated or standardized
+         if ( desiredModelStatus.equals( ModelPackageStatus.DEPRECATED ) || desiredModelStatus.equals( ModelPackageStatus.STANDARDIZED ) ) {
+            deleteByUrn( ModelPackageUrn.fromUrn( modelUrn ) );
+         } else {
+            throw new IllegalArgumentException(
+                  String.format( "The package %s is already in status %s and cannot be modified. Only a transition to STANDARDIZED or DEPRECATED is possible.",
+                        ModelPackageUrn.fromUrn( modelUrn ).getUrn(), persistedModelStatus.name() ) );
+         }
+         break;
+      case STANDARDIZED:
+         if ( desiredModelStatus.equals( ModelPackageStatus.DEPRECATED ) ) {
+            deleteByUrn( ModelPackageUrn.fromUrn( modelUrn ) );
+         } else {
+            throw new IllegalArgumentException(
+                  String.format( "The package %s is already in status %s and cannot be modified. Only a transition to DEPRECATED is possible.",
+                        ModelPackageUrn.fromUrn( modelUrn ).getUrn(), persistedModelStatus.name() ) );
+         }
+         break;
+      case DEPRECATED:
+         throw new IllegalArgumentException(
+               String.format( "The package %s is already in status %s and cannot be modified.",
+                     ModelPackageUrn.fromUrn( modelUrn ).getUrn(), persistedModelStatus.name() ) );
+      }
    }
 
    @Override
