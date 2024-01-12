@@ -26,8 +26,8 @@ sources:
   - https://github.com/eclipse-tractusx/sldt-semantic-hub
 
 type: application
-version: 0.1.33
-appVersion: 0.2.15
+version: 0.1.34
+appVersion: 0.2.16
 dependencies:
   - repository: https://charts.bitnami.com/bitnami
     name: keycloak
