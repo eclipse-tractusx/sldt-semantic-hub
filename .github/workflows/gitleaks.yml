@@ -36,7 +36,7 @@ jobs:
           gitleaks detect -f sarif -r ./gitleaks-report-semantic-hub.sarif --exit-code 0
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: gitleaks-report
           path: ./gitleaks-report-semantic-hub.sarif
