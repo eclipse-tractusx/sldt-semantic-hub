@@ -178,7 +178,7 @@ maven/mavencentral/org.graalvm.js/js/23.0.1, UPL-1.0 AND (LicenseRef-Permission-
 maven/mavencentral/org.graalvm.regex/regex/23.0.1, UPL-1.0, approved, #11529
 maven/mavencentral/org.graalvm.sdk/graal-sdk/23.0.1, UPL-1.0, approved, #9850
 maven/mavencentral/org.graalvm.truffle/truffle-api/23.0.1, UPL-1.0 AND (MIT AND UPL-1.0), approved, #11527
-maven/mavencentral/org.graphper/graph-support/1.2.3, unknown, restricted, none
+maven/mavencentral/org.graphper/graph-support/1.2.3, Apache-2.0, approved, #13169
 maven/mavencentral/org.hibernate.validator/hibernate-validator/8.0.1.Final, Apache-2.0, approved, clearlydefined
 maven/mavencentral/org.jboss.forge.roaster/roaster-api/2.29.0.Final, EPL-1.0, approved, #11526
 maven/mavencentral/org.jboss.forge.roaster/roaster-jdt/2.29.0.Final, , approved, #11525
