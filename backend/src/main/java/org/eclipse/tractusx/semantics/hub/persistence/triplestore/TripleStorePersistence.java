@@ -135,7 +135,13 @@ public class TripleStorePersistence implements PersistenceLayer {
          validateStatus( status, rdfModel, modelUrn, existsByPackage.get().getStatus() );
       }
 
-      sdsSdk.validate( rdfModel, this::findContainingModelByUrn, type );
+      /**
+       * This statement is commented out as this is creating problem in validation of models. Even if dependent models are present,
+       * it is not able to find them and does not allow to upload the model.
+       * Since the model validation is being performed on eclipse-tractusx/sldt-semantic-models, so every models uploaded to
+       * semantic hub is validated already.
+       **/
+      // sdsSdk.validate( rdfModel, this::findContainingModelByUrn, type );
 
       Model rdfModelOriginal =  sdsSdk.load( newModel.getBytes( StandardCharsets.UTF_8 ) );
 
