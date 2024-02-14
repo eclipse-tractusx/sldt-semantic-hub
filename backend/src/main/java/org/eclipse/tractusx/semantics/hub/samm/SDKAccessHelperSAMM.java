@@ -31,6 +31,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.apache.jena.rdf.model.Model;
+import org.eclipse.esmf.aspectmodel.aas.AasFileFormat;
 import org.eclipse.esmf.aspectmodel.aas.AspectModelAASGenerator;
 import org.eclipse.esmf.aspectmodel.generator.diagram.AspectModelDiagramGenerator;
 import org.eclipse.esmf.aspectmodel.generator.diagram.AspectModelDiagramGenerator.Format;
@@ -149,17 +150,17 @@ public class SDKAccessHelperSAMM {
       try {
          switch ( aasFormat ) {
          case FILE:
-            aasGenerator.generateAASXFile( aspect, ( String s ) -> {
+            aasGenerator.generate( AasFileFormat.AASX, aspect, ( String s ) -> {
                return stream;
             } );
             return Try.of( stream::toByteArray );
          case XML:
-            aasGenerator.generateAasXmlFile( aspect, ( String s ) -> {
+            aasGenerator.generate( AasFileFormat.XML, aspect, ( String s ) -> {
                return stream;
             } );
             return Try.of( stream::toString );
          case JSON:
-            aasGenerator.generateAasJsonFile( aspect, ( String s ) -> {
+            aasGenerator.generate( AasFileFormat.JSON, aspect, ( String s ) -> {
                return stream;
             } );
             return Try.of( stream::toString );
@@ -167,7 +168,7 @@ public class SDKAccessHelperSAMM {
             return Try.failure( new Exception( String.format( "Wrong AAS output format %s", aasFormat.toString() ) ) );
 
          }
-      } catch ( IOException e ) {
+      } catch ( Exception e ) {
          return Try.failure( e );
       }
    }
