@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 0.3.0
 ### Added
-- Upgrade dependency to ESMF SDK 2.5.1
+
 ### Fixed
 Validation removed while upload of model in semantic hub via API.
 
