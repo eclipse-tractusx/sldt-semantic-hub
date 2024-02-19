@@ -71,7 +71,7 @@ public class SDKAccessHelperSAMM {
       return validator.validateModel( model );
    }
 
-   public Try<byte[]> generatePng( String urn ) {
+   public Try<byte[]> generateDiagram( String urn, Format format ) {
 
       VersionedModel versionedModel = getVersionedModel( urn );
 
@@ -80,7 +80,7 @@ public class SDKAccessHelperSAMM {
       final AspectModelDiagramGenerator generator = new AspectModelDiagramGenerator( new AspectContext( versionedModel, aspect ) );
 
       try ( ByteArrayOutputStream output = new ByteArrayOutputStream() ) {
-         generator.generateDiagram( Format.PNG, Locale.ENGLISH, output );
+         generator.generateDiagram( format , Locale.ENGLISH, output );
          final byte[] bytes = output.toByteArray();
 
          return Try.success( bytes );

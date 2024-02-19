@@ -97,7 +97,7 @@ public class AspectModelService implements ModelsApiDelegate {
 
    @Override
    public ResponseEntity<org.springframework.core.io.Resource> getModelDiagram( final String urn ) {
-      final Try<byte[]>pngBytes = sdkHelper.generatePng( urn );
+      final Try<byte[]>pngBytes = sdkHelper.generateSvg( urn );
       if ( pngBytes.isFailure()  ) {
          throw new RuntimeException( String.format( "Failed to generate example payload for urn %s", urn ) );
       }

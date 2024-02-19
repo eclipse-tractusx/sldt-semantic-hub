@@ -563,7 +563,7 @@ components:
     SemanticModelDiagram:
       description: OK
       content:
-        image/png:
+        image/svg:
           schema:
             type: string
             format: binary
