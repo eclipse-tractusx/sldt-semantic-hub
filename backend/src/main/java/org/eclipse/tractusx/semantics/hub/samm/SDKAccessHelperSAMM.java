@@ -1,6 +1,6 @@
 /********************************************************************************
- * Copyright (c) 2021-2023 Robert Bosch Manufacturing Solutions GmbH
- * Copyright (c) 2021-2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * See the NOTICE file(s) distributed with this work for additional
  * information regarding copyright ownership.
@@ -71,7 +71,7 @@ public class SDKAccessHelperSAMM {
       return validator.validateModel( model );
    }
 
-   public Try<byte[]> generatePng( String urn ) {
+   public Try<byte[]> generateDiagram( String urn, Format format ) {
 
       VersionedModel versionedModel = getVersionedModel( urn );
 
@@ -80,7 +80,7 @@ public class SDKAccessHelperSAMM {
       final AspectModelDiagramGenerator generator = new AspectModelDiagramGenerator( new AspectContext( versionedModel, aspect ) );
 
       try ( ByteArrayOutputStream output = new ByteArrayOutputStream() ) {
-         generator.generateDiagram( Format.PNG, Locale.ENGLISH, output );
+         generator.generateDiagram( format , Locale.ENGLISH, output );
          final byte[] bytes = output.toByteArray();
 
          return Try.success( bytes );
