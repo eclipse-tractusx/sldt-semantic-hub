@@ -1,6 +1,6 @@
 ###############################################################
-# Copyright (c) 2021, 2024 Robert Bosch Manufacturing Solutions GmbH
-# Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation
+# Copyright (c) 2024 Robert Bosch Manufacturing Solutions GmbH
+# Copyright (c) 2024 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -17,19 +17,31 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 ###############################################################
+version: 2
+updates:
+    # Maintain dependencies for Maven
+  - package-ecosystem: "maven"
+    directory: "/"
+    open-pull-requests-limit: 5
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "03:00"
 
-apiVersion: v2
-name: semantic-hub
-description: Helm Chart for the Catena-X Semantic Hub Application
-home: https://eclipse-tractusx.github.io/
-sources:
-  - https://github.com/eclipse-tractusx/sldt-semantic-hub
+    # Maintain dependencies for GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    open-pull-requests-limit: 5
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "03:00"
 
-type: application
-version: 0.1.35
-appVersion: 0.2.16
-dependencies:
-  - repository: https://charts.bitnami.com/bitnami
-    name: keycloak
-    version: 13.3.0
-    condition: enableKeycloak
+    # Maintain dependencies for Docker
+  - package-ecosystem: "docker"
+    directory: "/"
+    open-pull-requests-limit: 5
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "03:00"

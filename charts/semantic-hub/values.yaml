@@ -1,6 +1,6 @@
 ###############################################################
-# Copyright (c) 2021, 2023 Robert Bosch Manufacturing Solutions GmbH
-# Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation
+# Copyright (c) 2021, 2024 Robert Bosch Manufacturing Solutions GmbH
+# Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -20,7 +20,7 @@
 
 
 # enables the default keycloak identity provider
-enableKeycloak: true
+enableKeycloak: false
 
 hub:
   image:
@@ -77,7 +77,7 @@ graphdb:
   queryEndpoint: query
   updateEndpoint: update
   username: admin
-  password: admin
+  password:
   javaOptions: "-Xmx1048m -Xms1048m"
   args: ["--tdb2", "--update", "--loc", "databases/", "/ds"]
   storageClassName: default
@@ -94,10 +94,10 @@ graphdb:
 
 keycloak:
   postgresql:
-    enabled: true
+    enabled: false
   auth:
-    adminUser: admin
-    adminPassword: "admin"
+    adminUser:
+    adminPassword:
   service:
     type: ClusterIP
   extraVolumes:

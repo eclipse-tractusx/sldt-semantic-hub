@@ -1,6 +1,6 @@
 /********************************************************************************
- * Copyright (c) 2021-2023 Robert Bosch Manufacturing Solutions GmbH
- * Copyright (c) 2021-2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * See the NOTICE file(s) distributed with this work for additional
  * information regarding copyright ownership.
@@ -21,6 +21,7 @@ package org.eclipse.tractusx.semantics.hub;
 
 import java.util.List;
 
+import org.eclipse.esmf.aspectmodel.generator.diagram.AspectModelDiagramGenerator;
 import org.eclipse.esmf.aspectmodel.resolver.services.VersionedModel;
 import org.eclipse.esmf.aspectmodel.shacl.violation.Violation;
 import org.eclipse.tractusx.semantics.hub.model.AasFormat;
@@ -46,8 +47,8 @@ public class SDKAccessHelper {
       return sdkAccessHelperSAMM.validateModel( model );
    }
 
-   public Try<byte[]> generatePng( String urn ) {
-      return sdkAccessHelperSAMM.generatePng( urn );
+   public Try<byte[]> generateSvg( String urn ) {
+      return sdkAccessHelperSAMM.generateDiagram( urn, AspectModelDiagramGenerator.Format.SVG );
    }
 
    public JsonNode getJsonSchema( String urn ) {
