@@ -7,6 +7,8 @@ The Helm chart can be found at the GitHub repository at: [Releases](https://gith
 
 Eclipse Tractus-X product(s) installed within the image:
 
+Semantic Hub
+
 - GitHub: https://github.com/eclipse-tractusx/sldt-semantic-hub
 - Project home: https://projects.eclipse.org/projects/automotive.tractusx
 - Dockerfile: https://github.com/eclipse-tractusx/sldt-semantic-hub/blob/main/backend/Dockerfile
