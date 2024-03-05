@@ -1,4 +1,4 @@
-# Copyright (c) 2023 Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
+# Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
 # Copyright (c) 2023 Contributors to the Eclipse Foundation
 
 # See the NOTICE file(s) distributed with this work for additional
@@ -20,7 +20,7 @@
 kind: ConfigMap
 apiVersion: v1
 metadata:
-  name: init-script-vol
+  name: {{ include "hub.fullname" . }}-keycloak-init-script-configmap
 data:
   default-realm-import.json: |-
 {{ .Files.Get "config/default-realm-import.json" | indent 4 }}
