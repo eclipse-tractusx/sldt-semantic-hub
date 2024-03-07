@@ -19,6 +19,7 @@
 ###############################################################
 
 {{- if and (.Values.graphdb.enabled) (not .Values.hub.embeddedTripleStore) }}
+{{- $pvc_name := printf "cx-%s-graphdb-pvc" .Release.Name }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -63,5 +64,5 @@ spec:
       volumes:
         - name: graphdbdata
           persistentVolumeClaim:
-            claimName: {{ include "hub.fullname" .}}-graphdb
+            claimName: {{ $pvc_name }}
 {{- end -}}

@@ -19,10 +19,11 @@
 ###############################################################
 
 {{- if and (.Values.graphdb.enabled) (not .Values.hub.embeddedTripleStore) }}
+{{- $pvc_name := printf "cx-%s-graphdb-pvc" .Release.Name }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ include "hub.fullname" .}}-graphdb
+  name: {{ $pvc_name }}
 spec:
   storageClassName: {{ .Values.graphdb.storageClassName }}
   accessModes:
