@@ -1,6 +1,6 @@
 ###############################################################
-# Copyright (c) 2021, 2023 Robert Bosch Manufacturing Solutions GmbH
-# Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation
+# Copyright (c) 2021 Robert Bosch Manufacturing Solutions GmbH
+# Copyright (c) 2021 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -18,18 +18,16 @@
 # SPDX-License-Identifier: Apache-2.0
 ###############################################################
 
-{{- $deployment_name := printf "cx-%s-hub" .Release.Name }}
-{{- $svc_name := printf "%s-svc" $deployment_name }}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ $svc_name }}
+  name: {{ include "hub.fullname" . }}
   labels:
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+    {{- include "hub.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.hub.service.type }}
   ports:
     - port: {{ .Values.hub.service.port }}
       targetPort: {{ .Values.hub.containerPort }}
   selector:
-    app: {{ $deployment_name }}
+    {{- include "hub.selectorLabels" . | nindent 4 }}
