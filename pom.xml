@@ -92,7 +92,7 @@
 		<!-- json, xml, formats, ... -->
 		<jackson.version>2.13.1</jackson.version>
 		<jackson.databind.version>2.14.0</jackson.databind.version>
-		<jackson.dataformat.version>2.12.7</jackson.dataformat.version>
+		<jackson.dataformat.version>2.16.1</jackson.dataformat.version>
 		<json.version>2.0.1</json.version>
 		<woodstoxcore.version>6.4.0</woodstoxcore.version>
 		<jaxb-api.version>2.3.1</jaxb-api.version>
