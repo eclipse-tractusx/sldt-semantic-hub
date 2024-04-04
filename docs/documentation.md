@@ -1,14 +1,37 @@
 ## Architectural Overview
 The SLDT Semantic Hub stores Semantic Model definitions and allows the generation of several artifacts. It restricts access to the models by authentication via a token and authorization via roles in the token claims. Therefore, the Hub interacts with a Keycloak instance. The models are created in the Hub during our governance process as depicted below.
-
-![](img/image001.png)
+```mermaid
+graph LR
+    SemanticHub[Semantic hub] -- "read models" --> Data[Data Consumer/Provider]
+    Keycloak --"PUB Key for token validation" --> SemanticHub
+    Github[Github Models Repository] -- "synchronize models from the governance process" --> SemanticHub
+```
 
 ## Implementation
 The following section describes the use cases implemented for the semantic hub.
 
 ### Upload of an aspect model
-![](img/image002.png)
+```mermaid
+sequenceDiagram
+    actor ModelAdmin as Model Admin
+    participant SemanticHub as Semantic hub
+    participant TripleStore as TripleStore
 
+    ModelAdmin ->>+ SemanticHub: Upload aspect model file (.ttl)
+    loop validation
+    SemanticHub ->>+ SemanticHub: Check if aspect model is complaint with bamm/samm (using sdk)
+    SemanticHub ->>+ TripleStore: Check if aspect model already exists
+    Note over SemanticHub, TripleStore: If the aspect model exists and is in release status, <br> the upload will be rejected. <br>If the aspect model exists in draft status,<br> upload will be accepted.
+    SemanticHub ->>+ TripleStore: Check if external referenceses exists
+    Note over SemanticHub, TripleStore: If an external reference does not exists,<br> the upload will be rejected.<br>Should we allow to reference namespaces,<br> in DRAFT state?
+    TripleStore -->> SemanticHub: response ok
+    end
+    note over ModelAdmin, SemanticHub: The model admin provides the release status <br> (RELEASED/DRAFT) upon upload
+    SemanticHub ->>+ SemanticHub: Add the release status as triple to the model
+    SemanticHub ->>+ TripleStore: Write all triples to TripleStore
+    TripleStore -->> SemanticHub: response ok
+    SemanticHub -->> ModelAdmin: Response upload successful
+```
 
 | Validation | Description Value | 
 |---|---|
@@ -55,7 +78,18 @@ Release Status
 | 5. | All aspect models and model elements scoped to a package have the same status.                                    | Possible: net.catenax.semantics.product:1.2.0#ProductDescription → RELEASE, net.catenax.semantics.product:1.2.0#ProductUsage → RELEASE net.catenax.semantics.product:1.2.0#ProductDetails → RELEASE Not Possible: net.catenax.semantics.product:1.2.0#ProductDescription → RELEASE, net.catenax.semantics.product:1.2.0#ProductUsage → DRAFT                                                                                                                                                                          |
 
 ## Download of the documentation of an Aspect Model
-![](img/image003.png)
+```mermaid
+sequenceDiagram
+    actor ModelAdmin as Model Admin
+    participant SemanticHub as Semantic hub
+    participant TripleStore as TripleStore
+
+    ModelAdmin ->>+ SemanticHub: Get documentation for aspect model com.catenax:0.0.1:Sample
+    SemanticHub ->>+ TripleStore: Resolve aspect model with all references based on provided urn com.catenax:0.0.1:Sample
+    TripleStore -->> SemanticHub: response 
+    SemanticHub ->>+ SemanticHub: generate documentation based on the response from TripleStore
+    SemanticHub -->> ModelAdmin: respond with generated documenation
+```
 
 Example queries to resolve an aspect model with all references:
 Construct Query

@@ -1,6 +1,6 @@
 ###############################################################
-# Copyright (c) 2021, 2023 Robert Bosch Manufacturing Solutions GmbH
-# Copyright (c) 2021, 2023 Contributors to the Eclipse Foundation
+# Copyright (c) 2021 Robert Bosch Manufacturing Solutions GmbH
+# Copyright (c) 2021 2023 Contributors to the Eclipse Foundation
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -25,23 +25,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ $deployment_name }}
+  name: {{ include "hub.fullname" . }}
   labels:
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+    {{- include "hub.labels" . | nindent 4 }}
 spec:
+  replicas: {{ default 1 .Values.hub.replicaCount | int }}
   selector:
     matchLabels:
-      app: {{ $deployment_name }}
-  replicas: {{ default 1 .Values.hub.replicaCount | int }}
+      {{- include "hub.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        app: {{ $deployment_name }}
+        {{- include "hub.selectorLabels" . | nindent 8 }}
     spec:
       securityContext:
         runAsUser: 100
       containers:
-        - name: {{ $deployment_name }}
+        - name: {{ .Chart.Name }}
           image: {{ .Values.hub.image.registry }}/{{ .Values.hub.image.repository }}:{{ .Values.hub.image.version | default .Chart.AppVersion }}
           imagePullPolicy: {{ .Values.hub.imagePullPolicy }}
           securityContext:
@@ -57,7 +57,7 @@ spec:
               value: "{{ .Values.hub.embeddedTripleStore }}"
             - name: HUB_TRIPLE_STORE_BASE_URL
               {{- if .Values.graphdb.enabled }}
-              value: {{ printf "http://%s:%v" $graphdb_svc_name .Values.graphdb.service.port }}/ds
+              value: {{ printf "http://%s-graphdb:%v" (include "hub.fullname" .) .Values.graphdb.service.port }}/ds
               {{- else }}
               value: {{ .Values.hub.graphdbBaseUrl }}
               {{- end }}
@@ -67,7 +67,7 @@ spec:
               value: {{ .Values.graphdb.updateEndpoint }}
           envFrom:
             - secretRef:
-                name: {{ $sec_name }}
+                name: {{ include "hub.fullname" . }}
           livenessProbe:
             httpGet:
               path: /actuator/health/liveness
