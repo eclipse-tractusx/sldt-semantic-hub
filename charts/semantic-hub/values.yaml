@@ -49,6 +49,14 @@ hub:
   service:
     port: 8080
     type: ClusterIP
+  livenessProbe:
+    failureThreshold: 3
+    periodSeconds: 3
+    initialDelaySeconds: 100
+  readinessProbe:
+    failureThreshold: 3
+    periodSeconds: 3
+    initialDelaySeconds: 100
   ingress:
     ## Enable ingress for the Semantic Hub
     enabled: false
