@@ -2,6 +2,24 @@ apiVersion: v1
 entries:
   semantic-hub:
   - apiVersion: v2
+    appVersion: 0.3.2
+    created: "2024-05-02T14:51:56.156343389Z"
+    dependencies:
+    - condition: enableKeycloak
+      name: keycloak
+      repository: https://charts.bitnami.com/bitnami
+      version: 13.3.0
+    description: Helm Chart for the Catena-X Semantic Hub Application
+    digest: 94510f3d555a0db49fc17a73e952beaf497ce0e886f69dbbbcd1d28098612985
+    home: https://eclipse-tractusx.github.io/
+    name: semantic-hub
+    sources:
+    - https://github.com/eclipse-tractusx/sldt-semantic-hub
+    type: application
+    urls:
+    - https://github.com/eclipse-tractusx/sldt-semantic-hub/releases/download/semantic-hub-0.2.3/semantic-hub-0.2.3.tgz
+    version: 0.2.3
+  - apiVersion: v2
     appVersion: 0.3.1
     created: "2024-04-08T11:33:05.330576593Z"
     dependencies:
@@ -600,4 +618,4 @@ entries:
     urls:
     - https://github.com/eclipse-tractusx/sldt-semantic-hub/releases/download/semantic-hub-0.1.3/semantic-hub-0.1.3.tgz
     version: 0.1.3
-generated: "2024-04-08T11:33:05.330832131Z"
+generated: "2024-05-02T14:51:56.156618998Z"
