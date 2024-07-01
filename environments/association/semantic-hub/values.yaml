@@ -1,0 +1,68 @@
+semantic-hub:
+  enableKeycloak: false
+  hub:
+    imagePullPolicy: Always
+    imagePullSecrets:
+      - name: machineuser-pull-secret-ro
+    replicaCount: 1
+    containerPort: 4242
+    ## Use in-memory triple store that is not persistent
+    embeddedTripleStore: false
+    host: semantics.int.catena-x.net
+    ## If 'authentication' is set to false, no OAuth authentication is enforced
+    authentication: true
+    idpIssuerUri: <path:semantics/data/commons#keycloak-idp>
+    idpClientId: <path:semantics/data/semantichub#idpClientIdHub>
+    ## Ignored if 'graphdb.enabled' is set to true
+    graphdbBaseUrl: http://graphdb:3030
+    service:
+      port: 8080
+      type: ClusterIP
+    ingress:
+      ## Enable ingress for the Semantic Hub
+      enabled: true
+      ## Enable TLS (e.g. by using cert-manager)
+      tls: true
+      ## The secret name that contains the necessary 'tls.crt' and 'tls.key' entries
+      ## When using cert-manager this secret is created automatically
+      tlsSecretName: hub-certificate-secret
+      urlPrefix: /hub
+      className: nginx
+      annotations:
+        cert-manager.io/cluster-issuer: letsencrypt-prod
+        nginx.ingress.kubernetes.io/rewrite-target: /$2
+        nginx.ingress.kubernetes.io/use-regex: "true"
+        nginx.ingress.kubernetes.io/enable-cors: "true"
+        nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
+        nginx.ingress.kubernetes.io/x-forwarded-prefix: /hub
+    resources:
+      limits:
+        memory: "1024Mi"
+      requests:
+        memory: "512Mi"
+  graphdb:
+    ## Include Fuski deployment or deploy separately
+    enabled: true
+    image: ghcr.io/catenax-ev/jena-fuseki:4.7.0
+    imagePullPolicy: Always
+    imagePullSecrets:
+      - name: machineuser-pull-secret-ro
+    replicaCount: 1
+    containerPort: 3030
+    queryEndpoint: query
+    updateEndpoint: update
+    username: admin
+    password: admin
+    javaOptions: "-Xmx1048m -Xms1048m"
+    args: ["--tdb2", "--update", "--loc", "databases/", "/ds"]
+    storageClassName: azurefile
+    storageSize: 8Gi
+    pvcAccessModes:
+      - ReadWriteOnce
+    resources:
+      limits:
+        memory: "1024Mi"
+      requests:
+        memory: "512Mi"
+    service:
+      port: 3030
