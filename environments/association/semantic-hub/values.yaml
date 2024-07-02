@@ -44,7 +44,7 @@ semantic-hub:
     ## Include Fuski deployment or deploy separately
     enabled: true
     image: ghcr.io/catenax-ev/jena-fuseki:4.7.0
-    imagePullPolicy: Always
+    imagePullPolicy: IfNotPresent
     imagePullSecrets:
       - name: machineuser-pull-secret-ro
     replicaCount: 1
