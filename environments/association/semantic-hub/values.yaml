@@ -1,7 +1,7 @@
 semantic-hub:
   enableKeycloak: false
   hub:
-    imagePullPolicy: Always
+    imagePullPolicy: IfNotPresent
     imagePullSecrets:
       - name: machineuser-pull-secret-ro
     replicaCount: 1
