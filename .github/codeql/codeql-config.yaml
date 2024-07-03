@@ -25,3 +25,7 @@ query-filters:
       problem.severity:
         - warning
         - recommendation
+
+paths-ignore:
+  - '**/test/**'
+  - '**/*Test.java'
