@@ -1,0 +1,8 @@
+name: "CodeQL configuration"
+query-filters:
+  - exclude:
+      id:
+        - java/spring-disabled-csrf-protection
+      problem.severity:
+        - warning
+        - recommendation
