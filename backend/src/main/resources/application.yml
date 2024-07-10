@@ -20,12 +20,6 @@
 
 server:
   port: 4242
-  ssl:
-    key-store-password: __KEYSTOREPASSWORD__
-    key-store: classpath:conf/__KEYSTOREFILENAME__.p12
-    key-store-type: PKCS12
-    key-alias: 1
-    enabled: false
   forward-headers-strategy: framework
 
 hub:
