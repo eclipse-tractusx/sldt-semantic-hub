@@ -9,7 +9,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## fixed
 - Implemented mandatory changes in licensing and legal documentation
-- updated springboot version to 3.3.1
 
 ## 0.3.2
 ### Added
