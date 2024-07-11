@@ -8,7 +8,7 @@ semantic-hub:
     containerPort: 4242
     ## Use in-memory triple store that is not persistent
     embeddedTripleStore: false
-    host: semantics.int.catena-x.net
+    host: <path:semantics/data/semantichub#hostname>
     ## If 'authentication' is set to false, no OAuth authentication is enforced
     authentication: true
     idpIssuerUri: <path:semantics/data/commons#keycloak-idp>
@@ -48,11 +48,11 @@ semantic-hub:
     imagePullSecrets:
       - name: machineuser-pull-secret-ro
     replicaCount: 1
-    containerPort: 3030
+    containerPort: <path:semantics/data/semantichub#dbport>
     queryEndpoint: query
     updateEndpoint: update
-    username: admin
-    password: admin
+    username: <path:semantics/data/semantichub#dbusername>
+    password: <path:semantics/data/semantichub#dbpassword>
     javaOptions: "-Xmx1048m -Xms1048m"
     args: ["--tdb2", "--update", "--loc", "databases/", "/ds"]
     storageClassName: azurefile
