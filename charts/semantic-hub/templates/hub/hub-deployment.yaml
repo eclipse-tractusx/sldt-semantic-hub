@@ -47,6 +47,7 @@ spec:
           securityContext:
             runAsUser: 100
             allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
           {{- if not .Values.hub.authentication }}
           args: ["--spring.profiles.active=local"]
           {{- end }}
