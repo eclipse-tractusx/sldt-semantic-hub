@@ -84,5 +84,11 @@ spec:
             failureThreshold: {{ .Values.hub.readinessProbe.failureThreshold }}
           resources:
 {{ .Values.hub.resources | toYaml | indent 12 }}
+          volumeMounts:
+            - mountPath: /tmp
+              name: empty-tmp
+      volumes:
+        - name: empty-tmp
+          emptyDir: {}
       imagePullSecrets:
 {{ .Values.hub.imagePullSecrets | toYaml | indent 8 }}
