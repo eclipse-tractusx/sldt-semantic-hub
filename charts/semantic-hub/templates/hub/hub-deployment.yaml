@@ -47,6 +47,7 @@ spec:
           securityContext:
             runAsUser: 100
             allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
           {{- if not .Values.hub.authentication }}
           args: ["--spring.profiles.active=local"]
           {{- end }}
@@ -84,5 +85,11 @@ spec:
             failureThreshold: {{ .Values.hub.readinessProbe.failureThreshold }}
           resources:
 {{ .Values.hub.resources | toYaml | indent 12 }}
+          volumeMounts:
+            - mountPath: /tmp
+              name: empty-tmp
+      volumes:
+        - name: empty-tmp
+          emptyDir: {}
       imagePullSecrets:
 {{ .Values.hub.imagePullSecrets | toYaml | indent 8 }}
