@@ -107,8 +107,7 @@ public class TripleStorePersistence implements PersistenceLayer {
 
    @Override
    public SemanticModel updateModel( String urn, SemanticModelStatus status ) {
-
-	   validateStatusParameter(status);
+	  validateStatusParameter(status);
       SemanticModel semanticModel = Optional.ofNullable( findByUrn(
             AspectModelUrn.fromUrn( urn ) ) ).orElseThrow( () -> new IllegalArgumentException(
             String.format( "Invalid URN %s",
