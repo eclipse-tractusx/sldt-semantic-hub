@@ -107,7 +107,7 @@ public class TripleStorePersistence implements PersistenceLayer {
 
    @Override
    public SemanticModel updateModel( String urn, SemanticModelStatus status ) {
-	  validateStatusParameter(status);
+      validateStatusParameter(status);
       SemanticModel semanticModel = Optional.ofNullable( findByUrn(
             AspectModelUrn.fromUrn( urn ) ) ).orElseThrow( () -> new IllegalArgumentException(
             String.format( "Invalid URN %s",
@@ -128,7 +128,7 @@ public class TripleStorePersistence implements PersistenceLayer {
 
    @Override
    public SemanticModel save( SemanticModelType type, String newModel, SemanticModelStatus status ) {
-	  validateStatusParameter(status);
+      validateStatusParameter(status);
       final Model rdfModel = sdsSdk.load( newModel.getBytes( StandardCharsets.UTF_8 ) );
       final AspectModelUrn modelUrn = sdsSdk.getAspectUrn( rdfModel );
       Optional<ModelPackage> existsByPackage = findByPackageByUrn( ModelPackageUrn.fromUrn( modelUrn ) );
