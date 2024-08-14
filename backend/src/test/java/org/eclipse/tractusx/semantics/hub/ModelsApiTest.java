@@ -112,13 +112,13 @@ public class ModelsApiTest extends AbstractModelsApiTest{
 
    @Test
    public void testSaveInvalidModelExpectSuccess() throws Exception {
-      String insertModelJson = "@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:1.0.0#> .\n @prefix bamm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:1.0.0#> .\n @prefix bamm-e: <urn:samm:org.eclipse.esmf.samm:entity:1.0.0#> .\n @prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:1.0.0#> .\n @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\n @prefix : <urn:samm:org.eclipse.tractusx:1.0.0#> .\n \n :Movement a samm:Aspect;\n samm:name \"Movement\";\n samm:preferredName \"Movement\"@en;\n samm:description \"Aspect for movement information\"@en;\n samm:propertiesX (:isMoving :speedLimitWarning :position);\n samm:operations ().\n :isMoving a samm:Property;\n samm:name \"isMoving\";\n samm:preferredName \"Moving\"@en;\n samm:description \"Flag indicating whether the asset is currently moving\"@en;\n samm:characteristic bamm-c:bool.\n :speedLimitWarning a samm:Property;\n samm:name \"speedLimitWarning\";\n samm:preferredName \"Speed Limit Warning\"@en;\n samm:description \"Indicates if the speed limit is adhered to.\"@en;\n samm:characteristic :TrafficLight.\n :position a samm:Property;\n samm:name \"position\";\n samm:preferredName \"Position\"@en;\n samm:description \"Indicates a position\"@en;\n samm:characteristic :SpatialPositionCharacteristic.\n :TrafficLight a bamm-c:Enumeration;\n samm:name \"TrafficLight\";\n samm:preferredName \"Warning Level\"@en;\n samm:description \"Represents if speed of position change is within specification (green), within tolerance (yellow), or outside specification (red).\"@en;\n samm:dataType xsd:string;\n bamm-c:values (\"green\" \"yellow\" \"red\").\n :SpatialPosition a samm:Entity;\n samm:name \"SpatialPosition\";\n samm:preferredName \"Spatial Position\"@en;\n samm:description \"Position in space, described along three axis, with the third axis optional, if all positions are in a plane.\"@en;\n samm:properties (:x :y :z).\n :x a samm:Property;\n samm:name \"x\";\n samm:preferredName \"x\"@en;\n samm:description \"x coordinate in space\"@en;\n samm:characteristic :Coordinate.\n :y a samm:Property;\n samm:name \"y\";\n samm:preferredName \"y\"@en;\n samm:description \"y coordinate in space\"@en;\n samm:characteristic :Coordinate.\n :z a samm:Property;\n samm:name \"z\";\n samm:preferredName \"z\"@en;\n samm:description \"z coordinate in space\"@en;\n samm:characteristic :Coordinate;\n samm:optional \"true\"^^xsd:boolean.\n :Coordinate a bamm-c:Measurement;\n samm:name \"Coordinate\";\n samm:preferredName \"Coordinate\"@en;\n samm:description \"Represents a coordinate along an axis in space.\"@en;\n samm:dataType xsd:float;\n bamm-c:unit unit:metre.\n :SpatialPositionCharacteristic a bamm-c:SingleEntity;\n samm:name \"SpatialPositionCharacteristic\";\n samm:preferredName \"Spatial Position Characteristic\"@en;\n samm:description \"Represents a single position in space with optional z coordinate.\"@en;\n samm:dataType :SpatialPosition.";
+      String insertModelJson = "@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:1.0.0#> .\n @prefix bamm-c: <urn:samm:org.eclipse.esmf.samm:characteristicX:1.0.0#> .\n @prefix bamm-e: <urn:samm:org.eclipse.esmf.samm:entity:1.0.0#> .\n @prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:1.0.0#> .\n @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\n @prefix : <urn:samm:org.eclipse.tractusx:1.0.0#> .\n \n :Movement a samm:Aspect;\n samm:name \"Movement\";\n samm:preferredName \"Movement\"@en;\n samm:description \"Aspect for movement information\"@en;\n samm:propertiesX (:isMoving :speedLimitWarning :position);\n samm:operations ().\n :isMoving a samm:Property;\n samm:name \"isMoving\";\n samm:preferredName \"Moving\"@en;\n samm:description \"Flag indicating whether the asset is currently moving\"@en;\n samm:characteristic bamm-c:Boolean.\n :speedLimitWarning a samm:Property;\n samm:name \"speedLimitWarning\";\n samm:preferredName \"Speed Limit Warning\"@en;\n samm:description \"Indicates if the speed limit is adhered to.\"@en;\n samm:characteristic :TrafficLight.\n :position a samm:Property;\n samm:name \"position\";\n samm:preferredName \"Position\"@en;\n samm:description \"Indicates a position\"@en;\n samm:characteristic :SpatialPositionCharacteristic.\n :TrafficLight a bamm-c:Enumeration;\n samm:name \"TrafficLight\";\n samm:preferredName \"Warning Level\"@en;\n samm:description \"Represents if speed of position change is within specification (green), within tolerance (yellow), or outside specification (red).\"@en;\n samm:dataType xsd:string;\n bamm-c:values (\"green\" \"yellow\" \"red\").\n :SpatialPosition a samm:Entity;\n samm:name \"SpatialPosition\";\n samm:preferredName \"Spatial Position\"@en;\n samm:description \"Position in space, described along three axis, with the third axis optional, if all positions are in a plane.\"@en;\n samm:properties (:x :y :z).\n :x a samm:Property;\n samm:name \"x\";\n samm:preferredName \"x\"@en;\n samm:description \"x coordinate in space\"@en;\n samm:characteristic :Coordinate.\n :y a samm:Property;\n samm:name \"y\";\n samm:preferredName \"y\"@en;\n samm:description \"y coordinate in space\"@en;\n samm:characteristic :Coordinate.\n :z a samm:Property;\n samm:name \"z\";\n samm:preferredName \"z\"@en;\n samm:description \"z coordinate in space\"@en;\n samm:characteristic :Coordinate;\n samm:optional \"true\"^^xsd:boolean.\n :Coordinate a bamm-c:Measurement;\n samm:name \"Coordinate\";\n samm:preferredName \"Coordinate\"@en;\n samm:description \"Represents a coordinate along an axis in space.\"@en;\n samm:dataType xsd:float;\n bamm-c:unit unit:metre.\n :SpatialPositionCharacteristic a bamm-c:SingleEntity;\n samm:name \"SpatialPositionCharacteristic\";\n samm:preferredName \"Spatial Position Characteristic\"@en;\n samm:description \"Represents a single position in space with optional z coordinate.\"@en;\n samm:dataType :SpatialPosition.";
 
       mvc.perform(post( insertModelJson ))
          .andDo( MockMvcResultHandlers.print() )
          .andExpect( jsonPath( "$.error.message", containsString("Validation failed" ) ) )
-            .andExpect( jsonPath( "$.error.details.validationError", containsString(
-                  "Resource urn:samm:org.eclipse.esmf.samm:characteristic:2.1.0#bool has no type" ) ) )
+            .andExpect( jsonPath( "$.error.details.ERR_NO_TYPE", containsString(
+                  "Could not determine type of bamm-c:Boolean." ) ) )
          .andExpect( status().is4xxClientError() );
    }
 
@@ -239,8 +239,8 @@ public class ModelsApiTest extends AbstractModelsApiTest{
          .andDo( MockMvcResultHandlers.print() )
          .andExpect( status().isBadRequest() )
          .andExpect( jsonPath( "$.error.message", is( "Validation failed." ) ) )
-         .andExpect( jsonPath( "$.error.details.validationError",
-               containsString( "TripleStoreResolutionStrategy: definition for urn:samm:org.eclipse.tractusx.traceability:0.1.1#PartDataCharacteristic not found" ) ) );
+         .andExpect( jsonPath( "$.error.details.ERR_PROCESSING",
+               containsString( "definition for urn:samm:org.eclipse.tractusx.traceability:0.1.1#PartDataCharacteristic not found" ) ) );
 
       // save the traceability aspect model
       String traceabilityModel = TestUtils.loadModelFromResources(
@@ -528,12 +528,12 @@ public class ModelsApiTest extends AbstractModelsApiTest{
 
    @Test
    public void testSaveInvalidModelExpectSuccessForBAMM() throws Exception {
-      String insertModelJson = "@prefix bamm: <urn:bamm:io.openmanufacturing:meta-model:1.0.0#> .\n @prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristic:1.0.0#> .\n @prefix bamm-e: <urn:bamm:io.openmanufacturing:entity:1.0.0#> .\n @prefix unit: <urn:bamm:io.openmanufacturing:unit:1.0.0#> .\n @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\n @prefix : <urn:bamm:org.eclipse.tractusx:1.0.0#> .\n \n :Movement a bamm:Aspect;\n bamm:name \"Movement\";\n bamm:preferredName \"Movement\"@en;\n bamm:description \"Aspect for movement information\"@en;\n bamm:propertiesX (:isMoving :speedLimitWarning :position);\n bamm:operations ().\n :isMoving a bamm:Property;\n bamm:name \"isMoving\";\n bamm:preferredName \"Moving\"@en;\n bamm:description \"Flag indicating whether the asset is currently moving\"@en;\n bamm:characteristic bamm-c:Bool.\n :speedLimitWarning a bamm:Property;\n bamm:name \"speedLimitWarning\";\n bamm:preferredName \"Speed Limit Warning\"@en;\n bamm:description \"Indicates if the speed limit is adhered to.\"@en;\n bamm:characteristic :TrafficLight.\n :position a bamm:Property;\n bamm:name \"position\";\n bamm:preferredName \"Position\"@en;\n bamm:description \"Indicates a position\"@en;\n bamm:characteristic :SpatialPositionCharacteristic.\n :TrafficLight a bamm-c:Enumeration;\n bamm:name \"TrafficLight\";\n bamm:preferredName \"Warning Level\"@en;\n bamm:description \"Represents if speed of position change is within specification (green), within tolerance (yellow), or outside specification (red).\"@en;\n bamm:dataType xsd:string;\n bamm-c:values (\"green\" \"yellow\" \"red\").\n :SpatialPosition a bamm:Entity;\n bamm:name \"SpatialPosition\";\n bamm:preferredName \"Spatial Position\"@en;\n bamm:description \"Position in space, described along three axis, with the third axis optional, if all positions are in a plane.\"@en;\n bamm:properties (:x :y :z).\n :x a bamm:Property;\n bamm:name \"x\";\n bamm:preferredName \"x\"@en;\n bamm:description \"x coordinate in space\"@en;\n bamm:characteristic :Coordinate.\n :y a bamm:Property;\n bamm:name \"y\";\n bamm:preferredName \"y\"@en;\n bamm:description \"y coordinate in space\"@en;\n bamm:characteristic :Coordinate.\n :z a bamm:Property;\n bamm:name \"z\";\n bamm:preferredName \"z\"@en;\n bamm:description \"z coordinate in space\"@en;\n bamm:characteristic :Coordinate;\n bamm:optional \"true\"^^xsd:boolean.\n :Coordinate a bamm-c:Measurement;\n bamm:name \"Coordinate\";\n bamm:preferredName \"Coordinate\"@en;\n bamm:description \"Represents a coordinate along an axis in space.\"@en;\n bamm:dataType xsd:float;\n bamm-c:unit unit:metre.\n :SpatialPositionCharacteristic a bamm-c:SingleEntity;\n bamm:name \"SpatialPositionCharacteristic\";\n bamm:preferredName \"Spatial Position Characteristic\"@en;\n bamm:description \"Represents a single position in space with optional z coordinate.\"@en;\n bamm:dataType :SpatialPosition.";
+      String insertModelJson = "@prefix bamm: <urn:bamm:io.openmanufacturing:meta-model:1.0.0#> .\n @prefix bamm-c: <urn:bamm:io.openmanufacturing:characteristicX:1.0.0#> .\n @prefix bamm-e: <urn:bamm:io.openmanufacturing:entity:1.0.0#> .\n @prefix unit: <urn:bamm:io.openmanufacturing:unit:1.0.0#> .\n @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\n @prefix : <urn:bamm:org.eclipse.tractusx:1.0.0#> .\n \n :Movement a bamm:Aspect;\n bamm:name \"Movement\";\n bamm:preferredName \"Movement\"@en;\n bamm:description \"Aspect for movement information\"@en;\n bamm:propertiesX (:isMoving :speedLimitWarning :position);\n bamm:operations ().\n :isMoving a bamm:Property;\n bamm:name \"isMoving\";\n bamm:preferredName \"Moving\"@en;\n bamm:description \"Flag indicating whether the asset is currently moving\"@en;\n bamm:characteristic bamm-c:Boolean.\n :speedLimitWarning a bamm:Property;\n bamm:name \"speedLimitWarning\";\n bamm:preferredName \"Speed Limit Warning\"@en;\n bamm:description \"Indicates if the speed limit is adhered to.\"@en;\n bamm:characteristic :TrafficLight.\n :position a bamm:Property;\n bamm:name \"position\";\n bamm:preferredName \"Position\"@en;\n bamm:description \"Indicates a position\"@en;\n bamm:characteristic :SpatialPositionCharacteristic.\n :TrafficLight a bamm-c:Enumeration;\n bamm:name \"TrafficLight\";\n bamm:preferredName \"Warning Level\"@en;\n bamm:description \"Represents if speed of position change is within specification (green), within tolerance (yellow), or outside specification (red).\"@en;\n bamm:dataType xsd:string;\n bamm-c:values (\"green\" \"yellow\" \"red\").\n :SpatialPosition a bamm:Entity;\n bamm:name \"SpatialPosition\";\n bamm:preferredName \"Spatial Position\"@en;\n bamm:description \"Position in space, described along three axis, with the third axis optional, if all positions are in a plane.\"@en;\n bamm:properties (:x :y :z).\n :x a bamm:Property;\n bamm:name \"x\";\n bamm:preferredName \"x\"@en;\n bamm:description \"x coordinate in space\"@en;\n bamm:characteristic :Coordinate.\n :y a bamm:Property;\n bamm:name \"y\";\n bamm:preferredName \"y\"@en;\n bamm:description \"y coordinate in space\"@en;\n bamm:characteristic :Coordinate.\n :z a bamm:Property;\n bamm:name \"z\";\n bamm:preferredName \"z\"@en;\n bamm:description \"z coordinate in space\"@en;\n bamm:characteristic :Coordinate;\n bamm:optional \"true\"^^xsd:boolean.\n :Coordinate a bamm-c:Measurement;\n bamm:name \"Coordinate\";\n bamm:preferredName \"Coordinate\"@en;\n bamm:description \"Represents a coordinate along an axis in space.\"@en;\n bamm:dataType xsd:float;\n bamm-c:unit unit:metre.\n :SpatialPositionCharacteristic a bamm-c:SingleEntity;\n bamm:name \"SpatialPositionCharacteristic\";\n bamm:preferredName \"Spatial Position Characteristic\"@en;\n bamm:description \"Represents a single position in space with optional z coordinate.\"@en;\n bamm:dataType :SpatialPosition.";
 
       mvc.perform(post( insertModelJson ))
             .andDo( MockMvcResultHandlers.print() )
-				.andExpect( jsonPath( "$.error.details.validationError", containsString("Resource urn:samm:org.eclipse.esmf.samm:characteristic:2.1.0#Bool has no type" ) ) )
-				.andExpect( status().is4xxClientError() );
+            .andExpect( jsonPath( "$.error.details.ERR_NO_TYPE", containsString("Could not determine type of urn:samm:io.openmanufacturing:characteristicX:1.0.0#Boolean" ) ) )
+            .andExpect( status().is4xxClientError() );
    }
 
    @Test
@@ -648,10 +648,9 @@ public class ModelsApiTest extends AbstractModelsApiTest{
             .andDo( MockMvcResultHandlers.print() )
             .andExpect( status().isBadRequest() )
             .andExpect( jsonPath( "$.error.message", is( "Validation failed." ) ) )
-				    .andExpect( jsonPath( "$.error.details.validationError",
-					containsString( "TripleStoreResolutionStrategy: definition for urn:bamm:org.eclipse.tractusx.traceability:0.1.1#PartDataCharacteristic not found" ) ) );
-
-		 // save the traceability aspect model
+            .andExpect( jsonPath( "$.error.details.ERR_PROCESSING",
+                  containsString( "urn:bamm:org.eclipse.tractusx.traceability:0.1.1#PartDataCharacteristic not found" ) ) );
+      // save the traceability aspect model
       String traceabilityModel = TestUtils.loadModelFromResources(
             TestUtils.TRACEABILITY_MODEL_PATH_FOR_BAMM );
       mvc.perform( postBAMM( traceabilityModel, "DRAFT" ) )
@@ -968,9 +967,7 @@ public class ModelsApiTest extends AbstractModelsApiTest{
 
    }
 
-	 //issue its fix into latest jena version 4.9.0 or above
-
-/*   @Test
+   @Test
    public void testInvalidDependentModelBAMMModel() throws Exception {
 
       //Given
@@ -1011,7 +1008,7 @@ public class ModelsApiTest extends AbstractModelsApiTest{
             .andExpect( status().isBadRequest() )
             .andExpect( jsonPath( "$.error.message", containsString( "Bad IRI" ) ) );
    }
-*/
+
    private static String toMovementUrn(String urn){
       return urn + "Movement";
    }
@@ -1024,7 +1021,7 @@ public class ModelsApiTest extends AbstractModelsApiTest{
             .andExpect( status().isBadRequest() )
             .andExpect( jsonPath( "$.error.message", is(
                   "The URN must consist of at least 5 sections adhering to the following schema: "
-                        + "urn:samm:<organisation>:<optional>:<version>#<element-name>." ) ) );
+                        + "urn:samm:<organisation>:<optional>:<version>:<model-name>." ) ) );
    }
 
    @Test
@@ -1073,71 +1070,25 @@ public class ModelsApiTest extends AbstractModelsApiTest{
             .andExpect( jsonPath( "$.error.message", containsString( "Invalid URN urn" ) ) );
    }
 
-    @Test
-    public void testDependentModelSAMMWithValidationFailed() throws Exception {
-        String ADDRESS_ASPECT_FILE = "AddressAspect.ttl";
-        String BUSINESS_PARTNER_NUMBER_FILE = "BusinessPartnerNumber-1.0.0.ttl";
-        String CONTACT_INFORMATION_FILE = "ContactInformation-3.0.0.ttl";
-        String UUID_FILE ="Uuid-1.0.0.ttl";
-        String DIGITAL_PRODUCT_PASSPORT_FILE = "DigitalProductPassport-3.0.0.ttl";
+	@Test
+	public void testUpdateModelWithNullStatusExpectBadRequest() throws Exception {
+		String urnPrefix = "urn:samm:org.eclipse.tractusx.valid.save:2.0.0#";
+		mvc.perform(
+				put( TestUtils.createValidModelRequest(urnPrefix),null)
+			)
+			.andDo( MockMvcResultHandlers.print() )
+			.andExpect( status().isBadRequest() )
+			.andExpect( jsonPath( "$.error.message", containsString( "SemanticModelStatus cannot be null" ) ) );
+	}
 
-        //Given
-        mvc.perform(post ( TestUtils.getTTLFile( ADDRESS_ASPECT_FILE ), "DRAFT" ) )
-                .andDo( MockMvcResultHandlers.print() )
-                .andExpect( status().isOk() );
-
-        mvc.perform( post( TestUtils.getTTLFile( BUSINESS_PARTNER_NUMBER_FILE ), "DRAFT" ) )
-                .andDo( MockMvcResultHandlers.print() )
-                .andExpect( status().isOk() );
-
-        mvc.perform( post( TestUtils.getTTLFile(CONTACT_INFORMATION_FILE), "DRAFT" ) )
-                .andDo( MockMvcResultHandlers.print() )
-                .andExpect( status().isOk() );
-
-
-        mvc.perform( post( TestUtils.getTTLFile(UUID_FILE), "DRAFT" ) )
-                .andDo( MockMvcResultHandlers.print() )
-                .andExpect( status().isOk() );
-        //When
-        mvc.perform( post( TestUtils.getTTLFile( DIGITAL_PRODUCT_PASSPORT_FILE ), "DRAFT" ) )
-                .andDo( MockMvcResultHandlers.print() )
-                .andExpect( jsonPath( "$.error.message", containsString("Validation failed" ) ) )
-                .andExpect( jsonPath( "$.error.details.validationError", containsString("TripleStoreResolutionStrategy: definition for urn:samm:io.catenax.shared.quantity:1.0.0#VolumeCharacteristic not found" ) ) )
-                .andExpect( status().is4xxClientError() );
-    }
-
-    @Test
-    public void testDependentModelSAMMWithSuccess() throws Exception {
-        String ADDRESS_ASPECT_FILE = "AddressAspect.ttl";
-        String BUSINESS_PARTNER_NUMBER_FILE = "BusinessPartnerNumber-1.0.0.ttl";
-        String CONTACT_INFORMATION_FILE = "ContactInformation-3.0.0.ttl";
-        String QUANTITY_FILE="Quantity-1.0.0.ttl";
-        String UUID_FILE ="Uuid-1.0.0.ttl";
-        String DIGITAL_PRODUCT_PASSPORT_FILE = "DigitalProductPassport-3.0.0.ttl";
-
-        //Given
-        mvc.perform(post ( TestUtils.getTTLFile( ADDRESS_ASPECT_FILE ), "DRAFT" ) )
-                .andDo( MockMvcResultHandlers.print() )
-                .andExpect( status().isOk() );
-
-        mvc.perform( post( TestUtils.getTTLFile( BUSINESS_PARTNER_NUMBER_FILE ), "DRAFT" ) )
-                .andDo( MockMvcResultHandlers.print() )
-                .andExpect( status().isOk() );
-
-        mvc.perform( post( TestUtils.getTTLFile(CONTACT_INFORMATION_FILE), "DRAFT" ) )
-                .andDo( MockMvcResultHandlers.print() )
-                .andExpect( status().isOk() );
-
-        mvc.perform( post( TestUtils.getTTLFile(QUANTITY_FILE), "DRAFT" ) )
-                .andDo( MockMvcResultHandlers.print() )
-                .andExpect( status().isOk() );
-
-        mvc.perform( post( TestUtils.getTTLFile(UUID_FILE), "DRAFT" ) )
-                .andDo( MockMvcResultHandlers.print() )
-                .andExpect( status().isOk() );
-        //When
-        mvc.perform( post( TestUtils.getTTLFile( DIGITAL_PRODUCT_PASSPORT_FILE ), "DRAFT" ) )
-                .andDo( MockMvcResultHandlers.print() )
-                .andExpect( status().isOk() );
-    }
+	@Test
+	public void testSaveModelWithNullStatusExpectBadRequest() throws Exception {
+		String urnPrefix = "urn:samm:org.eclipse.tractusx.valid.save:2.0.0#";
+		mvc.perform(
+				post( TestUtils.createValidModelRequest(urnPrefix),null)
+			)
+			.andDo( MockMvcResultHandlers.print() )
+			.andExpect( status().isBadRequest() )
+			.andExpect( jsonPath( "$.error.message", containsString( "SemanticModelStatus cannot be null" ) ) );
+	}
 }
