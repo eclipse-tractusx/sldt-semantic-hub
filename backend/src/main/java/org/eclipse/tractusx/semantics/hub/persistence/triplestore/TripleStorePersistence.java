@@ -379,7 +379,8 @@ public class TripleStorePersistence implements PersistenceLayer {
          return SemanticModelType.SAMM;
       }
    }
-	private void validateStatusParameter(SemanticModelStatus status) {
+
+   private void validateStatusParameter(SemanticModelStatus status) {
 		if (ObjectUtils.allNull(status)) {
 			throw new IllegalArgumentException(
 				"SemanticModelStatus cannot be null. Valid values are: DRAFT, RELEASED, STANDARDIZED, DEPRECATED.");
