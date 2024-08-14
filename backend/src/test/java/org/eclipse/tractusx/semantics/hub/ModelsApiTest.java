@@ -1069,7 +1069,6 @@ public class ModelsApiTest extends AbstractModelsApiTest{
             .andExpect( status().isBadRequest() )
             .andExpect( jsonPath( "$.error.message", containsString( "Invalid URN urn" ) ) );
    }
-
 	@Test
 	public void testUpdateModelWithNullStatusExpectBadRequest() throws Exception {
 		String urnPrefix = "urn:samm:org.eclipse.tractusx.valid.save:2.0.0#";
