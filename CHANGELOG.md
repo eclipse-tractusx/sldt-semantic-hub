@@ -4,12 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 0.5.0-RC2
+## 0.5.0-RC3
 ### Added
 ### fixed
 - Update spring framework to version 6.1.6
 - Update commons-io to version 2.17.0
 - Update lombock to version 1.18.34
+- Update velocity-engine-core to version 2.4
 - exlcude com.google.protobuf lib because of CVE https://avd.aquasec.com/nvd/2024/cve-2024-7254
 
 ## 0.4.0
