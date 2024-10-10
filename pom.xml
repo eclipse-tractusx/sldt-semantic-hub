@@ -31,7 +31,7 @@
 
 	<groupId>org.eclipse.tractusx</groupId>
 	<artifactId>semantic-hub</artifactId>
-	<version>0.5.0-RC1</version>
+	<version>0.5.0-RC2</version>
 	<name>Tractus-X Semantic Hub</name>
 	<description>Root Module of the Tractus-X Semantic Hub</description>
 	<packaging>pom</packaging>
