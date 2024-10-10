@@ -156,11 +156,6 @@
 				<version>${vavr.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>commons-io</groupId>
-				<artifactId>commons-io</artifactId>
-				<version>${commons-io.version}</version>
-			</dependency>
-			<dependency>
 				<groupId>com.google.code.findbugs</groupId>
 				<artifactId>jsr305</artifactId>
 				<version>${google.findbugs.version}</version>
@@ -341,6 +336,18 @@
 				<groupId>org.eclipse.esmf</groupId>
 				<artifactId>esmf-aspect-model-aas-generator</artifactId>
 				<version>${samm.sdk.version}</version>
+				<exclusions>
+					<!-- excluded because of CVE https://avd.aquasec.com/nvd/2024/cve-2024-47554/-->
+					<exclusion>
+						<groupId>commons-io</groupId>
+						<artifactId>commons-io</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>commons-io</groupId>
+				<artifactId>commons-io</artifactId>
+				<version>${commons-io.version}</version>
 			</dependency>
          <dependency>
             <groupId>org.apache.commons</groupId>
@@ -356,13 +363,20 @@
 				<groupId>org.apache.jena</groupId>
 				<artifactId>jena-arq</artifactId>
 				<version>${jena.version}</version>
+				<exclusions>
+					<!-- Exclusion of commons-fileupload is required because of CVE https://avd.aquasec.com/nvd/2024/cve-2024-7254-->
+					<exclusion>
+						<groupId>com.google.protobuf</groupId>
+						<artifactId>protobuf-java</artifactId>
+					</exclusion>
+				</exclusions>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.jena</groupId>
 				<artifactId>jena-fuseki-main</artifactId>
 				<version>${jena.version}</version>
 				<exclusions>
-					<!-- Exclusion of commons-fileupload is required because of CV https://avd.aquasec.com/nvd/2023/cve-2023-24998-->
+					<!-- Exclusion of commons-fileupload is required because of CVE https://avd.aquasec.com/nvd/2023/cve-2023-24998-->
 					<exclusion>
 						<groupId>commons-fileupload</groupId>
 						<artifactId>commons-fileupload</artifactId>
