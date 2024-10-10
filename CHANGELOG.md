@@ -4,35 +4,38 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.5.0-RC1
+### Added
+### fixed
+- Update spring framework to version 6.1.6
+- Update commons-io to version 2.17.0
+- Update lombock to version 1.18.34
+
 ## 0.4.0
 ### Added
-
-## fixed
+### fixed
 - Implemented mandatory changes in licensing and legal documentation
 
 ## 0.3.2
 ### Added
 - Update Springboot to version 3.2.4
-## fixed
+### fixed
 - security fix spring-web:6.1.5
 - security fix commons-compress:1.22
-
 
 ## 0.3.1
 ### Added
 - Update Springboot to version 3.2.3
 
-## fixed
+### fixed
 
 ## 0.3.0
 ### Added
-
 ### Fixed
 - Generate diagrams with SVG Format
 
 ## 0.2.16
 ### Added
-
 ### Fixed
 - Spring Boot version updated to 3.1.6 to fix CVE-2023-34053
 - update Logback version to fix CVE-2023-6378
@@ -43,34 +46,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added helm upgrade feature into helm test
 - Removed the docker apk upgrade and update commands.
 - Upgrade dependency to ESMF SDK 2.4.2
-
 ### Fixed
-=======
 - Handled UrnSyntaxException.
 - Fixed the jena-fuseki-docker version to 4.7.0 for the test case.
 
 ## 0.2.14
 ### Added
-
 ### Fixed
 - Fixed CVE-2023-36478 | CWE-190 and CVE-2023-40167| CWE-130 Third-Party Components vulnerability.
 
 ## 0.2.13
 ### Added
 - Added summary for the open api paths
-
 ### Fixed
 - Fixed CVE-2023-36478 | CWE-190 and CVE-2023-40167| CWE-130 Third-Party Components vulnerability.
 
 ## 0.2.12
 ### Added
-
 ### Fixed
 - Fixed CVE-2022-44729| CWE-918 Third-Party Components vulnerability.
 
 ## 0.2.11-M1
 ### Added
-
 ### Fixed
 - Resource management adjusted for Kubernetes
 - Updated README.md file
