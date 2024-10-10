@@ -28,8 +28,6 @@ on:
       - opened
       - reopened
       - synchronize
-    paths:
-      - backend/**
 
 env:
   FUSEKI_VERSION: 4.7.0
