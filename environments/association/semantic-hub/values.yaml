@@ -1,6 +1,8 @@
 semantic-hub:
   enableKeycloak: false
   hub:
+    image:
+      version: 0.5.0-RC3
     imagePullPolicy: IfNotPresent
     imagePullSecrets:
       - name: machineuser-pull-secret-ro
