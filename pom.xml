@@ -114,6 +114,8 @@
 
 		<!-- build -->
 		<maven.compiler.version>3.8.1</maven.compiler.version>
+		<license-tool-plugin-version>1.1.0</license-tool-plugin-version>
+
 	</properties>
 
 	<modules>
@@ -438,9 +440,40 @@
 		</dependencies>
 	</dependencyManagement>
 
+	<!-- Dash Licence Plugin Repo -->
+	<pluginRepositories>
+		<pluginRepository>
+			<id>dash-licenses</id>
+			<url>https://repo.eclipse.org/content/repositories/dash-licenses/</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</pluginRepository>
+	</pluginRepositories>
+
 	<build>
 		<pluginManagement>
 			<plugins>
+				<plugin>
+					<groupId>org.eclipse.dash</groupId>
+					<artifactId>license-tool-plugin</artifactId>
+					<version>${license-tool-plugin-version}</version>
+					<configuration>
+						<projectId>automotive.tractusx</projectId>
+						<!-- name of dependencies file -->
+						<summary>DEPENDENCIES</summary>
+						<!-- include test dependencies -->
+						<includeScope>test</includeScope>
+					</configuration>
+					<executions>
+						<execution>
+							<id>license-check</id>
+							<goals>
+								<goal>license-check</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
