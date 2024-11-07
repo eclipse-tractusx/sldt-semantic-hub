@@ -7,7 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 0.5.1
 ### Added
 ## fixed
-- Update Spring Boot to version 3.3.5
+- Update Spring Boot to version 3.2.5
+- Update Spring security to version 6.3.4
 
 ## 0.5.0
 ### Added
