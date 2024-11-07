@@ -81,7 +81,7 @@ maven/mavencentral/org.apache.jena/jena-cmds/4.7.0, Apache-2.0, approved, #8142
 maven/mavencentral/org.apache.jena/jena-core/4.7.0, Apache-2.0 AND (Apache-2.0 AND BSD-3-Clause), approved, #8150
 maven/mavencentral/org.apache.jena/jena-dboe-base/4.7.0, Apache-2.0, approved, #8144
 maven/mavencentral/org.apache.jena/jena-dboe-index/4.7.0, Apache-2.0, approved, #8136
-maven/mavencentral/org.apache.jena/jena-dboe-storage/4.7.0, Apache-2.0, restricted, clearlydefined
+maven/mavencentral/org.apache.jena/jena-dboe-storage/4.7.0, Apache-2.0, approved, #17111
 maven/mavencentral/org.apache.jena/jena-dboe-trans-data/4.7.0, Apache-2.0, approved, #8151
 maven/mavencentral/org.apache.jena/jena-dboe-transaction/4.7.0, Apache-2.0, approved, #8138
 maven/mavencentral/org.apache.jena/jena-fuseki-access/4.7.0, Apache-2.0, approved, #8161
