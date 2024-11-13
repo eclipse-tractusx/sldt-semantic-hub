@@ -65,7 +65,7 @@ CONSTRUCT {
 FILTER ( $param == ?o )  // Custom filter can be added here.
 ?s ?p ?o .
 }
-```
+
 
 ### NOTICE
 
