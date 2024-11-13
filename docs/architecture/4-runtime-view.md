@@ -47,6 +47,8 @@ sequenceDiagram
 Example queries to resolve an aspect model with all references:
 Construct Query
 ```
+
+```
 @prefix ns: <urn:bamm:org.idtwin:1.0.0#DocumentationSimple>
 
 CONSTRUCT {
@@ -65,7 +67,7 @@ CONSTRUCT {
 FILTER ( $param == ?o )  // Custom filter can be added here.
 ?s ?p ?o .
 }
-
+```
 
 ### NOTICE
 
