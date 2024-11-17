@@ -29,7 +29,7 @@ sequenceDiagram
 |  External reference check | It will be checked if all exernal references are available in the TripleStore. The BAMM SDK does provide a mechanisim where the resolving against the TripleStore can be integrated. |
 
 
-## Download of the documentation of an Aspect Model
+### Download of the documentation of an Aspect Model
 ```mermaid
 sequenceDiagram
     actor ModelAdmin as Model Admin

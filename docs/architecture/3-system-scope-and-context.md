@@ -3,27 +3,33 @@
 ### Business Context
 
 ```mermaid
-%%{init: {"flowchart": {"curve": "linear"} }}%%
-flowchart LR
-    DC(Data Consumer)
-    DP(Data Provider)
-    K(Keycloak)
-
-    subgraph Semantic Hub
-    SHB(Semantic Hub Backend)
-    SH[(Sematic Hub postgres)]
-    end
-    
-    SHB <-->|Find submodels / metadata| DC
-    SHB <-->|Submodel creation \n provide metadata| DP
-
-    SHB <--> SH
-
-    K -->|Public key for token validation| SHB
-
-    DC <-->|Token request| K
-    DP <-->|Token request| K
+graph LR
+    Keycloak -- "administrates the authorization token" <--> Semantic_Hub[Semantic Hub]
+    Semantic_Hub -- "view models with user interface" --> Portal[Portal]
+    Use_case[Github Models Repository] -- "Uploads the Aspect model" --> Semantic_Hub
 ```
+
+| Neighbor                 | Description                                                         | Example                                                  |
+|--------------------------|---------------------------------------------------------------------|----------------------------------------------------------|
+| Github Models Repository | Uploads aspect model on Semantic hub with some urn                  | A provider/use case uploads model with urn model-1.0.    |
+| Semantic Hub             | Provides the endpoints to view, add, update or delete aspect models |                                                          |
+| Keycloak                 | Keycloak is used for token validation                               |                                                          |
+| Portal                   | User interface used to view aspect models                           |
+
+### Technical Context
+```mermaid
+graph LR
+    Keycloak -- "administrates the authorization token" <--> Semantic_Hub[Semantic Hub]
+    Semantic_Hub -- "view models via GET https: /models/{urn}" --> Portal[Portal]
+    Use_case[Github Models Repository] -- "Uploads the Aspect model via POST https: /models" --> Semantic_Hub
+```
+
+| Neighbor                 | Description                                                              |
+|--------------------------|--------------------------------------------------------------------------|
+| Github Models Repository | Uploads or modify models in Semantic Hub                                 |
+| Portal                   | Views the Aspect Models through user interface                           |
+| Keycloak                 | Generates token for users and provides id management of user and service |
+
 
 ### NOTICE
 

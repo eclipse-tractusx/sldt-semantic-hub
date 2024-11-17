@@ -4,7 +4,7 @@
 |----------|------------------------------------------------------------------------------------------------------------|
 | Keycloak | Keycloack is an open-source Identity Management and Access management solution that allows Single Sign-On. |
 | Realm    | Manages a set of users, credentials, roles. Authenticates the users it controls.                           |
-| SAMM     | Semantic Aspect Meta Model                         |
+| SAMM     | Semantic Aspect Meta Model                                                                                 |
 ### NOTICE
 
 This work is licensed under the [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0).
