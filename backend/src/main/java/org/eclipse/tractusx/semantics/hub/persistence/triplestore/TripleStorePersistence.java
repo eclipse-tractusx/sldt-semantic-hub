@@ -30,6 +30,7 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.jena.arq.querybuilder.UpdateBuilder;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QuerySolution;
@@ -106,7 +107,7 @@ public class TripleStorePersistence implements PersistenceLayer {
 
    @Override
    public SemanticModel updateModel( String urn, SemanticModelStatus status ) {
-
+      validateStatusParameter(status);
       SemanticModel semanticModel = Optional.ofNullable( findByUrn(
             AspectModelUrn.fromUrn( urn ) ) ).orElseThrow( () -> new IllegalArgumentException(
             String.format( "Invalid URN %s",
@@ -127,6 +128,7 @@ public class TripleStorePersistence implements PersistenceLayer {
 
    @Override
    public SemanticModel save( SemanticModelType type, String newModel, SemanticModelStatus status ) {
+      validateStatusParameter(status);
       final Model rdfModel = sdsSdk.load( newModel.getBytes( StandardCharsets.UTF_8 ) );
       final AspectModelUrn modelUrn = sdsSdk.getAspectUrn( rdfModel );
       Optional<ModelPackage> existsByPackage = findByPackageByUrn( ModelPackageUrn.fromUrn( modelUrn ) );
@@ -374,6 +376,11 @@ public class TripleStorePersistence implements PersistenceLayer {
          return SemanticModelType.BAMM;
       }else{
          return SemanticModelType.SAMM;
+      }
+   }
+   private void validateStatusParameter(SemanticModelStatus status) {
+      if (ObjectUtils.allNull(status)) {
+	throw new IllegalArgumentException("SemanticModelStatus cannot be null. Valid values are: DRAFT, RELEASED, STANDARDIZED, DEPRECATED.");
       }
    }
 }
