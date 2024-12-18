@@ -134,9 +134,7 @@ public class TripleStorePersistence implements PersistenceLayer {
       final AspectModelUrn modelUrn = sdsSdk.getAspectUrn( rdfModel );
       Optional<ModelPackage> existsByPackage = findByPackageByUrn( ModelPackageUrn.fromUrn( modelUrn ) );
 
-      if ( existsByPackage.isPresent() ) {
-         validateStatus( status, rdfModel, modelUrn, existsByPackage.get().getStatus() );
-      }
+		 existsByPackage.ifPresent(modelPackage -> validateStatus(status, rdfModel, modelUrn, modelPackage.getStatus()));
 
       sdsSdk.validate( rdfModel, this::findContainingModelByUrn, type );
 

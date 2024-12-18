@@ -21,35 +21,25 @@ package org.eclipse.tractusx.semantics.hub.persistence.triplestore;
 
 import static java.util.Spliterator.ORDERED;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Spliterators;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
 import org.apache.jena.vocabulary.RDF;
-import org.eclipse.esmf.aspectmodel.MissingMetaModelVersionException;
-import org.eclipse.esmf.aspectmodel.MultipleMetaModelVersionsException;
-import org.eclipse.esmf.aspectmodel.UnsupportedVersionException;
-import org.eclipse.esmf.aspectmodel.VersionNumber;
-import org.eclipse.esmf.aspectmodel.resolver.AspectMetaModelResourceResolver;
 import org.eclipse.esmf.aspectmodel.resolver.AspectModelResolver;
 import org.eclipse.esmf.aspectmodel.resolver.ResolutionStrategy;
-import org.eclipse.esmf.aspectmodel.resolver.services.SammAspectMetaModelResourceResolver;
 import org.eclipse.esmf.aspectmodel.resolver.services.VersionedModel;
 import org.eclipse.esmf.aspectmodel.shacl.violation.Violation;
 import org.eclipse.esmf.aspectmodel.urn.AspectModelUrn;
-import org.eclipse.esmf.aspectmodel.urn.ElementType;
 import org.eclipse.esmf.aspectmodel.validation.services.AspectModelValidator;
 import org.eclipse.tractusx.semantics.hub.InvalidAspectModelException;
 import org.eclipse.tractusx.semantics.hub.model.SemanticModelType;
@@ -58,17 +48,9 @@ import io.vavr.control.Try;
 
 public class SAMMSdk {
 
-   private static final String MESSAGE_MISSING_METAMODEL_VERSION = "Unable to parse metamodel version";
-   private static final String MESSAGE_MULTIPLE_METAMODEL_VERSIONS = "Multiple metamodel versions detected, unable to parse";
-   private static final String MESSAGE_SAMM_VERSION_NOT_SUPPORTED = "The used meta model version is not supported";
-
-   private final AspectMetaModelResourceResolver aspectMetaModelResourceResolver;
-   private final AspectModelResolver aspectModelResolver;
    private final AspectModelValidator aspectModelValidator;
 
    public SAMMSdk() {
-      aspectMetaModelResourceResolver = new SammAspectMetaModelResourceResolver();
-      aspectModelResolver = new AspectModelResolver();
       aspectModelValidator = new AspectModelValidator();
    }
 
@@ -104,27 +86,9 @@ public class SAMMSdk {
             .orElseThrow( () -> new InvalidAspectModelException( "Unable to parse Aspect Model URN" ) );
    }
 
-   public VersionNumber getKnownVersion( final Model rawModel ) {
-      return aspectMetaModelResourceResolver
-            .getMetaModelVersion( rawModel )
-            .onFailure( MissingMetaModelVersionException.class,
-                  e -> {
-                     throw new InvalidAspectModelException( MESSAGE_MISSING_METAMODEL_VERSION );
-                  } )
-            .onFailure( MultipleMetaModelVersionsException.class,
-                  e -> {
-                     throw new InvalidAspectModelException( MESSAGE_MULTIPLE_METAMODEL_VERSIONS );
-                  } )
-            .onFailure( UnsupportedVersionException.class,
-                  e -> {
-                     throw new InvalidAspectModelException( MESSAGE_SAMM_VERSION_NOT_SUPPORTED );
-                  } ).get();
-   }
-
    public static class TripleStoreResolutionStrategy implements ResolutionStrategy {
 
       private final Function<String, Model> tripleStoreRequester;
-      private final List<String> alreadyLoadedNamespaces = new ArrayList<>();
       private final SemanticModelType type;
 
       public TripleStoreResolutionStrategy( final Function<String, Model> tripleStoreRequester, SemanticModelType type ) {
@@ -134,16 +98,8 @@ public class SAMMSdk {
 
       @Override
       public Try<Model> apply( final AspectModelUrn aspectModelUrn ) {
-         final String namespace = checkAndReplaceToBammPrefix(aspectModelUrn.getNamespace());
          final Resource resource = ResourceFactory.createResource( checkAndReplaceToBammPrefix(aspectModelUrn.getUrn().toASCIIString()));
          final Model model = tripleStoreRequester.apply( checkAndReplaceToBammPrefix(aspectModelUrn.getUrn().toString()));
-
-         if(!isBamm()){
-            if ( alreadyLoadedNamespaces.contains( namespace ) ) {
-               return Try.success( ModelFactory.createDefaultModel() );
-            }
-            alreadyLoadedNamespaces.add( namespace );
-         }
 
          if ( model == null ) {
             return Try.failure( new ResourceDefinitionNotFoundException( getClass().getSimpleName(), resource ) );
@@ -154,29 +110,11 @@ public class SAMMSdk {
       }
 
       private String checkAndReplaceToBammPrefix(String value){
-         return !isBamm() ? value : value.replace( "samm", "bamm" )
-               .replace(  "org.eclipse.esmf.samm","io.openmanufacturing" );
+         return isBamm() ? value.replace( "samm", "bamm" ) : value ;
       }
 
       private boolean isBamm(){
          return type.equals( SemanticModelType.BAMM );
-      }
-   }
-
-   private static class SelfResolutionStrategy implements ResolutionStrategy {
-
-      private final Model model;
-
-      public SelfResolutionStrategy( final Model model ) {
-         this.model = model;
-      }
-
-      @Override
-      public Try<Model> apply( final AspectModelUrn aspectModelUrn ) {
-         final Resource resource = ResourceFactory.createResource( aspectModelUrn.getUrn().toString() );
-         return model.contains( resource, RDF.type, (RDFNode) null ) ?
-               Try.success( model ) :
-               Try.failure( new ResourceDefinitionNotFoundException( getClass().getSimpleName(), resource ) );
       }
    }
 }
