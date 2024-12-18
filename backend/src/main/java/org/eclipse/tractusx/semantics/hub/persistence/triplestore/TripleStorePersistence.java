@@ -41,7 +41,6 @@ import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.rdfconnection.RDFConnection;
 import org.apache.jena.rdfconnection.RDFConnectionRemoteBuilder;
 import org.apache.jena.update.UpdateRequest;
-import org.eclipse.esmf.aspectmodel.resolver.AspectModelResolver;
 import org.eclipse.esmf.aspectmodel.urn.AspectModelUrn;
 import org.eclipse.esmf.aspectmodel.urn.UrnSyntaxException;
 import org.eclipse.tractusx.semantics.hub.AspectModelNotFoundException;
@@ -136,7 +135,7 @@ public class TripleStorePersistence implements PersistenceLayer {
 
 		 existsByPackage.ifPresent(modelPackage -> validateStatus(status, rdfModel, modelUrn, modelPackage.getStatus()));
 
-      sdsSdk.validate( rdfModel, this::findContainingModelByUrn, type );
+      sdsSdk.validate( newModel, this::findContainingModelByUrn, type );
 
       Model rdfModelOriginal =  sdsSdk.load( newModel.getBytes( StandardCharsets.UTF_8 ) );
 
@@ -249,23 +248,28 @@ public class TripleStorePersistence implements PersistenceLayer {
    }
 
    private boolean hasReferenceToDraftPackage( AspectModelUrn modelUrn, Model model ) {
-      Pattern pattern = Pattern.compile( SparqlQueries.ALL_SAMM_ASPECT_URN_PREFIX );
+		 Pattern pattern = Pattern.compile(SparqlQueries.ALL_SAMM_ASPECT_URN_PREFIX);
+		 List<String> urns = model.getNsPrefixMap().values().stream()
+			 .filter(value -> value.contains(AspectModelUrn.VALID_PROTOCOL))
+			 .toList();
 
-      List<String> urns = AspectModelResolver.getAllUrnsInModel( model ).stream().filter( urn -> getAspectModelUrn( urn ).isSuccess() )
-            .map( urn -> getAspectModelUrn( urn ).get().getUrnPrefix() )
-            .distinct()
-            .collect( Collectors.toList() );
 
-      for ( var entry : urns ) {
-         Matcher matcher = pattern.matcher( entry );
-         if ( !matcher.find() && !modelUrn.getUrnPrefix().equals( entry ) ) {
-            if ( findByPackageByUrn( ModelPackageUrn.fromUrn( entry ) ).get().getStatus().equals( ModelPackageStatus.DRAFT ) ) {
-               return false;
-            }
-         }
-      }
+		 for (String entry : urns) {
+			 Matcher matcher = pattern.matcher(entry);
 
-      return true;
+			 if (matcher.find() || modelUrn.getUrnPrefix().equals(entry)) {
+				 continue;
+			 }
+
+			 var packageStatus = findByPackageByUrn(ModelPackageUrn.fromUrn(entry))
+				 .map(ModelPackage::getStatus)
+				 .orElse(null);
+
+			 if (ModelPackageStatus.DRAFT.equals(packageStatus)) {
+				 return false;
+			 }
+		 }
+		 return true;
    }
 
    private Integer getTotalItemsCount( @Nullable String namespaceFilter,

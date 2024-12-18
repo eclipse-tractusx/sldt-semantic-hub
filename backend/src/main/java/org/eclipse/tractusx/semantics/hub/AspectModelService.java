@@ -23,6 +23,7 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+import org.eclipse.esmf.aspectmodel.aas.AasFileFormat;
 import org.eclipse.esmf.aspectmodel.urn.AspectModelUrn;
 import org.eclipse.tractusx.semantics.hub.api.ModelsApiDelegate;
 import org.eclipse.tractusx.semantics.hub.domain.ModelPackageStatus;
@@ -162,18 +163,31 @@ public class AspectModelService implements ModelsApiDelegate {
       return new ResponseEntity( result.get(), HttpStatus.OK );
    }
 
-   @Override
-   public ResponseEntity getAasSubmodelTemplate(String urn, AasFormat aasFormat) {
-      final Try result = sdkHelper.getAasSubmodelTemplate(urn, aasFormat);
-      if ( result.isFailure() ) {
-         throw new RuntimeException( String.format( "Failed to generate AASX submodel template for model with urn %s", urn ) );
-      }
-      HttpHeaders responseHeaders = new HttpHeaders();
+	@Override
+	public ResponseEntity getAasSubmodelTemplate(String urn, AasFormat aasFormat) {
+		AasFileFormat fileFormat = resolveFileFormat(aasFormat);
+		Try<byte[]> result  = sdkHelper.getAasSubmodelTemplate(urn, fileFormat);
 
-      responseHeaders.setContentType(getMediaType( aasFormat ));
+		if ( result.isFailure() ) {
+			throw new RuntimeException( String.format( "Failed to generate AASX submodel template for model with urn %s", urn ) );
+		}
+		HttpHeaders responseHeaders = new HttpHeaders();
 
-      return new ResponseEntity( result.get(), responseHeaders, HttpStatus.OK );
-   }
+		responseHeaders.setContentType(getMediaType( aasFormat ));
+
+		return new ResponseEntity( result.get(), responseHeaders, HttpStatus.OK );
+	}
+
+	private AasFileFormat resolveFileFormat(AasFormat aasFormat) {
+		if (AasFormat.FILE.equals(aasFormat)) {
+			return AasFileFormat.AASX;
+		}
+		try {
+			return AasFileFormat.valueOf(aasFormat.getValue());  // Convert AasFormat to AasFileFormat
+		} catch (IllegalArgumentException e) {
+			throw new IllegalArgumentException("Invalid AasFormat value: " + aasFormat.getValue(), e);
+		}
+	}
 
    /**
     * Determines the MediaType based on the AasFormat

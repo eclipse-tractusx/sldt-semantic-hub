@@ -25,18 +25,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
-import java.util.Map;
+import java.util.stream.Stream;
 
-import org.apache.jena.rdf.model.Model;
-import org.eclipse.esmf.aspectmodel.aas.AasFileFormat;
-import org.eclipse.esmf.aspectmodel.aas.AspectModelAasGenerator;
+import lombok.Setter;
+import org.eclipse.esmf.aspectmodel.aas.*;
 import org.eclipse.esmf.aspectmodel.generator.diagram.AspectModelDiagramGenerator;
-import org.eclipse.esmf.aspectmodel.generator.diagram.AspectModelDiagramGenerator.Format;
+import org.eclipse.esmf.aspectmodel.generator.diagram.DiagramArtifact;
+import org.eclipse.esmf.aspectmodel.generator.diagram.DiagramGenerationConfig;
 import org.eclipse.esmf.aspectmodel.generator.docu.AspectModelDocumentationGenerator;
-import org.eclipse.esmf.aspectmodel.generator.docu.AspectModelDocumentationGenerator.HtmlGenerationOption;
+import org.eclipse.esmf.aspectmodel.generator.docu.DocumentationGenerationConfig;
+import org.eclipse.esmf.aspectmodel.generator.docu.DocumentationGenerationConfigBuilder;
 import org.eclipse.esmf.aspectmodel.generator.json.AspectModelJsonPayloadGenerator;
 import org.eclipse.esmf.aspectmodel.generator.jsonschema.AspectModelJsonSchemaGenerator;
 import org.eclipse.esmf.aspectmodel.generator.jsonschema.JsonSchemaGenerationConfig;
@@ -44,18 +43,9 @@ import org.eclipse.esmf.aspectmodel.generator.jsonschema.JsonSchemaGenerationCon
 import org.eclipse.esmf.aspectmodel.generator.openapi.AspectModelOpenApiGenerator;
 import org.eclipse.esmf.aspectmodel.generator.openapi.OpenApiSchemaGenerationConfig;
 import org.eclipse.esmf.aspectmodel.generator.openapi.OpenApiSchemaGenerationConfigBuilder;
-import org.eclipse.esmf.aspectmodel.resolver.AspectModelResolver;
-import org.eclipse.esmf.aspectmodel.resolver.services.TurtleLoader;
-import org.eclipse.esmf.aspectmodel.resolver.services.VersionedModel;
-import org.eclipse.esmf.aspectmodel.shacl.violation.Violation;
+import org.eclipse.esmf.aspectmodel.loader.AspectModelLoader;
 import org.eclipse.esmf.aspectmodel.urn.AspectModelUrn;
-import org.eclipse.esmf.aspectmodel.validation.services.AspectModelValidator;
-import org.eclipse.esmf.metamodel.Aspect;
-import org.eclipse.esmf.metamodel.AspectContext;
-import org.eclipse.esmf.metamodel.loader.AspectModelLoader;
-import org.eclipse.tractusx.semantics.hub.InvalidAspectModelException;
-import org.eclipse.tractusx.semantics.hub.ResolutionException;
-import org.eclipse.tractusx.semantics.hub.model.AasFormat;
+import org.eclipse.esmf.metamodel.AspectModel;
 import org.eclipse.tractusx.semantics.hub.persistence.PersistenceLayer;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -63,160 +53,106 @@ import com.google.common.io.CharStreams;
 
 import io.vavr.control.Try;
 
+@Setter
 public class SDKAccessHelperSAMM {
 
    PersistenceLayer persistenceLayer;
 
-   public void setPersistenceLayer( PersistenceLayer persistenceLayer ) {
-      this.persistenceLayer = persistenceLayer;
-   }
+    public Try<byte[]> generateDiagram( String urn, DiagramGenerationConfig.Format format ) {
+       return Try.of(() -> {
+           String modelData = persistenceLayer.getModelDefinition(AspectModelUrn.fromUrn(urn));
+           final AspectModel aspectModel =loadAspectModel(modelData).get();
+           DiagramGenerationConfig config = new DiagramGenerationConfig(Locale.ENGLISH, format);
+           final AspectModelDiagramGenerator generator = new AspectModelDiagramGenerator(aspectModel.aspect(), config);
 
-   public List<Violation> validateModel( Try<VersionedModel> model ) {
-      final AspectModelValidator validator = new AspectModelValidator();
-      return validator.validateModel( model );
-   }
-
-   public Try<byte[]> generateDiagram( String urn, Format format ) {
-
-      VersionedModel versionedModel = getVersionedModel( urn );
-
-      final Aspect aspect = AspectModelLoader.getAspects( versionedModel ).get().get( 0 );
-
-      final AspectModelDiagramGenerator generator = new AspectModelDiagramGenerator( new AspectContext( versionedModel, aspect ) );
-
-      try ( ByteArrayOutputStream output = new ByteArrayOutputStream() ) {
-         generator.generateDiagram( format , Locale.ENGLISH, output );
-         final byte[] bytes = output.toByteArray();
-
-         return Try.success( bytes );
-      } catch ( IOException e ) {
-         return Try.failure( e );
-      }
+           // Generate the diagram and retrieve the content
+           return generator.generate()
+                   .findFirst()
+                   .map(DiagramArtifact::getContent)
+                   .orElseThrow(() -> new IllegalStateException("No artifact was generated."));
+       });
    }
 
    public JsonNode getJsonSchema( String urn ) {
-      Aspect aspect = getBamAspect( urn );
-		  final JsonSchemaGenerationConfig config = JsonSchemaGenerationConfigBuilder.builder()
-			  .locale( Locale.ENGLISH )
-			  .build();
-			final AspectModelJsonSchemaGenerator generator = AspectModelJsonSchemaGenerator.INSTANCE;
-      return generator.apply(aspect,config).getContent();
-   }
-
-   public Try<byte[]> getHtmlDocu( String urn ) {
-      VersionedModel versionedModel = getVersionedModel( urn );
-      ByteArrayOutputStream output = new ByteArrayOutputStream();
-
-      final Aspect aspect = AspectModelLoader.getAspects(versionedModel).get().get(0);
-
-      AspectModelDocumentationGenerator documentationGenerator = new AspectModelDocumentationGenerator( new AspectContext(versionedModel, aspect) );
-
-      Map<HtmlGenerationOption, String> options = new HashMap<>();
-
-      try {
-         InputStream ompCSS = getClass().getResourceAsStream( "/catena-template.css" );
-         String defaultCSS = CharStreams.toString( new InputStreamReader( ompCSS ) );
-
-         options.put( HtmlGenerationOption.STYLESHEET, defaultCSS );
-      } catch ( IOException e ) {
-         return Try.failure( e );
+       String modelData = persistenceLayer.getModelDefinition(AspectModelUrn.fromUrn(urn));
+       final AspectModel aspectModel =loadAspectModel(modelData).get();
+       final JsonSchemaGenerationConfig config = JsonSchemaGenerationConfigBuilder.builder()
+               .locale( Locale.ENGLISH )
+               .build();
+       final AspectModelJsonSchemaGenerator generator = new AspectModelJsonSchemaGenerator( aspectModel.aspect(), config );
+       return generator.getContent();
       }
 
-      try {
-         documentationGenerator.generate( ( String a ) -> output, options );
-
-         return Try.success( output.toByteArray() );
-      } catch ( IOException e ) {
-         return Try.failure( e );
-      }
-   }
-
-   public String getOpenApiDefinitionJson( String urn, String baseUrl ) {
-		 Aspect aspect = getBamAspect( urn );
-		 final OpenApiSchemaGenerationConfig config = OpenApiSchemaGenerationConfigBuilder.builder().baseUrl( baseUrl).build();
-		 final AspectModelOpenApiGenerator generator = new AspectModelOpenApiGenerator( );
-		 return generator.apply(aspect, config ).getContent().toString();
-   }
-
-   public Try<String> getExamplePayloadJson( String urn ) {
-      Aspect aspect = getBamAspect( urn );
-      AspectModelJsonPayloadGenerator payloadGenerator = new AspectModelJsonPayloadGenerator( aspect );
-
-      return Try.of( payloadGenerator::generateJson );
-   }
-
-   public Try getAasSubmodelTemplate( String urn, AasFormat aasFormat ) {
-		 Aspect aspect = getBamAspect(urn);
-		 if (aspect == null) {
-			 return Try.failure(new IllegalArgumentException("Aspect not found for URN: " + urn));
-		 }
-
-		 AasFileFormat format = determineFileFormat(aasFormat);
-		 if (format == null) {
-			 return Try.failure(new IllegalArgumentException("Invalid AasFormat value: " + aasFormat.getValue()));
-		 }
-
-		 AspectModelAasGenerator aasGenerator = new AspectModelAasGenerator();
-		 try (ByteArrayOutputStream stream = new ByteArrayOutputStream()) {
-			 byte[] byteArray = aasGenerator.generateAsByteArray(format, aspect);
-			 String result = new String(byteArray, StandardCharsets.UTF_8); // Convert byte array to UTF-8 string
-			 return Try.of(() -> result);
-		 } catch (IOException e) {
-			 return Try.failure(e);
-		 }
-   }
-
-	/**
-	 * Determines the AAS file format based on the input AasFormat.
-	 * Returns null if the format is invalid.
-	 */
-	private AasFileFormat determineFileFormat(AasFormat aasFormat) {
-		try {
-			if ("FILE".equalsIgnoreCase(aasFormat.getValue())) {
-				return AasFileFormat.AASX;
+	public Try<byte[]> getHtmlDocument(String urn) {
+		return Try.of(() -> {
+			String modelData = persistenceLayer.getModelDefinition(AspectModelUrn.fromUrn(urn));
+			final AspectModel aspectModel =loadAspectModel(modelData).get();
+			InputStream ompCSS = getClass().getResourceAsStream("/catena-template.css");
+			if (ompCSS == null) {
+				throw new IOException("CSS resource not found");
 			}
-			return AasFileFormat.valueOf(aasFormat.getValue());
-		} catch (IllegalArgumentException e) {
-			return null;
-		}
+			String defaultCSS = CharStreams.toString( new InputStreamReader( ompCSS ) );
+
+
+			final DocumentationGenerationConfig config = DocumentationGenerationConfigBuilder.builder()
+				.stylesheet(defaultCSS)
+				.build();
+			final AspectModelDocumentationGenerator generator =
+				new AspectModelDocumentationGenerator(aspectModel.aspect(), config);
+
+			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+			generator.generate(aspectFileName -> outputStream);
+
+			return outputStream.toByteArray();
+		});
 	}
 
+	public String getOpenApiDefinitionJson( String urn, String baseUrl ) {
+        String modelData = persistenceLayer.getModelDefinition(AspectModelUrn.fromUrn(urn));
+        final AspectModel aspectModel = loadAspectModel(modelData).get();
 
-	private org.eclipse.esmf.aspectmodel.resolver.services.VersionedModel getVersionedModel( String urn ) {
-      final String modelDefinition = persistenceLayer.getModelDefinition( AspectModelUrn.fromUrn( urn ) );
-      final Try<org.eclipse.esmf.aspectmodel.resolver.services.VersionedModel> versionedModel =
-            loadSammModel( modelDefinition );
+        final OpenApiSchemaGenerationConfig config = OpenApiSchemaGenerationConfigBuilder.builder().baseUrl(baseUrl).build();
+        final AspectModelOpenApiGenerator generator = new AspectModelOpenApiGenerator(aspectModel.aspect(), config);
 
-      if ( versionedModel.isFailure() ) {
-         throw new RuntimeException( "Failed to load versioned model", versionedModel.getCause() );
-      }
-      return versionedModel.get();
-   }
+        return generator.generateJson();
+    }
 
-   private org.eclipse.esmf.metamodel.Aspect getBamAspect( String urn ) {
-      final Try<List<org.eclipse.esmf.metamodel.Aspect>> aspect = getAspectFromVersionedModel( getVersionedModel( urn ) );
-      if ( aspect.isFailure() ) {
-         throw new RuntimeException( "Failed to load aspect model", aspect.getCause() );
-      }
-      return aspect.get().get( 0 );
-   }
+   public Try<String> getExamplePayloadJson( String urn ) {
+       return Try.of(() -> {
+           String modelData = persistenceLayer.getModelDefinition(AspectModelUrn.fromUrn(urn));
+           final AspectModel aspectModel =loadAspectModel(modelData).get();
+           final AspectModelJsonPayloadGenerator generator = new AspectModelJsonPayloadGenerator( aspectModel.aspect() );
+           return generator.generateJson();
+       });
+    }
 
-   private Try<List<Aspect>> getAspectFromVersionedModel( VersionedModel versionedModel ) {
-      return AspectModelLoader.getAspects( versionedModel );
-   }
+	public Try<byte[]> getAasSubmodelTemplate( String urn, AasFileFormat aasFormat ) {
+		return Try.of(() -> {
+			String modelData = persistenceLayer.getModelDefinition(AspectModelUrn.fromUrn(urn));
+			final AspectModel aspectModel =loadAspectModel(modelData).get();
+			AasGenerationConfig config = AasGenerationConfigBuilder.builder()
+				.format(aasFormat)
+				.build();
 
-   public Try<VersionedModel> loadSammModel( String ttl ) {
-      InputStream targetStream = new ByteArrayInputStream( ttl.getBytes() );
-      Try<Model> model = TurtleLoader.loadTurtle( targetStream );
+			Stream<AasArtifact> artifacts = new AspectModelAasGenerator(aspectModel.aspect(), config).generate();
 
-      StaticResolutionStrategy resolutionStrategy = new StaticResolutionStrategy( model );
-      AspectModelResolver resolver = new AspectModelResolver();
-      Try<VersionedModel> versionedModel = resolver.resolveAspectModel( resolutionStrategy,
-            model.getOrElseThrow( cause -> new InvalidAspectModelException( cause.getMessage() ) ) );
+			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
-      if ( resolutionStrategy.getResolvementCounter() > 1 ) {
-         return Try.failure( new ResolutionException( "The definition must be self contained!" ) );
-      }
-      return versionedModel;
-   }
+			artifacts.forEach(artifact -> {
+				try {
+					outputStream.write(artifact.getContent());
+				} catch (IOException e) {
+					throw new RuntimeException("Error writing artifact content to stream", e);
+				}
+			});
+			return outputStream.toByteArray();
+		});
+	}
+
+	public Try<AspectModel> loadAspectModel(String modelUrn) {
+		return Try.of(() -> {
+			InputStream inputStream = new ByteArrayInputStream(modelUrn.getBytes(StandardCharsets.UTF_8));
+			return new AspectModelLoader().load(inputStream);
+		});
+	}
 }

@@ -19,12 +19,9 @@
  ********************************************************************************/
 package org.eclipse.tractusx.semantics.hub;
 
-import java.util.List;
-
-import org.eclipse.esmf.aspectmodel.generator.diagram.AspectModelDiagramGenerator;
-import org.eclipse.esmf.aspectmodel.resolver.services.VersionedModel;
-import org.eclipse.esmf.aspectmodel.shacl.violation.Violation;
-import org.eclipse.tractusx.semantics.hub.model.AasFormat;
+import org.eclipse.esmf.aspectmodel.aas.AasFileFormat;
+import org.eclipse.esmf.aspectmodel.generator.diagram.DiagramGenerationConfig;
+import org.eclipse.esmf.metamodel.AspectModel;
 import org.eclipse.tractusx.semantics.hub.persistence.PersistenceLayer;
 import org.eclipse.tractusx.semantics.hub.samm.SDKAccessHelperSAMM;
 import org.springframework.stereotype.Component;
@@ -42,13 +39,8 @@ public class SDKAccessHelper {
       sdkAccessHelperSAMM.setPersistenceLayer( persistenceLayer );
    }
 
-   public List<Violation> validateModel( Try<VersionedModel> model ) {
-      // SAMM validator should also process BAMM models so no switch here
-      return sdkAccessHelperSAMM.validateModel( model );
-   }
-
    public Try<byte[]> generateSvg( String urn ) {
-      return sdkAccessHelperSAMM.generateDiagram( urn, AspectModelDiagramGenerator.Format.SVG );
+      return sdkAccessHelperSAMM.generateDiagram( urn, DiagramGenerationConfig.Format.SVG );
    }
 
    public JsonNode getJsonSchema( String urn ) {
@@ -56,7 +48,7 @@ public class SDKAccessHelper {
    }
 
    public Try<byte[]> getHtmlDocu( String urn ) {
-      return sdkAccessHelperSAMM.getHtmlDocu( urn );
+      return sdkAccessHelperSAMM.getHtmlDocument( urn );
    }
 
    public String getOpenApiDefinitionJson( String urn, String baseUrl ) {
@@ -67,11 +59,11 @@ public class SDKAccessHelper {
       return sdkAccessHelperSAMM.getExamplePayloadJson( urn );
    }
 
-   public Try getAasSubmodelTemplate( String urn, AasFormat aasFormat ) {
+   public Try getAasSubmodelTemplate( String urn, AasFileFormat aasFormat ) {
       return sdkAccessHelperSAMM.getAasSubmodelTemplate( urn, aasFormat );
    }
 
-   public Try<VersionedModel> loadBammModel( String modelString ) {
-      return sdkAccessHelperSAMM.loadSammModel( modelString );
-   }
+	public Try<AspectModel> loadAspectModel(String modelUrn){
+		return sdkAccessHelperSAMM.loadAspectModel(modelUrn);
+	}
 }
