@@ -78,7 +78,7 @@
 		<openapi-starter-webmvc-ui.version>2.0.2</openapi-starter-webmvc-ui.version>
 		<guava.version>32.1.1-jre</guava.version>
 		<vavr.version>0.10.3</vavr.version>
-		<commons-io.version>2.11.0</commons-io.version>
+		<commons-io.version>2.17.0</commons-io.version>
 		<google.findbugs.version>3.0.2</google.findbugs.version>
 		<snakeyaml.version>2.0</snakeyaml.version>
 		<jakarta.validation.version>3.0.2</jakarta.validation.version>
@@ -99,8 +99,8 @@
 		<jaxb-api.version>2.3.1</jaxb-api.version>
 
 		<!-- semantics -->
-      <samm.sdk.version>2.4.2</samm.sdk.version>
-		<jena.version>4.7.0</jena.version>
+      <samm.sdk.version>2.8.1</samm.sdk.version>
+		<jena.version>4.9.0</jena.version>
 		<shacl.version>1.3.1</shacl.version>
 
 		<!-- persistence -->
@@ -332,9 +332,9 @@
 				<artifactId>esmf-aspect-model-starter</artifactId>
 				<version>${samm.sdk.version}</version>
 			</dependency>
-			<dependency>   
-				<groupId>org.apache.commons</groupId>   
-				<artifactId>commons-text</artifactId>   
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-text</artifactId>
 				<version>1.10.0</version>
 			</dependency>
 			<dependency>
@@ -391,7 +391,7 @@
 				<artifactId>assertj-core</artifactId>
 				<version>${assertj.version}</version>
 				<scope>test</scope>
-			</dependency>			
+			</dependency>
 			<dependency>
 				<groupId>org.junit.jupiter</groupId>
 				<artifactId>junit-jupiter</artifactId>
