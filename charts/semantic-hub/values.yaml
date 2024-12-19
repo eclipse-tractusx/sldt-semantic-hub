@@ -79,7 +79,7 @@ hub:
 graphdb:
   ## Include Fuski deployment or deploy separately
   enabled: false
-  image: jena-fuseki-docker:4.7.0
+  image: jena-fuseki-docker:5.0.0
   imagePullPolicy: IfNotPresent
   replicaCount: 1
   containerPort: 3030

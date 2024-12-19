@@ -26,7 +26,7 @@ on:
         required: true
 
 env:
-  FUSEKI_VERSION: 4.7.0
+  FUSEKI_VERSION: 5.0.0
 
 jobs:
   build:

@@ -67,7 +67,6 @@ public class TripleStoreConfiguration {
                          .verbose( true )
                          .contextPath( embedded.getContextPath() )
                          .enableStats( true )
-                         .enableCors( true )
                          .build().start();
    }
 
