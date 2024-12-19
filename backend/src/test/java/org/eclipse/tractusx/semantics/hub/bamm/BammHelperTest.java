@@ -21,11 +21,10 @@ package org.eclipse.tractusx.semantics.hub.bamm;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.eclipse.esmf.metamodel.AspectModel;
 import org.eclipse.tractusx.semantics.hub.SDKAccessHelper;
 import org.junit.jupiter.api.Test;
 
-import org.eclipse.esmf.aspectmodel.resolver.services.VersionedModel;
-import io.vavr.NotImplementedError;
 import io.vavr.control.Try;
 
 public class BammHelperTest {
@@ -35,7 +34,7 @@ public class BammHelperTest {
 
         SDKAccessHelper bammHelper = new SDKAccessHelper();
 
-        assertTrue(bammHelper.loadBammModel(modelString).isSuccess());
+        assertTrue(bammHelper.loadAspectModel(modelString).isSuccess());
     }
 
     @Test
@@ -44,7 +43,7 @@ public class BammHelperTest {
 
         SDKAccessHelper bammHelper = new SDKAccessHelper();
 
-        assertTrue(bammHelper.loadBammModel(modelString).isFailure());
+        assertTrue(bammHelper.loadAspectModel(modelString).isFailure());
     }
 
     @Test
@@ -53,9 +52,9 @@ public class BammHelperTest {
 
         SDKAccessHelper bammHelper = new SDKAccessHelper();
 
-        Try<VersionedModel> model = bammHelper.loadBammModel(modelString);
+        Try<AspectModel> model = bammHelper.loadAspectModel(modelString);
 
-        assertTrue(bammHelper.validateModel(model).isEmpty());
+        assertTrue(model.isSuccess());
     }
     
     @Test
@@ -64,9 +63,9 @@ public class BammHelperTest {
 
         SDKAccessHelper bammHelper = new SDKAccessHelper();
 
-        Try<VersionedModel> model = bammHelper.loadBammModel(modelString);
+        Try<AspectModel> model = bammHelper.loadAspectModel(modelString);
 
-        assertFalse(bammHelper.validateModel(model).isEmpty());
+        assertTrue(model.isFailure());
     }
 
     @Test
@@ -75,7 +74,7 @@ public class BammHelperTest {
 
         SDKAccessHelper bammHelper = new SDKAccessHelper();
 
-        assertTrue(bammHelper.loadBammModel(modelString).isSuccess());
+        assertTrue(bammHelper.loadAspectModel(modelString).isSuccess());
     }
 
     @Test
@@ -84,7 +83,7 @@ public class BammHelperTest {
 
         SDKAccessHelper bammHelper = new SDKAccessHelper();
 
-        assertTrue(bammHelper.loadBammModel(modelString).isFailure());
+        assertTrue(bammHelper.loadAspectModel(modelString).isFailure());
 
     }
 }
