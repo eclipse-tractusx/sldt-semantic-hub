@@ -21,25 +21,18 @@ package org.eclipse.tractusx.semantics.hub.persistence;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.eclipse.tractusx.semantics.hub.TestUtils.loadModelFromResources;
 
 import java.io.IOException;
 
-import org.apache.jena.query.Query;
 import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.ResourceFactory;
-import org.apache.jena.rdfconnection.RDFConnection;
 import org.eclipse.tractusx.semantics.hub.model.SemanticModelType;
-import org.eclipse.tractusx.semantics.hub.persistence.triplestore.SAMMSdk;
-import org.eclipse.tractusx.semantics.hub.persistence.triplestore.SparqlQueries;
 import org.junit.jupiter.api.Test;
 
 import org.eclipse.tractusx.semantics.hub.InvalidAspectModelException;
 import org.eclipse.tractusx.semantics.hub.TestUtils;
-import org.eclipse.tractusx.semantics.hub.persistence.triplestore.ResourceDefinitionNotFoundException;
 import org.eclipse.tractusx.semantics.hub.persistence.triplestore.SdsSdk;
-import org.eclipse.esmf.aspectmodel.resolver.ResolutionStrategy;
 import org.eclipse.esmf.aspectmodel.urn.AspectModelUrn;
-import io.vavr.control.Try;
 
 public class SdsSdkTest {
 
@@ -49,7 +42,7 @@ public class SdsSdkTest {
       final Model model = sdsSdk.load( TestUtils.PRODUCT_USAGE_MODEL_PATH );
 
       final AspectModelUrn aspectUrn = sdsSdk.getAspectUrn( model );
-      assertThat( aspectUrn.getNamespace() ).isEqualTo( "org.eclipse.tractusx.semantics.test.productusage" );
+      assertThat( aspectUrn.getNamespaceMainPart() ).isEqualTo( "org.eclipse.tractusx.semantics.test.productusage" );
       assertThat( aspectUrn.getUrnPrefix() )
             .isEqualTo( "urn:samm:org.eclipse.tractusx.semantics.test.productusage:1.2.0#" );
       assertThat( aspectUrn.getUrn().toString() ).isEqualTo(
@@ -59,7 +52,7 @@ public class SdsSdkTest {
    @Test
    public void validateValidAspectModelWithAvailableExternalReferenceExpectSuccess() throws IOException {
       final SdsSdk sdsSdk = new SdsSdk();
-      final Model model = sdsSdk.load( TestUtils.PRODUCT_USAGE_MODEL_PATH );
+      final String model = loadModelFromResources( TestUtils.PRODUCT_USAGE_MODEL_PATH );
       assertThatCode( () -> sdsSdk.validate( model, this::findContainingModelByUrn, SemanticModelType.SAMM ) )
             .doesNotThrowAnyException();
    }
@@ -72,9 +65,9 @@ public class SdsSdkTest {
    @Test
    public void validateAspectModelWithNotAvailableExternalReferenceExpectError() throws IOException {
       final SdsSdk sdsSdk = new SdsSdk();
-      final Model model = sdsSdk.load( TestUtils.VEHICLE_WITH_NOT_AVAILABLE_EXTERNAL_REFERENCE );
+      final String model = loadModelFromResources( TestUtils.VEHICLE_WITH_NOT_AVAILABLE_EXTERNAL_REFERENCE );
       try {
-         sdsSdk.validate( model, this::noOpTripleResolution, SemanticModelType.SAMM );
+         sdsSdk.validate(model, this::noOpTripleResolution, SemanticModelType.SAMM );
       } catch ( final InvalidAspectModelException e ) {
          System.out.println( e.getDetails() );
       }
