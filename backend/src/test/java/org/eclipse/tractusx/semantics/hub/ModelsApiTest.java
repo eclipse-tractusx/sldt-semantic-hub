@@ -1072,4 +1072,72 @@ public class ModelsApiTest extends AbstractModelsApiTest{
             .andExpect( status().isBadRequest() )
             .andExpect( jsonPath( "$.error.message", containsString( "Invalid URN urn" ) ) );
    }
+
+    @Test
+    public void testDependentModelSAMMWithValidationFailed() throws Exception {
+        String ADDRESS_ASPECT_FILE = "AddressAspect.ttl";
+        String BUSINESS_PARTNER_NUMBER_FILE = "BusinessPartnerNumber-1.0.0.ttl";
+        String CONTACT_INFORMATION_FILE = "ContactInformation-3.0.0.ttl";
+        String UUID_FILE ="Uuid-1.0.0.ttl";
+        String DIGITAL_PRODUCT_PASSPORT_FILE = "DigitalProductPassport-3.0.0.ttl";
+
+        //Given
+        mvc.perform(post ( TestUtils.getTTLFile( ADDRESS_ASPECT_FILE ), "DRAFT" ) )
+                .andDo( MockMvcResultHandlers.print() )
+                .andExpect( status().isOk() );
+
+        mvc.perform( post( TestUtils.getTTLFile( BUSINESS_PARTNER_NUMBER_FILE ), "DRAFT" ) )
+                .andDo( MockMvcResultHandlers.print() )
+                .andExpect( status().isOk() );
+
+        mvc.perform( post( TestUtils.getTTLFile(CONTACT_INFORMATION_FILE), "DRAFT" ) )
+                .andDo( MockMvcResultHandlers.print() )
+                .andExpect( status().isOk() );
+
+
+        mvc.perform( post( TestUtils.getTTLFile(UUID_FILE), "DRAFT" ) )
+                .andDo( MockMvcResultHandlers.print() )
+                .andExpect( status().isOk() );
+        //When
+        mvc.perform( post( TestUtils.getTTLFile( DIGITAL_PRODUCT_PASSPORT_FILE ), "DRAFT" ) )
+                .andDo( MockMvcResultHandlers.print() )
+                .andExpect( jsonPath( "$.error.message", containsString("Validation failed" ) ) )
+                .andExpect( jsonPath( "$.error.details.validationError", containsString("TripleStoreResolutionStrategy: definition for urn:samm:io.catenax.shared.quantity:1.0.0#VolumeCharacteristic not found" ) ) )
+                .andExpect( status().is4xxClientError() );
+    }
+
+    @Test
+    public void testDependentModelSAMMWithSuccess() throws Exception {
+        String ADDRESS_ASPECT_FILE = "AddressAspect.ttl";
+        String BUSINESS_PARTNER_NUMBER_FILE = "BusinessPartnerNumber-1.0.0.ttl";
+        String CONTACT_INFORMATION_FILE = "ContactInformation-3.0.0.ttl";
+        String QUANTITY_FILE="Quantity-1.0.0.ttl";
+        String UUID_FILE ="Uuid-1.0.0.ttl";
+        String DIGITAL_PRODUCT_PASSPORT_FILE = "DigitalProductPassport-3.0.0.ttl";
+
+        //Given
+        mvc.perform(post ( TestUtils.getTTLFile( ADDRESS_ASPECT_FILE ), "DRAFT" ) )
+                .andDo( MockMvcResultHandlers.print() )
+                .andExpect( status().isOk() );
+
+        mvc.perform( post( TestUtils.getTTLFile( BUSINESS_PARTNER_NUMBER_FILE ), "DRAFT" ) )
+                .andDo( MockMvcResultHandlers.print() )
+                .andExpect( status().isOk() );
+
+        mvc.perform( post( TestUtils.getTTLFile(CONTACT_INFORMATION_FILE), "DRAFT" ) )
+                .andDo( MockMvcResultHandlers.print() )
+                .andExpect( status().isOk() );
+
+        mvc.perform( post( TestUtils.getTTLFile(QUANTITY_FILE), "DRAFT" ) )
+                .andDo( MockMvcResultHandlers.print() )
+                .andExpect( status().isOk() );
+
+        mvc.perform( post( TestUtils.getTTLFile(UUID_FILE), "DRAFT" ) )
+                .andDo( MockMvcResultHandlers.print() )
+                .andExpect( status().isOk() );
+        //When
+        mvc.perform( post( TestUtils.getTTLFile( DIGITAL_PRODUCT_PASSPORT_FILE ), "DRAFT" ) )
+                .andDo( MockMvcResultHandlers.print() )
+                .andExpect( status().isOk() );
+    }
 }
