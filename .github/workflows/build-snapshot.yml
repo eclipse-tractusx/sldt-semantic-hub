@@ -54,7 +54,7 @@ jobs:
         run: |
           unzip jena-fuseki.zip
           cd jena-fuseki-docker-$FUSEKI_VERSION
-          docker build --build-arg JENA_VERSION=$FUSEKI_VERSION -t jena-fuseki-docker:4.7.0 .
+          docker build --build-arg JENA_VERSION=$FUSEKI_VERSION -t jena-fuseki-docker:$FUSEKI_VERSION .
       - name: Build and Deploy with Maven
         run: mvn clean install
         env:
