@@ -1,6 +1,6 @@
 /********************************************************************************
- * Copyright (c) 2021-2023 Robert Bosch Manufacturing Solutions GmbH
- * Copyright (c) 2021-2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021-2025 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2021-2025 Contributors to the Eclipse Foundation
  *
  * See the NOTICE file(s) distributed with this work for additional
  * information regarding copyright ownership.
@@ -55,17 +55,22 @@ import org.eclipse.tractusx.semantics.hub.model.SemanticModelType;
 
 public class SAMMSdk {
 
+	private final AspectModelValidator aspectModelValidator;
+
+	public SAMMSdk(){
+		this.aspectModelValidator=new AspectModelValidator();
+	}
+
 	public void validate( final String modelData, final Function<String, Model> tripleStoreRequester, SemanticModelType type ) {
 		InputStream inputStream = new ByteArrayInputStream(modelData.getBytes(StandardCharsets.UTF_8));
 		AspectModel aspectModel;
-		final ResolutionStrategy resolutionStrategy=new TripleStoreResolutionStrategy(tripleStoreRequester,type);
+		final ResolutionStrategy resolutionStrategy =new TripleStoreResolutionStrategy(tripleStoreRequester,type);
 		try {
 			aspectModel = new AspectModelLoader(resolutionStrategy).load(inputStream);
 		}catch (Exception e){
 			throw new InvalidAspectModelException( e.getMessage() );
 		}
-		final AspectModelValidator validator = new AspectModelValidator();
-		final List<Violation> violations = validator.validateModel(aspectModel);
+		final List<Violation> violations = aspectModelValidator.validateModel(aspectModel);
 		if ( !violations.isEmpty() ) {
 			Map<String, String> detailsMap = violations.stream()
 				.collect(
@@ -126,8 +131,8 @@ public class SAMMSdk {
 
 
 		@Override
-		public Stream<URI> listContentsForNamespace( final AspectModelUrn namespace ) {
-			return aspectModelFile.namespace().urn().equals( namespace )
+		public Stream<URI> listContentsForNamespace( final AspectModelUrn aspectModelUrn ) {
+			return aspectModelFile.namespace().urn().equals( aspectModelUrn )
 				? aspectModelFile.sourceLocation().stream()
 				: Stream.empty();
 		}
@@ -138,8 +143,8 @@ public class SAMMSdk {
 		}
 
 		@Override
-		public Stream<AspectModelFile> loadContentsForNamespace( final AspectModelUrn namespace ) {
-			return aspectModelFile.namespace().urn().equals( namespace )
+		public Stream<AspectModelFile> loadContentsForNamespace( final AspectModelUrn aspectModelUrn ) {
+			return aspectModelFile.namespace().urn().equals( aspectModelUrn )
 				? Stream.of( aspectModelFile )
 				: Stream.empty();
 		}
