@@ -55,7 +55,7 @@ public class SDKAccessHelper {
       return sdkAccessHelperSAMM.getOpenApiDefinitionJson( urn, baseUrl );
    }
 
-   public Try<String> getExamplePayloadJson( String urn  ) {
+   public Try<String> getExamplePayloadJson( String urn ) {
       return sdkAccessHelperSAMM.getExamplePayloadJson( urn );
    }
 
@@ -63,7 +63,7 @@ public class SDKAccessHelper {
       return sdkAccessHelperSAMM.getAasSubmodelTemplate( urn, aasFormat );
    }
 
-	public Try<AspectModel> loadAspectModel(String modelUrn){
-		return sdkAccessHelperSAMM.loadAspectModel(modelUrn);
-	}
+   public Try<AspectModel> loadAspectModel( String modelUrn ) {
+      return sdkAccessHelperSAMM.loadAspectModel( modelUrn );
+   }
 }

@@ -19,15 +19,10 @@
  ********************************************************************************/
 package org.eclipse.tractusx.semantics.hub.samm;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
-import java.util.Locale;
-import java.util.stream.Stream;
-
+import com.fasterxml.jackson.databind.JsonNode;
+import com.google.common.io.CharStreams;
+import io.vavr.control.Try;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.eclipse.esmf.aspectmodel.aas.*;
 import org.eclipse.esmf.aspectmodel.generator.diagram.AspectModelDiagramGenerator;
@@ -48,111 +43,113 @@ import org.eclipse.esmf.aspectmodel.urn.AspectModelUrn;
 import org.eclipse.esmf.metamodel.AspectModel;
 import org.eclipse.tractusx.semantics.hub.persistence.PersistenceLayer;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.google.common.io.CharStreams;
-
-import io.vavr.control.Try;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.util.Locale;
+import java.util.stream.Stream;
 
 @Setter
+@RequiredArgsConstructor
 public class SDKAccessHelperSAMM {
 
-   PersistenceLayer persistenceLayer;
+   private PersistenceLayer persistenceLayer;
+   private AspectModel aspectModel;
 
-    public Try<byte[]> generateDiagram( String urn, DiagramGenerationConfig.Format format ) {
-       return Try.of(() -> {
-           String modelData = persistenceLayer.getModelDefinition(AspectModelUrn.fromUrn(urn));
-           final AspectModel aspectModel =loadAspectModel(modelData).get();
-           DiagramGenerationConfig config = new DiagramGenerationConfig(Locale.ENGLISH, format);
-           final AspectModelDiagramGenerator generator = new AspectModelDiagramGenerator(aspectModel.aspect(), config);
+   public Try<byte[]> generateDiagram( String urn, DiagramGenerationConfig.Format format ) {
+      return Try.of( () -> {
+         String modelData = persistenceLayer.getModelDefinition( AspectModelUrn.fromUrn( urn ) );
+         aspectModel = loadAspectModel( modelData ).get();
+         DiagramGenerationConfig config = new DiagramGenerationConfig( Locale.ENGLISH, format );
+         final AspectModelDiagramGenerator generator = new AspectModelDiagramGenerator( aspectModel.aspect(), config );
 
-           // Generate the diagram and retrieve the content
-           return generator.generate()
-                   .findFirst()
-                   .map(DiagramArtifact::getContent)
-                   .orElseThrow(() -> new IllegalStateException("No artifact was generated."));
-       });
+         // Generate the diagram and retrieve the content
+         return generator.generate()
+               .findFirst()
+               .map( DiagramArtifact::getContent )
+               .orElseThrow( () -> new IllegalStateException( "No artifact was generated." ) );
+      } );
    }
 
    public JsonNode getJsonSchema( String urn ) {
-       String modelData = persistenceLayer.getModelDefinition(AspectModelUrn.fromUrn(urn));
-       final AspectModel aspectModel =loadAspectModel(modelData).get();
-       final JsonSchemaGenerationConfig config = JsonSchemaGenerationConfigBuilder.builder()
-               .locale( Locale.ENGLISH )
+      String modelData = persistenceLayer.getModelDefinition( AspectModelUrn.fromUrn( urn ) );
+      aspectModel = loadAspectModel( modelData ).get();
+      final JsonSchemaGenerationConfig config = JsonSchemaGenerationConfigBuilder.builder()
+            .locale( Locale.ENGLISH )
+            .build();
+      final AspectModelJsonSchemaGenerator generator = new AspectModelJsonSchemaGenerator( aspectModel.aspect(), config );
+      return generator.getContent();
+   }
+
+   public Try<byte[]> getHtmlDocument( String urn ) {
+      return Try.of( () -> {
+         String modelData = persistenceLayer.getModelDefinition( AspectModelUrn.fromUrn( urn ) );
+         aspectModel = loadAspectModel( modelData ).get();
+         InputStream ompCSS = getClass().getResourceAsStream( "/catena-template.css" );
+         if (ompCSS == null) {
+            throw new IOException( "CSS resource not found" );
+         }
+         String defaultCSS = CharStreams.toString( new InputStreamReader( ompCSS ) );
+
+
+         final DocumentationGenerationConfig config = DocumentationGenerationConfigBuilder.builder()
+               .stylesheet( defaultCSS )
                .build();
-       final AspectModelJsonSchemaGenerator generator = new AspectModelJsonSchemaGenerator( aspectModel.aspect(), config );
-       return generator.getContent();
-      }
+         final AspectModelDocumentationGenerator generator =
+               new AspectModelDocumentationGenerator( aspectModel.aspect(), config );
 
-	public Try<byte[]> getHtmlDocument(String urn) {
-		return Try.of(() -> {
-			String modelData = persistenceLayer.getModelDefinition(AspectModelUrn.fromUrn(urn));
-			final AspectModel aspectModel =loadAspectModel(modelData).get();
-			InputStream ompCSS = getClass().getResourceAsStream("/catena-template.css");
-			if (ompCSS == null) {
-				throw new IOException("CSS resource not found");
-			}
-			String defaultCSS = CharStreams.toString( new InputStreamReader( ompCSS ) );
+         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+         generator.generate( aspectFileName -> outputStream );
 
+         return outputStream.toByteArray();
+      } );
+   }
 
-			final DocumentationGenerationConfig config = DocumentationGenerationConfigBuilder.builder()
-				.stylesheet(defaultCSS)
-				.build();
-			final AspectModelDocumentationGenerator generator =
-				new AspectModelDocumentationGenerator(aspectModel.aspect(), config);
+   public String getOpenApiDefinitionJson( String urn, String baseUrl ) {
+      String modelData = persistenceLayer.getModelDefinition( AspectModelUrn.fromUrn( urn ) );
+      aspectModel = loadAspectModel( modelData ).get();
 
-			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-			generator.generate(aspectFileName -> outputStream);
+      final OpenApiSchemaGenerationConfig config = OpenApiSchemaGenerationConfigBuilder.builder().baseUrl( baseUrl ).build();
+      final AspectModelOpenApiGenerator generator = new AspectModelOpenApiGenerator( aspectModel.aspect(), config );
 
-			return outputStream.toByteArray();
-		});
-	}
-
-	public String getOpenApiDefinitionJson( String urn, String baseUrl ) {
-        String modelData = persistenceLayer.getModelDefinition(AspectModelUrn.fromUrn(urn));
-        final AspectModel aspectModel = loadAspectModel(modelData).get();
-
-        final OpenApiSchemaGenerationConfig config = OpenApiSchemaGenerationConfigBuilder.builder().baseUrl(baseUrl).build();
-        final AspectModelOpenApiGenerator generator = new AspectModelOpenApiGenerator(aspectModel.aspect(), config);
-
-        return generator.generateJson();
-    }
+      return generator.generateJson();
+   }
 
    public Try<String> getExamplePayloadJson( String urn ) {
-       return Try.of(() -> {
-           String modelData = persistenceLayer.getModelDefinition(AspectModelUrn.fromUrn(urn));
-           final AspectModel aspectModel =loadAspectModel(modelData).get();
-           final AspectModelJsonPayloadGenerator generator = new AspectModelJsonPayloadGenerator( aspectModel.aspect() );
-           return generator.generateJson();
-       });
-    }
+      return Try.of( () -> {
+         String modelData = persistenceLayer.getModelDefinition( AspectModelUrn.fromUrn( urn ) );
+         aspectModel = loadAspectModel( modelData ).get();
+         final AspectModelJsonPayloadGenerator generator = new AspectModelJsonPayloadGenerator( aspectModel.aspect() );
+         return generator.generateJson();
+      } );
+   }
 
-	public Try<byte[]> getAasSubmodelTemplate( String urn, AasFileFormat aasFormat ) {
-		return Try.of(() -> {
-			String modelData = persistenceLayer.getModelDefinition(AspectModelUrn.fromUrn(urn));
-			final AspectModel aspectModel =loadAspectModel(modelData).get();
-			AasGenerationConfig config = AasGenerationConfigBuilder.builder()
-				.format(aasFormat)
-				.build();
+   public Try<byte[]> getAasSubmodelTemplate( String urn, AasFileFormat aasFormat ) {
+      return Try.of( () -> {
+         String modelData = persistenceLayer.getModelDefinition( AspectModelUrn.fromUrn( urn ) );
+         aspectModel = loadAspectModel( modelData ).get();
+         AasGenerationConfig config = AasGenerationConfigBuilder.builder()
+               .format( aasFormat )
+               .build();
 
-			Stream<AasArtifact> artifacts = new AspectModelAasGenerator(aspectModel.aspect(), config).generate();
+         Stream<AasArtifact> artifacts = new AspectModelAasGenerator( aspectModel.aspect(), config ).generate();
 
-			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
-			artifacts.forEach(artifact -> {
-				try {
-					outputStream.write(artifact.getContent());
-				} catch (IOException e) {
-					throw new RuntimeException("Error writing artifact content to stream", e);
-				}
-			});
-			return outputStream.toByteArray();
-		});
-	}
+         artifacts.forEach( artifact -> {
+            try {
+               outputStream.write( artifact.getContent() );
+            } catch (IOException e) {
+               throw new RuntimeException( "Error writing artifact content to stream", e );
+            }
+         } );
+         return outputStream.toByteArray();
+      } );
+   }
 
-	public Try<AspectModel> loadAspectModel(String modelUrn) {
-		return Try.of(() -> {
-			InputStream inputStream = new ByteArrayInputStream(modelUrn.getBytes(StandardCharsets.UTF_8));
-			return new AspectModelLoader().load(inputStream);
-		});
-	}
+   public Try<AspectModel> loadAspectModel( String modelUrn ) {
+      return Try.of( () -> {
+         InputStream inputStream = new ByteArrayInputStream( modelUrn.getBytes( StandardCharsets.UTF_8 ) );
+         return new AspectModelLoader().load( inputStream );
+      } );
+   }
 }

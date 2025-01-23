@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.5.3 
+### Added
+- Added test case for saving a semantic model with a dependent model
+
+## fixed
+- Upgrade ESMF-SAMM SDK version to 2.9.8
+- Upgrade Jena Server to 5.0.0
+- Update common-io version 2.17
+- Updated model validation logic and service implementation according to the new SAMM version 2.9.8
+
 ## 0.5.2
 ### Added
 ## fixed

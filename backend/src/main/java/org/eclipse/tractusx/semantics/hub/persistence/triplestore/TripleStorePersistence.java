@@ -107,7 +107,7 @@ public class TripleStorePersistence implements PersistenceLayer {
    @Override
    public SemanticModel updateModel( String urn, SemanticModelStatus status ) {
 
-	  validateStatusParameter(status);
+      validateStatusParameter( status );
       SemanticModel semanticModel = Optional.ofNullable( findByUrn(
             AspectModelUrn.fromUrn( urn ) ) ).orElseThrow( () -> new IllegalArgumentException(
             String.format( "Invalid URN %s",
@@ -128,16 +128,16 @@ public class TripleStorePersistence implements PersistenceLayer {
 
    @Override
    public SemanticModel save( SemanticModelType type, String newModel, SemanticModelStatus status ) {
-	  validateStatusParameter(status);
+      validateStatusParameter( status );
       final Model rdfModel = sdsSdk.load( newModel.getBytes( StandardCharsets.UTF_8 ) );
       final AspectModelUrn modelUrn = sdsSdk.getAspectUrn( rdfModel );
       Optional<ModelPackage> existsByPackage = findByPackageByUrn( ModelPackageUrn.fromUrn( modelUrn ) );
 
-		 existsByPackage.ifPresent(modelPackage -> validateStatus(status, rdfModel, modelUrn, modelPackage.getStatus()));
+      existsByPackage.ifPresent( modelPackage -> validateStatus( status, rdfModel, modelUrn, modelPackage.getStatus() ) );
 
       sdsSdk.validate( newModel, this::findContainingModelByUrn, type );
 
-      Model rdfModelOriginal =  sdsSdk.load( newModel.getBytes( StandardCharsets.UTF_8 ) );
+      Model rdfModelOriginal = sdsSdk.load( newModel.getBytes( StandardCharsets.UTF_8 ) );
 
       updateModel( status, modelUrn, rdfModelOriginal );
 
@@ -248,28 +248,28 @@ public class TripleStorePersistence implements PersistenceLayer {
    }
 
    private boolean hasReferenceToDraftPackage( AspectModelUrn modelUrn, Model model ) {
-		 Pattern pattern = Pattern.compile(SparqlQueries.ALL_SAMM_ASPECT_URN_PREFIX);
-		 List<String> urns = model.getNsPrefixMap().values().stream()
-			 .filter(value -> value.contains(AspectModelUrn.VALID_PROTOCOL))
-			 .toList();
+      Pattern pattern = Pattern.compile( SparqlQueries.ALL_SAMM_ASPECT_URN_PREFIX );
+      List<String> urns = model.getNsPrefixMap().values().stream()
+            .filter( value -> value.contains( AspectModelUrn.VALID_PROTOCOL ) )
+            .toList();
 
 
-		 for (String entry : urns) {
-			 Matcher matcher = pattern.matcher(entry);
+      for (String entry : urns) {
+         Matcher matcher = pattern.matcher( entry );
 
-			 if (matcher.find() || modelUrn.getUrnPrefix().equals(entry)) {
-				 continue;
-			 }
+         if (matcher.find() || modelUrn.getUrnPrefix().equals( entry )) {
+            continue;
+         }
 
-			 var packageStatus = findByPackageByUrn(ModelPackageUrn.fromUrn(entry))
-				 .map(ModelPackage::getStatus)
-				 .orElse(null);
+         var packageStatus = findByPackageByUrn( ModelPackageUrn.fromUrn( entry ) )
+               .map( ModelPackage::getStatus )
+               .orElse( null );
 
-			 if (ModelPackageStatus.DRAFT.equals(packageStatus)) {
-				 return false;
-			 }
-		 }
-		 return true;
+         if (ModelPackageStatus.DRAFT.equals( packageStatus )) {
+            return false;
+         }
+      }
+      return true;
    }
 
    private Integer getTotalItemsCount( @Nullable String namespaceFilter,
@@ -381,10 +381,11 @@ public class TripleStorePersistence implements PersistenceLayer {
          return SemanticModelType.SAMM;
       }
    }
-	private void validateStatusParameter(SemanticModelStatus status) {
-		if (ObjectUtils.allNull(status)) {
-			throw new IllegalArgumentException(
-				"SemanticModelStatus cannot be null. Valid values are: DRAFT, RELEASED, STANDARDIZED, DEPRECATED.");
-		}
-	}
+
+   private void validateStatusParameter( SemanticModelStatus status ) {
+      if (ObjectUtils.allNull( status )) {
+         throw new IllegalArgumentException(
+               "SemanticModelStatus cannot be null. Valid values are: DRAFT, RELEASED, STANDARDIZED, DEPRECATED." );
+      }
+   }
 }

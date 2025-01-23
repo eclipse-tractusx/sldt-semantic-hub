@@ -55,30 +55,30 @@ import org.eclipse.tractusx.semantics.hub.model.SemanticModelType;
 
 public class SAMMSdk {
 
-	private final AspectModelValidator aspectModelValidator;
+   private final AspectModelValidator aspectModelValidator;
 
-	public SAMMSdk(){
-		this.aspectModelValidator=new AspectModelValidator();
-	}
+   public SAMMSdk() {
+      this.aspectModelValidator = new AspectModelValidator();
+   }
 
-	public void validate( final String modelData, final Function<String, Model> tripleStoreRequester, SemanticModelType type ) {
-		InputStream inputStream = new ByteArrayInputStream(modelData.getBytes(StandardCharsets.UTF_8));
-		AspectModel aspectModel;
-		final ResolutionStrategy resolutionStrategy =new TripleStoreResolutionStrategy(tripleStoreRequester,type);
-		try {
-			aspectModel = new AspectModelLoader(resolutionStrategy).load(inputStream);
-		}catch (Exception e){
-			throw new InvalidAspectModelException( e.getMessage() );
-		}
-		final List<Violation> violations = aspectModelValidator.validateModel(aspectModel);
-		if ( !violations.isEmpty() ) {
-			Map<String, String> detailsMap = violations.stream()
-				.collect(
-					Collectors.groupingBy(
-						Violation::errorCode,
-						Collectors.mapping( Violation::message, Collectors.joining( "," ) )
-					)
-				);
+   public void validate( final String modelData, final Function<String, Model> tripleStoreRequester, SemanticModelType type ) {
+      InputStream inputStream = new ByteArrayInputStream( modelData.getBytes( StandardCharsets.UTF_8 ) );
+      AspectModel aspectModel;
+      final ResolutionStrategy resolutionStrategy = new TripleStoreResolutionStrategy( tripleStoreRequester, type );
+      try {
+         aspectModel = new AspectModelLoader( resolutionStrategy ).load( inputStream );
+      } catch (Exception e) {
+         throw new InvalidAspectModelException( e.getMessage() );
+      }
+      final List<Violation> violations = aspectModelValidator.validateModel( aspectModel );
+      if (!violations.isEmpty()) {
+         Map<String, String> detailsMap = violations.stream()
+               .collect(
+                     Collectors.groupingBy(
+                           Violation::errorCode,
+                           Collectors.mapping( Violation::message, Collectors.joining( "," ) )
+                     )
+               );
 
          throw new InvalidAspectModelException( detailsMap );
       }
@@ -88,7 +88,7 @@ public class SAMMSdk {
       final StmtIterator stmtIterator = model.listStatements( null, RDF.type, (RDFNode) null );
       return StreamSupport.stream( Spliterators.spliteratorUnknownSize( stmtIterator, ORDERED ), false )
             .filter( statement -> statement.getObject().isURIResource() )
-            .filter( statement -> statement.getObject().asResource().toString().matches( SparqlQueries.SAMM_ASPECT_URN_REGEX ))
+            .filter( statement -> statement.getObject().asResource().toString().matches( SparqlQueries.SAMM_ASPECT_URN_REGEX ) )
             .map( Statement::getSubject )
             .map( Resource::toString )
             .map( AspectModelUrn::fromUrn )
@@ -97,64 +97,65 @@ public class SAMMSdk {
    }
 
    public static class TripleStoreResolutionStrategy implements ResolutionStrategy {
-		private final Function<String, Model> tripleStoreRequester;
-		private final SemanticModelType type;
-		private  AspectModelFile aspectModelFile;
+      private final Function<String, Model> tripleStoreRequester;
+      private final SemanticModelType type;
+      private AspectModelFile aspectModelFile;
 
-		public TripleStoreResolutionStrategy(Function<String, Model> tripleStoreRequester, SemanticModelType type) {
-			this.tripleStoreRequester = tripleStoreRequester;
-			this.type = type;
-		}
-
-
-		@Override
-		public AspectModelFile apply(AspectModelUrn aspectModelUrn, ResolutionStrategySupport resolutionStrategySupport) throws ModelResolutionException {
-			final Resource resource = ResourceFactory.createResource( checkAndReplaceToBammPrefix(aspectModelUrn.getUrn().toASCIIString()));
-			try {
-				final Model model = tripleStoreRequester.apply( checkAndReplaceToBammPrefix(aspectModelUrn.getUrn().toString()));
-				if ( model == null ) {
-					throw new ResourceDefinitionNotFoundException( getClass().getSimpleName(), resource ) ;
-				}
-				if(!model.contains( resource, RDF.type, (RDFNode) null ) ){
-					throw new ResourceDefinitionNotFoundException( getClass().getSimpleName(), resource );
-				}
-				aspectModelFile=load(model);
-				return aspectModelFile;
-			} catch (Exception e) {
-				throw  new ResourceDefinitionNotFoundException( getClass().getSimpleName(), resource )  ;          }
-		}
-
-		@Override
-		public Stream<URI> listContents() {
-			return aspectModelFile.sourceLocation().stream();
-		}
+      public TripleStoreResolutionStrategy( Function<String, Model> tripleStoreRequester, SemanticModelType type ) {
+         this.tripleStoreRequester = tripleStoreRequester;
+         this.type = type;
+      }
 
 
-		@Override
-		public Stream<URI> listContentsForNamespace( final AspectModelUrn aspectModelUrn ) {
-			return aspectModelFile.namespace().urn().equals( aspectModelUrn )
-				? aspectModelFile.sourceLocation().stream()
-				: Stream.empty();
-		}
+      @Override
+      public AspectModelFile apply( AspectModelUrn aspectModelUrn, ResolutionStrategySupport resolutionStrategySupport ) throws ModelResolutionException {
+         final Resource resource = ResourceFactory.createResource( checkAndReplaceToBammPrefix( aspectModelUrn.getUrn().toASCIIString() ) );
+         try {
+            final Model model = tripleStoreRequester.apply( checkAndReplaceToBammPrefix( aspectModelUrn.getUrn().toString() ) );
+            if (model == null) {
+               throw new ResourceDefinitionNotFoundException( getClass().getSimpleName(), resource );
+            }
+            if (!model.contains( resource, RDF.type, (RDFNode) null )) {
+               throw new ResourceDefinitionNotFoundException( getClass().getSimpleName(), resource );
+            }
+            aspectModelFile = load( model );
+            return aspectModelFile;
+         } catch (Exception e) {
+            throw new ResourceDefinitionNotFoundException( getClass().getSimpleName(), resource );
+         }
+      }
 
-		@Override
-		public Stream<AspectModelFile> loadContents() {
-			return Stream.of( aspectModelFile );
-		}
+      @Override
+      public Stream<URI> listContents() {
+         return aspectModelFile.sourceLocation().stream();
+      }
 
-		@Override
-		public Stream<AspectModelFile> loadContentsForNamespace( final AspectModelUrn aspectModelUrn ) {
-			return aspectModelFile.namespace().urn().equals( aspectModelUrn )
-				? Stream.of( aspectModelFile )
-				: Stream.empty();
-		}
 
-		private String checkAndReplaceToBammPrefix(String value){
-			return isBamm() ? value.replace( "samm", "bamm" ) : value ;
-		}
+      @Override
+      public Stream<URI> listContentsForNamespace( final AspectModelUrn aspectModelUrn ) {
+         return aspectModelFile.namespace().urn().equals( aspectModelUrn )
+               ? aspectModelFile.sourceLocation().stream()
+               : Stream.empty();
+      }
 
-		private boolean isBamm(){
-			return type.equals( SemanticModelType.BAMM );
-		}
-	}
+      @Override
+      public Stream<AspectModelFile> loadContents() {
+         return Stream.of( aspectModelFile );
+      }
+
+      @Override
+      public Stream<AspectModelFile> loadContentsForNamespace( final AspectModelUrn aspectModelUrn ) {
+         return aspectModelFile.namespace().urn().equals( aspectModelUrn )
+               ? Stream.of( aspectModelFile )
+               : Stream.empty();
+      }
+
+      private String checkAndReplaceToBammPrefix( String value ) {
+         return isBamm() ? value.replace( "samm", "bamm" ) : value;
+      }
+
+      private boolean isBamm() {
+         return type.equals( SemanticModelType.BAMM );
+      }
+   }
 }

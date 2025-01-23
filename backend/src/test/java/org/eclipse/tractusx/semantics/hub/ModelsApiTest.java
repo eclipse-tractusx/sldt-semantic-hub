@@ -648,8 +648,7 @@ public class ModelsApiTest extends AbstractModelsApiTest{
             .andDo( MockMvcResultHandlers.print() )
             .andExpect( status().isBadRequest() )
             .andExpect( jsonPath( "$.error.message", is( "Validation failed." ) ) )
-				    .andExpect( jsonPath( "$.error.details.validationError",
-					containsString( "TripleStoreResolutionStrategy: definition for urn:bamm:org.eclipse.tractusx.traceability:0.1.1#PartDataCharacteristic not found" ) ) );
+            .andExpect( jsonPath( "$.error.details.validationError", containsString( "TripleStoreResolutionStrategy: definition for urn:bamm:org.eclipse.tractusx.traceability:0.1.1#PartDataCharacteristic not found" ) ) );
 
 		 // save the traceability aspect model
       String traceabilityModel = TestUtils.loadModelFromResources(

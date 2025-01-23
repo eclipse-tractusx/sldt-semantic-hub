@@ -163,34 +163,35 @@ public class AspectModelService implements ModelsApiDelegate {
       return new ResponseEntity( result.get(), HttpStatus.OK );
    }
 
-	@Override
-	public ResponseEntity getAasSubmodelTemplate(String urn, AasFormat aasFormat) {
-		AasFileFormat fileFormat = resolveFileFormat(aasFormat);
-		Try<byte[]> result  = sdkHelper.getAasSubmodelTemplate(urn, fileFormat);
+   @Override
+   public ResponseEntity getAasSubmodelTemplate( String urn, AasFormat aasFormat ) {
+      AasFileFormat fileFormat = resolveFileFormat( aasFormat );
+      Try<byte[]> result = sdkHelper.getAasSubmodelTemplate( urn, fileFormat );
 
-		if ( result.isFailure() ) {
-			throw new RuntimeException( String.format( "Failed to generate AASX submodel template for model with urn %s", urn ) );
-		}
-		HttpHeaders responseHeaders = new HttpHeaders();
+      if ( result.isFailure() ) {
+         throw new RuntimeException( String.format( "Failed to generate AASX submodel template for model with urn %s", urn ) );
+      }
+      HttpHeaders responseHeaders = new HttpHeaders();
 
-		responseHeaders.setContentType(getMediaType( aasFormat ));
+      responseHeaders.setContentType( getMediaType( aasFormat ) );
 
-		return new ResponseEntity( result.get(), responseHeaders, HttpStatus.OK );
-	}
+      return new ResponseEntity( result.get(), responseHeaders, HttpStatus.OK );
+   }
 
-	private AasFileFormat resolveFileFormat(AasFormat aasFormat) {
-		if (AasFormat.FILE.equals(aasFormat)) {
-			return AasFileFormat.AASX;
-		}
-		try {
-			return AasFileFormat.valueOf(aasFormat.getValue());  // Convert AasFormat to AasFileFormat
-		} catch (IllegalArgumentException e) {
-			throw new IllegalArgumentException("Invalid AasFormat value: " + aasFormat.getValue(), e);
-		}
-	}
+   private AasFileFormat resolveFileFormat( AasFormat aasFormat ) {
+      if ( AasFormat.FILE.equals( aasFormat ) ) {
+         return AasFileFormat.AASX;
+      }
+      try {
+         return AasFileFormat.valueOf( aasFormat.getValue() );  // Convert AasFormat to AasFileFormat
+      } catch (IllegalArgumentException e) {
+         throw new IllegalArgumentException( "Invalid AasFormat value: " + aasFormat.getValue(), e );
+      }
+   }
 
    /**
     * Determines the MediaType based on the AasFormat
+    *
     * @param aasFormat
     * @return MediaType
     */
