@@ -62,7 +62,7 @@ jobs:
           BEARER_TOKEN: ${{ env.mask_client_bearer_token }}
           SEMANTIC_HUB_API_URL: ${{ inputs.semantichubUrl }}
       - name: Upload test report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: semantic-hub-e2e-test-report
