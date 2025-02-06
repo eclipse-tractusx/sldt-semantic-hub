@@ -1,6 +1,6 @@
 /********************************************************************************
- * Copyright (c) 2021-2023 Robert Bosch Manufacturing Solutions GmbH
- * Copyright (c) 2021-2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021-2025 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2021-2025 Contributors to the Eclipse Foundation
  *
  * See the NOTICE file(s) distributed with this work for additional
  * information regarding copyright ownership.
@@ -53,7 +53,7 @@ public class SdsSdk {
     *
     * @param model - the model to validate
     */
-   public void validate( final Model model, final Function<String, Model> tripleStoreRequester, SemanticModelType type ) {
+   public void validate( final String model, final Function<String, Model> tripleStoreRequester, SemanticModelType type ) {
       sammSdk.validate( model, tripleStoreRequester, type );
    }
 

@@ -1,5 +1,5 @@
 /********************************************************************************
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
+ * Copyright (c) 2025 Contributors to the Eclipse Foundation
  *
  * See the NOTICE file(s) distributed with this work for additional
  * information regarding copyright ownership.
@@ -23,6 +23,7 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+import org.eclipse.esmf.aspectmodel.aas.AasFileFormat;
 import org.eclipse.esmf.aspectmodel.urn.AspectModelUrn;
 import org.eclipse.tractusx.semantics.hub.api.ModelsApiDelegate;
 import org.eclipse.tractusx.semantics.hub.domain.ModelPackageStatus;
@@ -163,20 +164,34 @@ public class AspectModelService implements ModelsApiDelegate {
    }
 
    @Override
-   public ResponseEntity getAasSubmodelTemplate(String urn, AasFormat aasFormat) {
-      final Try result = sdkHelper.getAasSubmodelTemplate(urn, aasFormat);
+   public ResponseEntity getAasSubmodelTemplate( String urn, AasFormat aasFormat ) {
+      AasFileFormat fileFormat = resolveFileFormat( aasFormat );
+      Try<byte[]> result = sdkHelper.getAasSubmodelTemplate( urn, fileFormat );
+
       if ( result.isFailure() ) {
          throw new RuntimeException( String.format( "Failed to generate AASX submodel template for model with urn %s", urn ) );
       }
       HttpHeaders responseHeaders = new HttpHeaders();
 
-      responseHeaders.setContentType(getMediaType( aasFormat ));
+      responseHeaders.setContentType( getMediaType( aasFormat ) );
 
       return new ResponseEntity( result.get(), responseHeaders, HttpStatus.OK );
    }
 
+   private AasFileFormat resolveFileFormat( AasFormat aasFormat ) {
+      if ( AasFormat.FILE.equals( aasFormat ) ) {
+         return AasFileFormat.AASX;
+      }
+      try {
+         return AasFileFormat.valueOf( aasFormat.getValue() );  // Convert AasFormat to AasFileFormat
+      } catch (IllegalArgumentException e) {
+         throw new IllegalArgumentException( "Invalid AasFormat value: " + aasFormat.getValue(), e );
+      }
+   }
+
    /**
     * Determines the MediaType based on the AasFormat
+    *
     * @param aasFormat
     * @return MediaType
     */
