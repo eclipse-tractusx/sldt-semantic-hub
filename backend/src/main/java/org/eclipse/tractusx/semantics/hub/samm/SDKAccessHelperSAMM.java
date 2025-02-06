@@ -19,9 +19,15 @@
  ********************************************************************************/
 package org.eclipse.tractusx.semantics.hub.samm;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.google.common.io.CharStreams;
-import io.vavr.control.Try;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.util.Locale;
+import java.util.stream.Stream;
+
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.eclipse.esmf.aspectmodel.aas.*;
@@ -43,10 +49,10 @@ import org.eclipse.esmf.aspectmodel.urn.AspectModelUrn;
 import org.eclipse.esmf.metamodel.AspectModel;
 import org.eclipse.tractusx.semantics.hub.persistence.PersistenceLayer;
 
-import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.util.Locale;
-import java.util.stream.Stream;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.google.common.io.CharStreams;
+
+import io.vavr.control.Try;
 
 @Setter
 @RequiredArgsConstructor
