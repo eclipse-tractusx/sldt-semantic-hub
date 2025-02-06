@@ -1,6 +1,6 @@
 /********************************************************************************
- * Copyright (c) 2021-2023 Robert Bosch Manufacturing Solutions GmbH
- * Copyright (c) 2021-2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021-2025 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2021-2025 Contributors to the Eclipse Foundation
  *
  * See the NOTICE file(s) distributed with this work for additional
  * information regarding copyright ownership.
@@ -30,6 +30,7 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.jena.arq.querybuilder.UpdateBuilder;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QuerySolution;
@@ -40,7 +41,6 @@ import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.rdfconnection.RDFConnection;
 import org.apache.jena.rdfconnection.RDFConnectionRemoteBuilder;
 import org.apache.jena.update.UpdateRequest;
-import org.eclipse.esmf.aspectmodel.resolver.AspectModelResolver;
 import org.eclipse.esmf.aspectmodel.urn.AspectModelUrn;
 import org.eclipse.esmf.aspectmodel.urn.UrnSyntaxException;
 import org.eclipse.tractusx.semantics.hub.AspectModelNotFoundException;
@@ -107,6 +107,7 @@ public class TripleStorePersistence implements PersistenceLayer {
    @Override
    public SemanticModel updateModel( String urn, SemanticModelStatus status ) {
 
+      validateStatusParameter( status );
       SemanticModel semanticModel = Optional.ofNullable( findByUrn(
             AspectModelUrn.fromUrn( urn ) ) ).orElseThrow( () -> new IllegalArgumentException(
             String.format( "Invalid URN %s",
@@ -127,17 +128,16 @@ public class TripleStorePersistence implements PersistenceLayer {
 
    @Override
    public SemanticModel save( SemanticModelType type, String newModel, SemanticModelStatus status ) {
+      validateStatusParameter( status );
       final Model rdfModel = sdsSdk.load( newModel.getBytes( StandardCharsets.UTF_8 ) );
       final AspectModelUrn modelUrn = sdsSdk.getAspectUrn( rdfModel );
       Optional<ModelPackage> existsByPackage = findByPackageByUrn( ModelPackageUrn.fromUrn( modelUrn ) );
 
-      if ( existsByPackage.isPresent() ) {
-         validateStatus( status, rdfModel, modelUrn, existsByPackage.get().getStatus() );
-      }
+      existsByPackage.ifPresent( modelPackage -> validateStatus( status, rdfModel, modelUrn, modelPackage.getStatus() ) );
 
-      sdsSdk.validate( rdfModel, this::findContainingModelByUrn, type );
+      sdsSdk.validate( newModel, this::findContainingModelByUrn, type );
 
-      Model rdfModelOriginal =  sdsSdk.load( newModel.getBytes( StandardCharsets.UTF_8 ) );
+      Model rdfModelOriginal = sdsSdk.load( newModel.getBytes( StandardCharsets.UTF_8 ) );
 
       updateModel( status, modelUrn, rdfModelOriginal );
 
@@ -249,21 +249,26 @@ public class TripleStorePersistence implements PersistenceLayer {
 
    private boolean hasReferenceToDraftPackage( AspectModelUrn modelUrn, Model model ) {
       Pattern pattern = Pattern.compile( SparqlQueries.ALL_SAMM_ASPECT_URN_PREFIX );
+      List<String> urns = model.getNsPrefixMap().values().stream()
+            .filter( value -> value.contains( AspectModelUrn.VALID_PROTOCOL ) )
+            .toList();
 
-      List<String> urns = AspectModelResolver.getAllUrnsInModel( model ).stream().filter( urn -> getAspectModelUrn( urn ).isSuccess() )
-            .map( urn -> getAspectModelUrn( urn ).get().getUrnPrefix() )
-            .distinct()
-            .collect( Collectors.toList() );
 
-      for ( var entry : urns ) {
+      for (String entry : urns) {
          Matcher matcher = pattern.matcher( entry );
-         if ( !matcher.find() && !modelUrn.getUrnPrefix().equals( entry ) ) {
-            if ( findByPackageByUrn( ModelPackageUrn.fromUrn( entry ) ).get().getStatus().equals( ModelPackageStatus.DRAFT ) ) {
-               return false;
-            }
+
+         if (matcher.find() || modelUrn.getUrnPrefix().equals( entry )) {
+            continue;
+         }
+
+         var packageStatus = findByPackageByUrn( ModelPackageUrn.fromUrn( entry ) )
+               .map( ModelPackage::getStatus )
+               .orElse( null );
+
+         if (ModelPackageStatus.DRAFT.equals( packageStatus )) {
+            return false;
          }
       }
-
       return true;
    }
 
@@ -374,6 +379,13 @@ public class TripleStorePersistence implements PersistenceLayer {
          return SemanticModelType.BAMM;
       }else{
          return SemanticModelType.SAMM;
+      }
+   }
+
+   private void validateStatusParameter( SemanticModelStatus status ) {
+      if (ObjectUtils.allNull( status )) {
+         throw new IllegalArgumentException(
+               "SemanticModelStatus cannot be null. Valid values are: DRAFT, RELEASED, STANDARDIZED, DEPRECATED." );
       }
    }
 }
