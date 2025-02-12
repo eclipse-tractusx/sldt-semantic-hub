@@ -43,7 +43,7 @@ semantic-hub:
   graphdb:
     ## Include Fuski deployment or deploy separately
     enabled: true
-    image: ghcr.io/catenax-ev/jena-fuseki:5.0.0
+    image: ghcr.io/catenax-ev/jena-fuseki-docker:5.0.0
     imagePullPolicy: IfNotPresent
     imagePullSecrets:
       - name: machineuser-pull-secret-ro
