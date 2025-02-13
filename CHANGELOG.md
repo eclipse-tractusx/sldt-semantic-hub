@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 0.6.0
 ### fixed
-- updated springboot version to 3.4.0
+- fixed cve CVE-2024-38819 spring-webmvc
 
 
 ## 0.5.3 
