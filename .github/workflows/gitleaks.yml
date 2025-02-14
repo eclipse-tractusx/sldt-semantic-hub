@@ -1,5 +1,5 @@
-# Copyright (c) 2021-2022 Robert Bosch Manufacturing Solutions GmbH
-# Copyright (c) 2021-2022 Contributors to the Eclipse Foundation
+# Copyright (c) 2024-2025 Robert Bosch Manufacturing Solutions GmbH
+# Copyright (c) 2024-2025 Contributors to the Eclipse Foundation
 
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -36,7 +36,7 @@ jobs:
           gitleaks detect -f sarif -r ./gitleaks-report-semantic-hub.sarif --exit-code 0
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: gitleaks-report
           path: ./gitleaks-report-semantic-hub.sarif
@@ -49,7 +49,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Download artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: gitleaks-report
       - name: Upload SARIF report

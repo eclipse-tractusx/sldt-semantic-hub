@@ -1,6 +1,6 @@
 /********************************************************************************
- * Copyright (c) 2021-2022 Robert Bosch Manufacturing Solutions GmbH
- * Copyright (c) 2021-2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021-2025 Robert Bosch Manufacturing Solutions GmbH
+ * Copyright (c) 2021-2025 Contributors to the Eclipse Foundation
  *
  * See the NOTICE file(s) distributed with this work for additional
  * information regarding copyright ownership.
@@ -26,7 +26,7 @@ import org.testcontainers.containers.wait.strategy.Wait;
 
 public class FusekiTestContainer {
    private static final int PORT = 3030;
-   private static final String IMAGE = "jena-fuseki-docker:4.7.0";
+   private static final String IMAGE = "jena-fuseki-docker:5.0.0";
    private static final String CONTAINER_NAME = "fuseki-container";
 
    public static final GenericContainer<?> FUSEKI_CONTAINER =
