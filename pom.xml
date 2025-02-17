@@ -176,6 +176,10 @@
 						<groupId>org.springframework.boot</groupId>
 						<artifactId>spring-boot-starter-tomcat</artifactId>
 					</exclusion>
+					<exclusion>
+						<groupId>org.springframework</groupId>
+						<artifactId>spring-webmvc</artifactId>
+					</exclusion>
 				</exclusions>
 			</dependency>
 			<!-- Tempory fix for a finding in snakeyaml v1.30, remove once new Spring Boot release contains fix -->
@@ -419,6 +423,11 @@
 				<artifactId>junit-jupiter</artifactId>
 				<version>${testcontainer.version}</version>
 				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-webmvc</artifactId>
+				<version>6.1.14</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
