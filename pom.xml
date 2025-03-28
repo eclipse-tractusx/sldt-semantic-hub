@@ -83,7 +83,7 @@
 		<snakeyaml.version>2.0</snakeyaml.version>
 		<jakarta.validation.version>3.0.2</jakarta.validation.version>
 		<jakarta.servlet.api.version>6.0.0</jakarta.servlet.api.version>
-		<jakarta.xml.bind.version>4.0.0</jakarta.xml.bind.version>
+		<jakarta.xml.bind.version>4.0.2</jakarta.xml.bind.version>
 		<apache.commons.fileupload.version>1.5</apache.commons.fileupload.version>
 
 		<!-- logging -->
