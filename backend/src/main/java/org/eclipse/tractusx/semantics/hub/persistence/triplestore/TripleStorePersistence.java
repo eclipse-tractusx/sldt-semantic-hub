@@ -106,7 +106,6 @@ public class TripleStorePersistence implements PersistenceLayer {
 
    @Override
    public SemanticModel updateModel( String urn, SemanticModelStatus status ) {
-
       validateStatusParameter( status );
       SemanticModel semanticModel = Optional.ofNullable( findByUrn(
             AspectModelUrn.fromUrn( urn ) ) ).orElseThrow( () -> new IllegalArgumentException(
@@ -382,10 +381,10 @@ public class TripleStorePersistence implements PersistenceLayer {
       }
    }
 
+
    private void validateStatusParameter( SemanticModelStatus status ) {
       if (ObjectUtils.allNull( status )) {
          throw new IllegalArgumentException(
-               "SemanticModelStatus cannot be null. Valid values are: DRAFT, RELEASED, STANDARDIZED, DEPRECATED." );
-      }
+               "SemanticModelStatus cannot be null. Valid values are: DRAFT, RELEASED, STANDARDIZED, DEPRECATED." );      }
    }
 }

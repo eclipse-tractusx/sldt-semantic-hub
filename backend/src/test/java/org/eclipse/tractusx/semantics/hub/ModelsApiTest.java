@@ -1112,4 +1112,26 @@ public class ModelsApiTest extends AbstractModelsApiTest{
                 .andDo( MockMvcResultHandlers.print() )
                 .andExpect( status().isOk() );
     }
+  
+  	@Test
+	public void testUpdateModelWithNullStatusExpectBadRequest() throws Exception {
+		String urnPrefix = "urn:samm:org.eclipse.tractusx.valid.save:2.0.0#";
+		mvc.perform(
+				put( TestUtils.createValidModelRequest(urnPrefix),null)
+			)
+			.andDo( MockMvcResultHandlers.print() )
+			.andExpect( status().isBadRequest() )
+			.andExpect( jsonPath( "$.error.message", containsString( "SemanticModelStatus cannot be null" ) ) );
+	}
+
+	@Test
+	public void testSaveModelWithNullStatusExpectBadRequest() throws Exception {
+		String urnPrefix = "urn:samm:org.eclipse.tractusx.valid.save:2.0.0#";
+		mvc.perform(
+				post( TestUtils.createValidModelRequest(urnPrefix),null)
+			)
+			.andDo( MockMvcResultHandlers.print() )
+			.andExpect( status().isBadRequest() )
+			.andExpect( jsonPath( "$.error.message", containsString( "SemanticModelStatus cannot be null" ) ) );
+	}
 }
