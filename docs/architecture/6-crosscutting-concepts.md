@@ -1,47 +1,12 @@
-## Architectural Overview
-The SLDT Semantic Hub stores Semantic Model definitions and allows the generation of several artifacts. It restricts access to the models by authentication via a token and authorization via roles in the token claims. Therefore, the Hub interacts with a Keycloak instance. The models are created in the Hub during our governance process as depicted below.
-```mermaid
-graph LR
-    SemanticHub[Semantic hub] -- "read models" --> Data[Data Consumer/Provider]
-    Keycloak --"PUB Key for token validation" --> SemanticHub
-    Github[Github Models Repository] -- "synchronize models from the governance process" --> SemanticHub
-```
+## 6 Concept
 
-## Implementation
-The following section describes the use cases implemented for the semantic hub.
+### Overall Concept
 
-### Upload of an aspect model
-```mermaid
-sequenceDiagram
-    actor ModelAdmin as Model Admin
-    participant SemanticHub as Semantic hub
-    participant TripleStore as TripleStore
+#The overall concept can be found under **2 Architecture and
+constraints**.
 
-    ModelAdmin ->>+ SemanticHub: Upload aspect model file (.ttl)
-    loop validation
-    SemanticHub ->>+ SemanticHub: Check if aspect model is complaint with bamm/samm (using sdk)
-    SemanticHub ->>+ TripleStore: Check if aspect model already exists
-    Note over SemanticHub, TripleStore: If the aspect model exists and is in release status, <br> the upload will be rejected. <br>If the aspect model exists in draft status,<br> upload will be accepted.
-    SemanticHub ->>+ TripleStore: Check if external referenceses exists
-    Note over SemanticHub, TripleStore: If an external reference does not exists,<br> the upload will be rejected.<br>Should we allow to reference namespaces,<br> in DRAFT state?
-    TripleStore -->> SemanticHub: response ok
-    end
-    note over ModelAdmin, SemanticHub: The model admin provides the release status <br> (RELEASED/DRAFT) upon upload
-    SemanticHub ->>+ SemanticHub: Add the release status as triple to the model
-    SemanticHub ->>+ TripleStore: Write all triples to TripleStore
-    TripleStore -->> SemanticHub: response ok
-    SemanticHub -->> ModelAdmin: Response upload successful
-```
+### Semantic Hub
 
-| Validation | Description Value | 
-|---|---|
-| BAMM compliance  | Checks if the model is compliant with the BAMM. The BAMM SDK does provide the validation logic. |
-| Model Status check (RELEASE vs DRAFT)  | Uploads will always accepted when there are no existing namespace:version combination in the TripleStore. For a model in DRAFT state, uploads will always be accepted. For a model in RELEASE state, uploads will be denied. RELEASED models are immutable. |
-|  External reference check | It will be checked if all exernal references are available in the TripleStore. The BAMM SDK does provide a mechanisim where the resolving against the TripleStore can be integrated. |
-
-
-
-## Example:
 Example Aspect Model
 ```
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -68,7 +33,7 @@ Release Status
 <urn:bamm:org.idtwin:1.0.0#> aux:releaseStatus aux:DRAFT .
 ```
 
-## Package
+### Package
 | No | Rule                                                                                                              | Example                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
 |----|-------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | 1. | A package is defined by the urn prefix until "#".                                                                 | net.catenax.semantics.product:1.2.0#                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
@@ -77,43 +42,38 @@ Release Status
 | 4. | The versioning applies to the package.  All aspects and model elements scoped to a package have the same version. | Possible: net.catenax.semantics.product:1.2.0#ProductDescription  net.catenax.semantics.product:1.2.0#ProductUsage net.catenax.semantics.product:1.2.0#ProductDetails  Possible:net.catenax.semantics.product:4.3.0#ProductDescription  net.catenax.semantics.product:4.3.0#ProductUsage net.catenax.semantics.product:4.3.0#ProductDetails  Not Possible: net.catenax.semantics.product:1.3.0#ProductDescription net.catenax.semantics.product:1.2.0#ProductUsage net.catenax.semantics.product:3.2.0#ProductDetails |
 | 5. | All aspect models and model elements scoped to a package have the same status.                                    | Possible: net.catenax.semantics.product:1.2.0#ProductDescription → RELEASE, net.catenax.semantics.product:1.2.0#ProductUsage → RELEASE net.catenax.semantics.product:1.2.0#ProductDetails → RELEASE Not Possible: net.catenax.semantics.product:1.2.0#ProductDescription → RELEASE, net.catenax.semantics.product:1.2.0#ProductUsage → DRAFT                                                                                                                                                                          |
 
-## Download of the documentation of an Aspect Model
-```mermaid
-sequenceDiagram
-    actor ModelAdmin as Model Admin
-    participant SemanticHub as Semantic hub
-    participant TripleStore as TripleStore
 
-    ModelAdmin ->>+ SemanticHub: Get documentation for aspect model com.catenax:0.0.1:Sample
-    SemanticHub ->>+ TripleStore: Resolve aspect model with all references based on provided urn com.catenax:0.0.1:Sample
-    TripleStore -->> SemanticHub: response 
-    SemanticHub ->>+ SemanticHub: generate documentation based on the response from TripleStore
-    SemanticHub -->> ModelAdmin: respond with generated documenation
-```
+### Security / Safety / Use of JWT Token
 
-Example queries to resolve an aspect model with all references:
-Construct Query
-```
-@prefix ns: <urn:bamm:org.idtwin:1.0.0#DocumentationSimple>
+The whole environment is secured with OAuth2. We used and recommend the usage of Keycloak. The Semantic hub has
+a realm entry in Keycloak. Every user who wants to use Semantic Hub
+need the corresponding roles for his user.
 
-CONSTRUCT {
-?s ?p ?o .
-} WHERE {
-bind( ns: as ?aspect)
-?aspect (<>|!<>)* ?s . // resolves all references
-?s ?p ?o .
-}
-Search for Aspect Models
-The current search API can stay as is. Below is an example query for selecting bamm properties:
-Search Queries
-CONSTRUCT {
-?s ?p ?o .
-} WHERE {   
-FILTER ( $param == ?o )  // Custom filter can be added here.
-?s ?p ?o .
-}
-```
-## Security Assessment
+The roles are:
+
+1. [ ] *VIEW*( "view_semantic_model" )
+2. [ ] *ADD*( "add_semantic_model" )
+3. [ ] *DELETE*( "delete_semantic_model" )
+4. [ ] *UPDATE*( "update_semantic_model" )
+These roles are sent within a JWT Token generated by Keycloak.
+
+With Add,Delete,Update roles it is possible to add or modify entries from the
+Semantic Hub Database. For searching the view role is sufficient.
+The credentials are set with entries in Helm Charts.
+
+### Authentication & Authorization
+The service is secured by a OAuth2 compliant authorization. Every API call has to provide a
+valid Bearer Token. Authorization is provided by a role based access. These roles are possible:
+
+| Role                    | Description                   |
+|-------------------------|-------------------------------|
+| view_semantic_model     | can search for semantic model |
+| add_semantic_model      | can add semantic model        |
+| delete_semantic_model   | can delete semantic model     |
+| update_semantic_model   | can update semantic model     |
+
+
+### Security Assessment
 
 ### Data Flow Diagram
 
@@ -139,6 +99,8 @@ flowchart LR
     DC <-->|Token request| K
     DP <-->|Token request| K
 ```
+
+
 
 ### NOTICE
 

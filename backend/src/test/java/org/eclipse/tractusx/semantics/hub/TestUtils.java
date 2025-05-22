@@ -51,6 +51,8 @@ public class TestUtils {
 
    private static final String DEPENDENT_MODEL_BAMM = MODELS_ROOT_PATH + "DependentModel-bamm.ttl";
 
+   public static final String VALIDATION_FAILED_SAMM=MODELS_ROOT_PATH +"InvalidPropertyValidate-samm.ttl";
+
    public static String loadModelFromResources( String resourceName ) throws IOException {
       return IOUtils.resourceToString( resourceName, StandardCharsets.UTF_8, TestUtils.class.getClassLoader() );
    }

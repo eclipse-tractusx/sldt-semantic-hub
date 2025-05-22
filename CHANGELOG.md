@@ -4,35 +4,66 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 0.4.0
+## 0.6.0
+### fixed
+- fixed cve CVE-2024-38819 spring-webmvc
+
+
+## 0.5.3 
 ### Added
+- Added test case for saving a semantic model with a dependent model
 
 ## fixed
+- Upgrade ESMF-SAMM SDK version to 2.9.8
+- Upgrade Jena Server to 5.0.0
+- Update common-io version 2.17
+- Updated model validation logic and service implementation according to the new SAMM version 2.9.8
+
+## 0.5.2
+### Added
+## fixed
+- Updated the documentation structure according to Arc42 template
+
+## 0.5.1
+### Added
+## fixed
+- Update Spring Boot to version 3.2.5
+- Update Spring security to version 6.3.4
+
+## 0.5.0
+### Added
+### fixed
+- Update spring framework to version 6.1.6
+- Update commons-io to version 2.17.0
+- Update lombock to version 1.18.34
+- Update velocity-engine-core to version 2.4
+- exlcude com.google.protobuf lib because of CVE https://avd.aquasec.com/nvd/2024/cve-2024-7254
+
+## 0.4.0
+### Added
+### fixed
 - Implemented mandatory changes in licensing and legal documentation
 
 ## 0.3.2
 ### Added
 - Update Springboot to version 3.2.4
-## fixed
+### fixed
 - security fix spring-web:6.1.5
 - security fix commons-compress:1.22
-
 
 ## 0.3.1
 ### Added
 - Update Springboot to version 3.2.3
 
-## fixed
+### fixed
 
 ## 0.3.0
 ### Added
-
 ### Fixed
 - Generate diagrams with SVG Format
 
 ## 0.2.16
 ### Added
-
 ### Fixed
 - Spring Boot version updated to 3.1.6 to fix CVE-2023-34053
 - update Logback version to fix CVE-2023-6378
@@ -43,34 +74,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added helm upgrade feature into helm test
 - Removed the docker apk upgrade and update commands.
 - Upgrade dependency to ESMF SDK 2.4.2
-
 ### Fixed
-=======
 - Handled UrnSyntaxException.
 - Fixed the jena-fuseki-docker version to 4.7.0 for the test case.
 
 ## 0.2.14
 ### Added
-
 ### Fixed
 - Fixed CVE-2023-36478 | CWE-190 and CVE-2023-40167| CWE-130 Third-Party Components vulnerability.
 
 ## 0.2.13
 ### Added
 - Added summary for the open api paths
-
 ### Fixed
 - Fixed CVE-2023-36478 | CWE-190 and CVE-2023-40167| CWE-130 Third-Party Components vulnerability.
 
 ## 0.2.12
 ### Added
-
 ### Fixed
 - Fixed CVE-2022-44729| CWE-918 Third-Party Components vulnerability.
 
 ## 0.2.11-M1
 ### Added
-
 ### Fixed
 - Resource management adjusted for Kubernetes
 - Updated README.md file
