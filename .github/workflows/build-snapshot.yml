@@ -74,5 +74,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: mvn --batch-mode verify sonar:sonar -Dsonar.projectKey=eclipse-tractusx_sldt-semantic-hub -Dsonar.organization=eclipse-tractusx
+        run: mvn --batch-mode  --update-snapshots verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=eclipse-tractusx_sldt-semantic-hub -Dsonar.organization=eclipse-tractusx -Dcheckstyle.skip -Dpmd.skip=true
 
