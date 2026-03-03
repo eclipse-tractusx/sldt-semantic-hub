@@ -23,7 +23,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -33,18 +35,18 @@ public class OAuthSecurityConfig {
     @Bean
     protected SecurityFilterChain configure(HttpSecurity http) throws Exception {
         http
-          .authorizeRequests(auth -> auth
-            .requestMatchers(HttpMethod.OPTIONS).permitAll()
-            .requestMatchers(HttpMethod.GET,"/**/models/**").access("@authorizationEvaluator.hasRoleViewSemanticModel()")
-            .requestMatchers(HttpMethod.POST,"/**/models/**").access("@authorizationEvaluator.hasRoleAddSemanticModel()")
-            .requestMatchers(HttpMethod.PUT,"/**/models/**").access("@authorizationEvaluator.hasRoleUpdateSemanticModel()")
-            .requestMatchers(HttpMethod.DELETE,"/**/models/**").access("@authorizationEvaluator.hasRoleDeleteSemanticModel()"))
-            .csrf().disable()
-            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-            .oauth2ResourceServer().jwt();
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers(HttpMethod.OPTIONS).permitAll()
+                .requestMatchers(HttpMethod.GET, "/**/models/**").access("@authorizationEvaluator.hasRoleViewSemanticModel()")
+                .requestMatchers(HttpMethod.POST, "/**/models/**").access("@authorizationEvaluator.hasRoleAddSemanticModel()")
+                .requestMatchers(HttpMethod.PUT, "/**/models/**").access("@authorizationEvaluator.hasRoleUpdateSemanticModel()")
+                .requestMatchers(HttpMethod.DELETE, "/**/models/**").access("@authorizationEvaluator.hasRoleDeleteSemanticModel()"))
+            // CSRF protection is disabled because this is a stateless REST API using OAuth2 JWT bearer tokens.
+            // CSRF attacks exploit cookie-based authentication; since no session cookies are used, CSRF is not applicable.
+            .csrf(AbstractHttpConfigurer::disable)
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
 
         return http.build();
-
-
     }
 }

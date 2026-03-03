@@ -22,6 +22,7 @@ query-filters:
   - exclude:
       id:
         - java/spring-disabled-csrf-protection
+  - exclude:
       problem.severity:
         - warning
         - recommendation
