@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.6.1
+### fixed
+- Migrate security configs to Spring Security 6 lambda DSL
+- Fix CodeQL alert for disabled CSRF protection (use AbstractHttpConfigurer::disable with justification)
+- Fix codeql-config.yaml exclusion filter structure for CSRF alert
+- Replace deprecated authorizeRequests() with authorizeHttpRequests()
+
 ## 0.6.0
 ### fixed
 - fixed cve CVE-2024-38819 spring-webmvc
