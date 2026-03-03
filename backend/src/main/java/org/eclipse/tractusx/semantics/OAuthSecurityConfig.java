@@ -28,6 +28,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.expression.WebExpressionAuthorizationManager;
 
 @Profile("!local")
 @Configuration
@@ -37,10 +38,10 @@ public class OAuthSecurityConfig {
         http
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.OPTIONS).permitAll()
-                .requestMatchers(HttpMethod.GET, "/**/models/**").access("@authorizationEvaluator.hasRoleViewSemanticModel()")
-                .requestMatchers(HttpMethod.POST, "/**/models/**").access("@authorizationEvaluator.hasRoleAddSemanticModel()")
-                .requestMatchers(HttpMethod.PUT, "/**/models/**").access("@authorizationEvaluator.hasRoleUpdateSemanticModel()")
-                .requestMatchers(HttpMethod.DELETE, "/**/models/**").access("@authorizationEvaluator.hasRoleDeleteSemanticModel()"))
+                .requestMatchers(HttpMethod.GET, "/**/models/**").access(new WebExpressionAuthorizationManager("@authorizationEvaluator.hasRoleViewSemanticModel()"))
+                .requestMatchers(HttpMethod.POST, "/**/models/**").access(new WebExpressionAuthorizationManager("@authorizationEvaluator.hasRoleAddSemanticModel()"))
+                .requestMatchers(HttpMethod.PUT, "/**/models/**").access(new WebExpressionAuthorizationManager("@authorizationEvaluator.hasRoleUpdateSemanticModel()"))
+                .requestMatchers(HttpMethod.DELETE, "/**/models/**").access(new WebExpressionAuthorizationManager("@authorizationEvaluator.hasRoleDeleteSemanticModel()")))
             // CSRF protection is disabled because this is a stateless REST API using OAuth2 JWT bearer tokens.
             // CSRF attacks exploit cookie-based authentication; since no session cookies are used, CSRF is not applicable.
             .csrf(AbstractHttpConfigurer::disable)
