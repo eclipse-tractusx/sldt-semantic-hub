@@ -111,7 +111,7 @@
 		<assertj.version>3.24.2</assertj.version>
 		<junit-jupiter.version>5.9.3</junit-jupiter.version>
 		<junit.version>4.13.2</junit.version>
-		<testcontainer.version>1.17.6</testcontainer.version>
+		<testcontainer.version>1.20.4</testcontainer.version>
 		<spring-security.version>6.3.8</spring-security.version>
 		<!-- build -->
 		<maven.compiler.version>3.8.1</maven.compiler.version>

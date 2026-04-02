@@ -96,6 +96,9 @@ management:
         enabled: true
     info:
       enabled: true
+  info:
+    git:
+      enabled: true
   endpoints:
     web:
       exposure:

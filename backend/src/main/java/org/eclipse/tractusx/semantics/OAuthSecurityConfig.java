@@ -19,6 +19,7 @@
  ********************************************************************************/
 package org.eclipse.tractusx.semantics;
 
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -28,20 +29,39 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.expression.DefaultHttpSecurityExpressionHandler;
 import org.springframework.security.web.access.expression.WebExpressionAuthorizationManager;
 
 @Profile("!local")
 @Configuration
 public class OAuthSecurityConfig {
+
+    private final ApplicationContext applicationContext;
+
+    public OAuthSecurityConfig(ApplicationContext applicationContext) {
+        this.applicationContext = applicationContext;
+    }
+
+    private WebExpressionAuthorizationManager expressionManager(String expression) {
+        var expressionHandler = new DefaultHttpSecurityExpressionHandler();
+        expressionHandler.setApplicationContext(applicationContext);
+        var manager = new WebExpressionAuthorizationManager(expression);
+        manager.setExpressionHandler(expressionHandler);
+        return manager;
+    }
+
     @Bean
     protected SecurityFilterChain configure(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.OPTIONS).permitAll()
-                .requestMatchers(HttpMethod.GET, "/**/models/**").access(new WebExpressionAuthorizationManager("@authorizationEvaluator.hasRoleViewSemanticModel()"))
-                .requestMatchers(HttpMethod.POST, "/**/models/**").access(new WebExpressionAuthorizationManager("@authorizationEvaluator.hasRoleAddSemanticModel()"))
-                .requestMatchers(HttpMethod.PUT, "/**/models/**").access(new WebExpressionAuthorizationManager("@authorizationEvaluator.hasRoleUpdateSemanticModel()"))
-                .requestMatchers(HttpMethod.DELETE, "/**/models/**").access(new WebExpressionAuthorizationManager("@authorizationEvaluator.hasRoleDeleteSemanticModel()")))
+                .requestMatchers("/", "/swagger-ui/**", "/swagger-resources/**",
+                                  "/v3/api-docs/**", "/semantic-hub-openapi.yaml").permitAll()
+                .requestMatchers("/actuator/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/**/models/**").access(expressionManager("@authorizationEvaluator.hasRoleViewSemanticModel()"))
+                .requestMatchers(HttpMethod.POST, "/**/models/**").access(expressionManager("@authorizationEvaluator.hasRoleAddSemanticModel()"))
+                .requestMatchers(HttpMethod.PUT, "/**/models/**").access(expressionManager("@authorizationEvaluator.hasRoleUpdateSemanticModel()"))
+                .requestMatchers(HttpMethod.DELETE, "/**/models/**").access(expressionManager("@authorizationEvaluator.hasRoleDeleteSemanticModel()")))
             // CSRF protection is disabled because this is a stateless REST API using OAuth2 JWT bearer tokens.
             // CSRF attacks exploit cookie-based authentication; since no session cookies are used, CSRF is not applicable.
             .csrf(AbstractHttpConfigurer::disable)
