@@ -39,4 +39,9 @@ public class ModelPackageUrn {
    public static ModelPackageUrn fromUrn( String urn ) {
       return new ModelPackageUrn( urn );
    }
+
+   @Override
+   public String toString() {
+      return urn;
+   }
 }

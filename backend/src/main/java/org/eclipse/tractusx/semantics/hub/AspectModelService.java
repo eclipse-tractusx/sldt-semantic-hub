@@ -130,7 +130,7 @@ public class AspectModelService implements ModelsApiDelegate {
 
    @Override
    public ResponseEntity<Void> deleteModel( final String modelId ) {
-      persistenceLayer.deleteModelsPackage( ModelPackageUrn.fromUrn( modelId ) );
+      persistenceLayer.deleteModelsPackage( ModelPackageUrn.fromUrn( AspectModelUrn.fromUrn( modelId ) ) );
       return new ResponseEntity<>( HttpStatus.NO_CONTENT );
    }
 

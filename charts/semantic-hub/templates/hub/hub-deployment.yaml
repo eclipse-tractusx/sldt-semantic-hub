@@ -71,14 +71,14 @@ spec:
                 name: {{ include "hub.fullname" . }}
           livenessProbe:
             httpGet:
-              path: /actuator/health/liveness
+              path: /hub/actuator/health/liveness
               port: {{ .Values.hub.containerPort }}
             initialDelaySeconds: {{ .Values.hub.livenessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.hub.livenessProbe.periodSeconds }}
             failureThreshold: {{ .Values.hub.livenessProbe.failureThreshold }}
           readinessProbe:
             httpGet:
-              path: /actuator/health/readiness
+              path: /hub/actuator/health/readiness
               port: {{ .Values.hub.containerPort }}
             initialDelaySeconds: {{ .Values.hub.readinessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.hub.readinessProbe.periodSeconds }}

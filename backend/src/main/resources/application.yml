@@ -20,7 +20,13 @@
 
 server:
   port: 4242
+  servlet:
+    context-path: /hub
   forward-headers-strategy: framework
+
+openapi:
+  semanticHub:
+    base-path: /api/v1
 
 hub:
   triple-store:
