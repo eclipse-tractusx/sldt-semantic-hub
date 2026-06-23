@@ -1,6 +1,7 @@
 ###############################################################
 # Copyright (c) 2021-2022 T-Systems International GmbH
 # Copyright (c) 2021-2022 Contributors to the Eclipse Foundation
+# Copyright (c) 2026 Capgemini Deutschland GmbH
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -19,12 +20,12 @@
 ###############################################################
 
 # Docker buildfile to containerize the semantics layer
-FROM maven:3-eclipse-temurin-17-alpine AS builder
+FROM maven:3-eclipse-temurin-21-alpine AS builder
 COPY . /build
 WORKDIR /build
 RUN mvn package -DskipTests
 
-FROM eclipse-temurin:17-jre-alpine
+FROM eclipse-temurin:21-jre-alpine
 
 RUN addgroup -g 101 -S spring \
     && adduser -u 100 -S spring -G spring \

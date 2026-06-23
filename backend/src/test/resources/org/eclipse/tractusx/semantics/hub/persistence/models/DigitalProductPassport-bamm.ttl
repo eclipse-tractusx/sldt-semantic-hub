@@ -8,6 +8,7 @@
 # Copyright (c) 2023 iPoint-systems GmbH
 # Copyright (c) 2023 T-Systems International GmbH
 # Copyright (c) 2023 Contributors to the Eclipse Foundation
+# Copyright (c) 2026 Capgemini Deutschland GmbH
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -602,8 +603,7 @@
 :concentration a bamm:Property;
     bamm:preferredName "Concentration"@en;
     bamm:description "Concentration of substances of concern at the level of the product."@en;
-    bamm:characteristic :Either;
-    bamm:exampleValue "13.6".
+    bamm:characteristic :Either.
 :ConcentrationEnumeration a bamm-c:Enumeration;
     bamm:preferredName "Concentration Enumeration"@en;
     bamm:description "Enumeration of possible units of concentration with percent, volume percent, parts per thousand, parts per million, parts per billion and parts per trillion."@en;

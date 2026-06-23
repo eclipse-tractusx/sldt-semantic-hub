@@ -1,5 +1,6 @@
 # Copyright (c) 2023 Robert Bosch Manufacturing Solutions GmbH
 # Copyright (c) 2023 Contributors to the Eclipse Foundation
+# Copyright (c) 2026 Capgemini Deutschland GmbH
 
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -48,11 +49,11 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: temurin
-          java-version: 17
+          java-version: 21
       - name: Setup Maven Action
         uses: s4u/setup-maven-action@v1.7.0
         with:
-          java-version: 17
+          java-version: 21
       - name: execute-maven-deps
         working-directory: ./backend
         run: mvn verify dependency:list -DskipTests -Dmaven.javadoc.skip=true -DappendOutput=false -DoutputFile=maven.deps -DincludeScope=compile

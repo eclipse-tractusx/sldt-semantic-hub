@@ -1,6 +1,7 @@
 ###############################################################
 # Copyright (c) 2021, 2024 Robert Bosch Manufacturing Solutions GmbH
 # Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation
+# Copyright (c) 2026 Capgemini Deutschland GmbH
 #
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -26,8 +27,8 @@ sources:
   - https://github.com/eclipse-tractusx/sldt-semantic-hub
 
 type: application
-version: 0.5.0
-appVersion: 0.6.0
+version: 0.6.0
+appVersion: 0.7.0
 dependencies:
   - repository: https://charts.bitnami.com/bitnami
     name: keycloak

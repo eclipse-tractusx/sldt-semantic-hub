@@ -1,0 +1,148 @@
+######################################################################
+# Copyright (c) 2025 Robert Bosch Manufacturing Solutions GmbH
+# Copyright (c) 2025 Industrial Digital Twin Association
+# Copyright (c) 2026 Capgemini Deutschland GmbH
+#
+# This work  is made available under the terms of the
+# Creative Commons Attribution 4.0 International (CC BY 4.0) license,
+# which is available at
+# https://creativecommons.org/licenses/by/4.0/.
+# SPDX-License-Identifier: CC-BY-4.0
+#######################################################################
+
+
+@prefix samm: <urn:samm:org.eclipse.esmf.samm:meta-model:2.2.0#> .
+@prefix samm-c: <urn:samm:org.eclipse.esmf.samm:characteristic:2.2.0#> .
+@prefix samm-e: <urn:samm:org.eclipse.esmf.samm:entity:2.2.0#> .
+@prefix unit: <urn:samm:org.eclipse.esmf.samm:unit:2.2.0#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix : <urn:samm:io.admin-shell.idta.batterypass.handover_documentation:1.0.0#> .
+@prefix docu: <urn:samm:io.admin-shell.idta.handover_documentation:2.0.0#> .
+@prefix shared: <urn:samm:io.admin-shell.idta.shared:3.1.0#> .
+
+:HandoverDocumentation a samm:Aspect ;
+   samm:preferredName "handover documentation of battery passport"@en ;
+   samm:preferredName "Übergabe-Dokumentation des Batteriepasses"@de ;
+   samm:description "Handover Documentation defines a set of meta data for the handover of documentation from the operator to the users of the Battery Passport."@en ;
+   samm:description "Enthält alle wichtigen Dokumente für den Kunden wie vom Batteriepass gefordert."@de ;
+   samm:see <urn:irdi:0173-1%2301-AHF578%23003> ;
+   samm:see <https://api.eclass-cdp.com/0173-1-01-AHF578-003> ;
+   samm:properties ( 
+   [ samm:property :documents; samm:payloadName "Documents" ] 
+   ) ;
+   samm:operations ( ) ;
+   samm:events ( ) .
+
+
+:documents a samm:Property ;
+   samm:preferredName "documents"@en ;
+   samm:preferredName "Dokumente"@de ;
+   samm:description "A set of relevant documents to hand over to customers for documentation purposes."@en ;
+   samm:see <urn:irdi:0173-1%2302-ABI500%23003> ;
+   samm:see <https://api.eclass-cdp.com/0173-1-02-ABI500-003> ;
+   samm:characteristic :DocumentSet .
+   
+:DocumentSet a samm-c:Set ;
+   samm:see <https://admin-shell.io/vdi/2770/1/0/EntityForDocumentation> ;
+   samm:dataType :Document .
+   
+:Document a samm:Entity ;
+   samm:properties ( 
+     [ samm:property docu:documentIds; samm:payloadName "DocumentIds" ] 
+	 [ samm:property docu:documentClassifications; samm:payloadName "DocumentClassifications" ] 
+	 [ samm:property :documentVersions; samm:payloadName "DocumentVersions" ] 
+	 ) ;
+   samm:description "A single handover document."@en ;
+   samm:see <0173-1%2302-ABI500%23003/0173-1%2301-AHF579%23003> ;
+   samm:see <https://api.eclass-cdp.com/0173-1-02-ABI500-003/0173-1-01-AHF579-003> .
+
+:documentVersions a samm:Property ;
+   samm:preferredName "document versions"@en ;
+   samm:preferredName "Dokumenten-Versionen"@de ;
+   samm:description "Information elements of individual VDI 2770 DocumentVersion entities.\nNote: at the time of handover, this collection shall include at least one DocumentVersion."@en ;
+   samm:description "Liste der Dokument-Versionen."@de ;
+   samm:see <0173-1%2302-ABI503%23003> ;
+   samm:see <https://api.eclass-cdp.com/0173-1-02-ABI503-003> ;
+   samm:characteristic :DocumentVersionsTrait .
+
+:DocumentVersionsTrait a samm-c:Trait ;
+   samm-c:baseCharacteristic :DocumentVersions ;
+   samm-c:constraint shared:CardinalityOneToMany .
+   
+:DocumentVersions a samm-c:Set ;
+   samm:dataType :DocumentVersion .
+ 
+:DocumentVersion a samm:Entity ;
+   samm:preferredName "Dokumenten-Version"@de ;
+   samm:preferredName "document version"@en ;
+   samm:see <urn:irdi:0173-1%2302-ABI502%23003/0173-1%2301-AHF581%23003> ;
+   samm:properties ( 
+     [ samm:property shared:languages; samm:payloadName "Language" ] 
+	 [ samm:property docu:version; samm:optional true; samm:payloadName "Version" ] 
+	 [ samm:property docu:title; samm:payloadName "Title" ]
+	 [ samm:property docu:subtitle; samm:optional true; samm:payloadName "Subtitle" ] 
+	 [ samm:property docu:description; samm:optional true; samm:payloadName "Description" ]
+	 [ samm:property docu:digitalFiles; samm:payloadName "DigitalFiles" ]
+	 ) ;
+   samm:see <urn:irdi:0173-1%2302-ABI503%23003/0173-1%2301-AHF582%23003> ;
+   samm:see <https://api.eclass-cdp.com/0173-1-02-ABI503-003/0173-1-01-AHF582-003> .
+#######################################################################
+# Test-only addition: the original model at
+# https://github.com/admin-shell-io/smt-semantic-models references the
+# external namespaces io.admin-shell.idta.handover_documentation:2.0.0
+# and io.admin-shell.idta.shared:3.1.0. The referenced elements are
+# inlined below in reduced form so the model is self-contained and can
+# be uploaded without its dependency packages.
+#######################################################################
+
+docu:documentIds a samm:Property ;
+   samm:preferredName "document IDs"@en ;
+   samm:description "Set of document identifiers."@en ;
+   samm:characteristic samm-c:Text .
+
+docu:documentClassifications a samm:Property ;
+   samm:preferredName "document classifications"@en ;
+   samm:description "Set of classifications of the document."@en ;
+   samm:characteristic samm-c:Text .
+
+docu:version a samm:Property ;
+   samm:preferredName "version"@en ;
+   samm:description "The version of the document."@en ;
+   samm:characteristic samm-c:Text .
+
+docu:title a samm:Property ;
+   samm:preferredName "title"@en ;
+   samm:description "The title of the document."@en ;
+   samm:characteristic samm-c:MultiLanguageText .
+
+docu:subtitle a samm:Property ;
+   samm:preferredName "subtitle"@en ;
+   samm:description "The subtitle of the document."@en ;
+   samm:characteristic samm-c:MultiLanguageText .
+
+docu:description a samm:Property ;
+   samm:preferredName "description"@en ;
+   samm:description "The description of the document."@en ;
+   samm:characteristic samm-c:MultiLanguageText .
+
+docu:digitalFiles a samm:Property ;
+   samm:preferredName "digital files"@en ;
+   samm:description "Digital files of the document version."@en ;
+   samm:characteristic samm-c:Text .
+
+shared:languages a samm:Property ;
+   samm:preferredName "languages"@en ;
+   samm:description "Languages used in the document version."@en ;
+   samm:characteristic shared:LanguageSet .
+
+shared:LanguageSet a samm-c:Set ;
+   samm:preferredName "language set"@en ;
+   samm:description "Set of language codes."@en ;
+   samm:dataType xsd:string .
+
+shared:CardinalityOneToMany a samm-c:LengthConstraint ;
+   samm:preferredName "cardinality one to many"@en ;
+   samm:description "The collection must contain at least one element."@en ;
+   samm-c:minValue "1"^^xsd:nonNegativeInteger .

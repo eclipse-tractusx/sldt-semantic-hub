@@ -1,6 +1,7 @@
 <!--
     Copyright (c) 2021-2023 Robert Bosch Manufacturing Solutions GmbH
     Copyright (c) 2021-2023 Contributors to the Eclipse Foundation
+    Copyright (c) 2026 Capgemini Deutschland GmbH
 
     See the NOTICE file(s) distributed with this work for additional 
     information regarding copyright ownership.
@@ -24,11 +25,11 @@ The source code under this folder contains reference implementations of the SLDT
 
 ## Precondition
 Build fuseki docker image by following the below steps :
-- Download [jena-fuseki-docker-5.0.0.zip](https://repo1.maven.org/maven2/org/apache/jena/jena-fuseki-docker/5.0.0/jena-fuseki-docker-5.0.0.zip)
-- Unzip the jena-fuseki-docker-5.0.0.zip.
-- Build the docker image by running the command - `docker build --build-arg JENA_VERSION=5.0.0 -t jena-fuseki-docker:5.0.0 .`
+- Download [jena-fuseki-docker-5.3.0.zip](https://repo1.maven.org/maven2/org/apache/jena/jena-fuseki-docker/5.3.0/jena-fuseki-docker-5.3.0.zip)
+- Unzip the jena-fuseki-docker-5.3.0.zip.
+- Build the docker image by running the command - `docker build --build-arg JENA_VERSION=5.3.0 -t jena-fuseki-docker:5.3.0 .`
 
-This docker image `jena-fuseki-docker:5.0.0` will be used in the Helm deployment and test - [values.yaml](charts/semantic-hub/values.yaml) (graphdb.image).
+This docker image `jena-fuseki-docker:5.3.0` will be used in the Helm deployment and test - [values.yaml](charts/semantic-hub/values.yaml) (graphdb.image).
 
 ## Build Packages
 

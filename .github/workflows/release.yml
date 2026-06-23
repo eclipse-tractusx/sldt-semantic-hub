@@ -1,5 +1,6 @@
 # Copyright (c) 2025 Robert Bosch Manufacturing Solutions GmbH
 # Copyright (c) 2025 Contributors to the Eclipse Foundation
+# Copyright (c) 2026 Capgemini Deutschland GmbH
 
 # See the NOTICE file(s) distributed with this work for additional
 # information regarding copyright ownership.
@@ -26,7 +27,7 @@ on:
         required: true
 
 env:
-  FUSEKI_VERSION: 5.0.0
+  FUSEKI_VERSION: 5.3.0
 
 jobs:
   build:
@@ -38,11 +39,11 @@ jobs:
         with:
           fetch-depth: 0
           ref: release
-      - name: Set up JDK 17
+      - name: Set up JDK 21
         uses: actions/setup-java@v3
         with:
-          java-version: '17'
-          distribution: 'adopt'
+          java-version: '21'
+          distribution: 'temurin'
           cache: maven
       - name: setup git config
         run: |

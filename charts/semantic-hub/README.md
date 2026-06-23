@@ -34,7 +34,7 @@ helm install hub -n semantics ./charts/semantic-hub
 | graphdb.args[4] | string | `"/ds"`                                                                                                                                                                     |  |
 | graphdb.containerPort | int | `3030`                                                                                                                                                                      |  |
 | graphdb.enabled | bool | `false`                                                                                                                                                                     |  |
-| graphdb.image | string | `"ghcr.io/catenax-ev/jena-fuseki:4.7.0"`                                                                                                                                    |  |
+| graphdb.image | string | `"jena-fuseki-docker:5.3.0"`                                                                                                                                                |  |
 | graphdb.imagePullPolicy | string | `"IfNotPresent"`                                                                                                                                                            |  |
 | graphdb.javaOptions | string | `"-Xmx1048m -Xms1048m"`                                                                                                                                                     |  |
 | graphdb.password | string | `"admin"`                                                                                                                                                                   |  |
